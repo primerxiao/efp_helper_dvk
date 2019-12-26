@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.primer.efp_plugin</id>
   <name>efp项目助手</name>
-  <vendor>efp项目</vendor>
+  <vendor>efp项目组</vendor>
   <description><![CDATA[关于Efp项目高度定制的IDEA插件。提供配置生成、代码生成等功能，极大提高开发效率]]></description>
   <version>1.0.3</version>
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -21,19 +21,11 @@
     <action id="dubbo-xml-config" class="com.efp.plugins.dubbo.action.DubboXmlConfigAction" text="EFP:生成dubbo配置">
       <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
     </action>
-    <!--<action id="ExportBookMarksAction" class="com.efp.plugins.dubbo.action.ExportBookMarkAction" text="导出BookMarks">
-                <add-to-group group-id="ToolsMenu" anchor="first"/>
-                <keyboard-shortcut first-keystroke="alt p" keymap="$default"/>
-     </action>-->
     <!--code-helper-->
     <action id="efp-plugin-code-helper" description="代码助手" text="EFP:根据表生成代码"
             class="com.efp.plugins.codeHelper.action.CodeHelperAction">
       <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
     </action>
-    <!--<action id="efp-plugin-code-helper-generate-method" description="代码助手" text="EFP:生成函数"
-            class="com.efp.plugins.codeHelper.action.CodeHelperGenerateMethodAction" >
-        <add-to-group anchor="first" group-id="EditorPopupMenu"/>
-    </action>-->
     <action id="efp-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke" text="EFP:发起dubbo调用">
       <add-to-group group-id="GenerateGroup" anchor="first"/>
     </action>
