@@ -31,7 +31,7 @@ public class DubboRemoteInvoke extends AnAction {
     public static final String PROPERTIES_FILE_NAME = "application";
     public static final String INVOKE = "invoke ";
     public static final String POINT = ".";
-    public static final String K = "()";
+    public static final String STRING = "java.lang.String";
     public static String PORT = null;
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -57,10 +57,9 @@ public class DubboRemoteInvoke extends AnAction {
         PORT = propertiesFile.findPropertyByKey(PROPERTIES_NAME).getValue();
         // 类全名 + 方法
         PsiMethod method = (PsiMethod) psiElement;
-        PsiClass Class = (PsiClass) method.getParent();
+        String methodName = method.getName();
         PsiJavaFile javaFile = (PsiJavaFile) Classfile;
-
-        String invokeMethod = INVOKE +javaFile.getPackageName() + POINT + Class.getName().replace("Impl","") + POINT + method.getName() + K;
+        String invokeMethod = INVOKE + javaFile.getPackageName() + POINT + Classfile.getVirtualFile().getNameWithoutExtension() + POINT + methodName + getMethodParameters(method);
         // telnet调用
         try {
             TelnetClient telnetClient = new TelnetClient("vt200");  //指明Telnet终端类型，否则会返回来的数据中文会乱码
@@ -81,6 +80,26 @@ public class DubboRemoteInvoke extends AnAction {
             return module;
         }
         return ModuleManager.getInstance(module.getProject()).findModuleByName(module.getName().replace("service", "impl"));
+    }
+    public String getMethodParameters(PsiMethod method) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        PsiParameter[] parameters = method.getParameterList().getParameters();
+        if (parameters.length > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                if (PsiType.INT.equals(parameters[i].getType())) sb.append("0");
+                else if (PsiType.LONG.equals(parameters[i].getType())) sb.append("0");
+                else if (PsiType.FLOAT.equals(parameters[i].getType())) sb.append("0f");
+                else if (PsiType.DOUBLE.equals(parameters[i].getType())) sb.append("0.0");
+                else if (PsiType.BOOLEAN.equals(parameters[i].getType())) sb.append("false");
+                else if (PsiType.CHAR.equals(parameters[i].getType())) sb.append("''");
+                else if (STRING.equals(parameters[i].getType())) sb.append("\"\"");
+                else sb.append("{}");
+                if (i < parameters.length - 1) sb.append(",");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
 }
