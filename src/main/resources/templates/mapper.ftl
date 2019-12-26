@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${daoQuaName}">
+
+    <resultMap type="${domainQuaName}" id="${baseClassName}List">
+        <#list classFields as field>
+            <#if field.primaryKey>
+                <id property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
+            <#else>
+                <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
+            </#if>
+        </#list>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ${baseColumnList}
+    </sql>
+
+    <insert id="insert" parameterType="${domainQuaName}">
+        insert into ${tableName}(<#list classFields as field><#if field_index!=0>,</#if>${field.dasColumnName}</#list>)
+        values (<#list classFields as field><#if field_index!=0>,</#if><#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#list>)
+    </insert>
+
+    <delete id="deleteByPk" parameterType="${domainQuaName}">
+        delete from ${tableName} where <#list classFields as field><#if field.primaryKey>${field.fieldName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+    </delete>
+
+    <update id="updateByPk" parameterType="${domainQuaName}">
+        update ${tableName}
+        <trim prefix="set" suffixOverrides=",">
+            <#list classFields as field>
+                <if test="${field.fieldName?uncap_first}!=null and ${field.fieldName?uncap_first}!=''">${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}},</if>
+            </#list>
+        </trim>
+        where <#list classFields as field><#if field.primaryKey>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+    </update>
+
+    <select id="queryByPk" resultMap="${baseClassName}List" parameterType="${domainQuaName}">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName} where  <#list classFields as field><#if field.primaryKey>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+    </select>
+
+</mapper>

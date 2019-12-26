@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.jetbrains.intellij' version '0.4.15'
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "utf-8"
+}
+group 'com.efp.plugins'
+version '1.0.3'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    //模板
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+    //databasetool
+    compileOnly fileTree(dir: IDEA_ROOT_PATH + 'plugins\\DatabaseTools\\lib', includes: ['*jar'])
+    //properties
+    compileOnly fileTree(dir: IDEA_ROOT_PATH + 'plugins\\properties\\lib', includes: ['*jar'])
+    //test
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    pluginName 'efp项目助手'
+    //version 'IC-2019.1'
+    localPath IDEA_ROOT_PATH
+    updateSinceUntilBuild true
+    localSourcesPath LOCAL_SOURCES_PATH
+}
+patchPluginXml {
+    version '1.0.3'
+    description '关于Efp项目高度定制的IDEA插件。提供配置生成、代码生成等功能，极大提高开发效率'
+    changeNotes """
+<div>
+  <p>1.0.3(caoxin)</p> 
+  <ul> 
+    <li>在dubbo服务类中函数直接发起dubbo调用</li> 
+  </ul>
+  <p>1.0.2(xiaojunhui)</p> 
+  <ul> 
+    <li>在数据库视图中右键相应表直接生成项目代码以及配置</li> 
+  </ul>
+  <p>1.0.1(xiaojunhui)</p> 
+  <ul> 
+    <li>1、生成dubbo配置整合为一个动作同时生成</li> 
+    <li>3、支持的idea版本前置到2018</li> 
+  </ul>
+  <p>1.0.0 </p>
+  <ul> 
+    <li>初始化插件：提供生成根据类生成消费者、生产者中的xml配置</li> 
+  </ul>
+</div>
+       """
+    sinceBuild '174.*'
+}
