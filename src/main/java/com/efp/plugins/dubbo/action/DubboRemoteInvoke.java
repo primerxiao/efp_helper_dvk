@@ -49,7 +49,7 @@ public class DubboRemoteInvoke extends AnAction {
 
         if (Classfile.getVirtualFile().getNameWithoutExtension().endsWith("Impl")) {
             final String impl = Classfile.getVirtualFile().getNameWithoutExtension().replace("Impl", "");
-            Classfile = FilenameIndex.getFilesByName(e.getProject(), impl, GlobalSearchScope.allScope(e.getProject()))[0];
+            Classfile = FilenameIndex.getFilesByName(e.getProject(), impl+".java", GlobalSearchScope.allScope(e.getProject()))[0];
         }
         Module implModule = getImplModule(ModuleUtil.findModuleForFile(Classfile));
         PropertiesFile propertiesFile = PropertiesReferenceManager.getInstance(e.getProject()).findPropertiesFiles(implModule, PROPERTIES_FILE_NAME).get(0);

@@ -69,11 +69,8 @@ public class CodeHelperAction extends AnAction {
             return;
         }
         try {
-            //generateDomain(generateInfo);
+            generateDomain(generateInfo);
             generateVo(generateInfo);
-            if (true) {
-                return;
-            }
             generateDao(generateInfo);
             VirtualFile service = generateService(generateInfo);
             generateServiceImpl(generateInfo);
@@ -295,8 +292,16 @@ public class CodeHelperAction extends AnAction {
         generateInfo.setDasTable(dasTable);
         generateInfo.setDasColumns(DasUtil.getColumns(dasTable));
         generateInfo.setProject(e.getProject());
-        generateInfo.setImplModule(ModuleManager.getInstance(e.getProject()).findModuleByName(generateInfo.getDasNamespace().getName().replace("_", ".") + ".impl"));
-        generateInfo.setServiceModule(ModuleManager.getInstance(e.getProject()).findModuleByName(generateInfo.getDasNamespace().getName().replace("_", ".") + ".service"));
+        String implModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".impl";
+        if (implModuleName.contains("risk")) {
+            implModuleName = implModuleName.replaceFirst("risk", "riskm");
+        }
+        generateInfo.setImplModule(ModuleManager.getInstance(e.getProject()).findModuleByName(implModuleName));
+        String serviceModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".service";
+        if (serviceModuleName.contains("risk")) {
+            serviceModuleName = serviceModuleName.replaceFirst("risk", "riskm");
+        }
+        generateInfo.setServiceModule(ModuleManager.getInstance(e.getProject()).findModuleByName(serviceModuleName));
         generateInfo.setGenerateJava(getGenerateJava(generateInfo));
         return generateInfo;
     }
