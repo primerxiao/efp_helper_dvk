@@ -7,6 +7,7 @@ import com.efp.common.util.CodeHelperUtils;
 import com.efp.common.util.DubboXmlConfigUtils;
 import com.efp.common.util.SystemUtils;
 import com.efp.plugins.codeHelper.bean.*;
+import com.efp.plugins.codeHelper.generator.DomainGenerator;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
@@ -92,7 +93,8 @@ public class CodeHelperAction extends AnAction {
                 indicator.checkCanceled();
                 WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
                     try {
-                        generateDomain(generateInfo);
+                        //generateDomain(generateInfo);
+                        new DomainGenerator(isOverride, generateInfo, TemplateFileNameEnum.DOMAIN).generate();
                         generateVo(generateInfo);
                         generateDao(generateInfo);
                         VirtualFile service = generateService(generateInfo);
@@ -113,7 +115,6 @@ public class CodeHelperAction extends AnAction {
             }
         });
     }
-
     private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, VirtualFile service) {
         PsiFile file = PsiManager.getInstance(generateInfo.getProject()).findFile(service);
         if (!Objects.isNull(file)) {
@@ -121,14 +122,10 @@ public class CodeHelperAction extends AnAction {
             DubboXmlConfigUtils.poviderXmlConfigSet(e, generateInfo.getImplModule(), ((PsiJavaFile) file).getClasses()[0]);
         }
     }
-
     private void generateDomain(GenerateInfo generateInfo) throws IOException, TemplateException {
         StringWriter sw = getStringWriter(generateInfo, TemplateFileNameEnum.DOMAIN);
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getDomainPackagePath());
         VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getDomainFileName(), packageDir);
-        if (virtualFile == null) {
-            return;
-        }
         virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
         reformatJavaFile(generateInfo, virtualFile);
     }
@@ -139,22 +136,15 @@ public class CodeHelperAction extends AnAction {
         }
         VirtualFile packageDir = VfsUtil.findFile(voPackagePath.toPath(), true);
         VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getVoClassName() + ".java", packageDir);
-        if (virtualFile == null) {
-            return;
-        }
-        StringWriter sw = new StringWriter();
-        Template template = freemarker.getTemplate("vo.ftl");
-        template.process(covertToVoClassInfo(generateInfo), sw);
+
+        StringWriter sw = getStringWriter(generateInfo, TemplateFileNameEnum.VO);
         virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
         reformatJavaFile(generateInfo, virtualFile);
     }
-
     private VirtualFile generateDao(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getDaoPackagePath());
         VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getDaoClassName() + ".java", packageDir);
-        if (virtualFile == null) {
-            return null;
-        }
+
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("dao.ftl");
         template.process(covertToDaoClassInfo(generateInfo), sw);
@@ -175,7 +165,6 @@ public class CodeHelperAction extends AnAction {
         reformatJavaFile(generateInfo, virtualFile);
         return virtualFile;
     }
-
     private void generateServiceImpl(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getServiceImplPackagePath());
         VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getServiceImplClassName() + ".java", packageDir);
@@ -188,7 +177,6 @@ public class CodeHelperAction extends AnAction {
         virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
         reformatJavaFile(generateInfo, virtualFile);
     }
-
     private void generateMapper(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getMapperPath());
         VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getMapperFileNameWithoutExt() + ".xml", packageDir);
@@ -434,11 +422,7 @@ public class CodeHelperAction extends AnAction {
     @Nullable
     private VirtualFile getVirtualFile(GenerateInfo generateInfo, String fileName, VirtualFile packageDir) throws IOException {
         VirtualFile virtualFile = packageDir.findChild(fileName);
-        if (!Objects.isNull(virtualFile)) {
-            if (!isOverride) {
-                //return null;
-            }
-        } else {
+        if (Objects.isNull(virtualFile)) {
             virtualFile = packageDir.createChildData(generateInfo.getProject(), fileName);
         }
         return virtualFile;
