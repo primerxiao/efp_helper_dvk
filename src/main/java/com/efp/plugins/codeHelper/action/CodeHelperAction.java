@@ -2,6 +2,7 @@ package com.efp.plugins.codeHelper.action;
 
 import com.efp.common.config.FreemarkerConfiguration;
 import com.efp.common.constant.PluginContants;
+import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.CodeHelperUtils;
 import com.efp.common.util.DubboXmlConfigUtils;
 import com.efp.common.util.SystemUtils;
@@ -11,6 +12,7 @@ import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.lang.java.JavaLanguage;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -31,10 +33,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.util.IconUtil;
@@ -47,12 +46,11 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CodeHelperAction extends AnAction {
@@ -125,15 +123,12 @@ public class CodeHelperAction extends AnAction {
     }
 
     private void generateDomain(GenerateInfo generateInfo) throws IOException, TemplateException {
-        String fileName = generateInfo.getGenerateJava().getDomainClassName() + ".java";
+        StringWriter sw = getStringWriter(generateInfo, TemplateFileNameEnum.DOMAIN);
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getDomainPackagePath());
-        VirtualFile virtualFile = getVirtualFile(generateInfo, fileName, packageDir);
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getDomainFileName(), packageDir);
         if (virtualFile == null) {
             return;
         }
-        StringWriter sw = new StringWriter();
-        Template template = freemarker.getTemplate("domain.ftl");
-        template.process(covertToDomainClassInfo(generateInfo), sw);
         virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
         reformatJavaFile(generateInfo, virtualFile);
     }
@@ -196,7 +191,7 @@ public class CodeHelperAction extends AnAction {
 
     private void generateMapper(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getMapperPath());
-        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getMapperFileName() + ".xml", packageDir);
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getMapperFileNameWithoutExt() + ".xml", packageDir);
         if (virtualFile == null) {
             return;
         }
@@ -350,6 +345,7 @@ public class CodeHelperAction extends AnAction {
         generateJava.setDomainClassName(generateJava.getBaseClassName());
         generateJava.setDomainPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.domain");
         generateJava.setDomainPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
+        generateJava.setDomainFileName(generateJava.getBaseClassName()+".java");
         //vo
         generateJava.setVoClassName(generateJava.getBaseClassName() + "VO");
         generateJava.setVoPackageName("com.irdstudio." + serviceModuleNameArr[0] + "." + serviceModuleNameArr[1] + ".service.vo");
@@ -368,7 +364,8 @@ public class CodeHelperAction extends AnAction {
         generateJava.setServiceImplPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/impl/");
         //mapper
         generateJava.setMapperPath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/resources/mybatis/mapper/");
-        generateJava.setMapperFileName(generateJava.getBaseClassName() + "Mapper");
+        generateJava.setMapperFileNameWithoutExt(generateJava.getBaseClassName() + "Mapper");
+        generateJava.setMapperFileName(generateJava.getBaseClassName()+"Mapper.xml");
         return generateJava;
 
     }
@@ -438,8 +435,8 @@ public class CodeHelperAction extends AnAction {
     private VirtualFile getVirtualFile(GenerateInfo generateInfo, String fileName, VirtualFile packageDir) throws IOException {
         VirtualFile virtualFile = packageDir.findChild(fileName);
         if (!Objects.isNull(virtualFile)) {
-            if (isOverride) {
-                return null;
+            if (!isOverride) {
+                //return null;
             }
         } else {
             virtualFile = packageDir.createChildData(generateInfo.getProject(), fileName);
@@ -447,4 +444,29 @@ public class CodeHelperAction extends AnAction {
         return virtualFile;
     }
 
+    private StringWriter getStringWriter(GenerateInfo generateInfo,TemplateFileNameEnum templateFileNameEnum) throws IOException, TemplateException{
+        StringWriter sw = new StringWriter();
+        Template template = freemarker.getTemplate(templateFileNameEnum.getFileName());
+        switch (templateFileNameEnum) {
+            case VO:
+                template.process(covertToVoClassInfo(generateInfo), sw);
+                break;
+            case DAO:
+                template.process(covertToDaoClassInfo(generateInfo), sw);
+                break;
+            case DOMAIN:
+                template.process(covertToDomainClassInfo(generateInfo), sw);
+                break;
+            case MAPPER:
+                template.process(covertToMapperInfo(generateInfo), sw);
+                break;
+            case SERVICE:
+                template.process(covertToServiceClassInfo(generateInfo), sw);
+                break;
+            case SERVICEIMPL:
+                template.process(covertToServiceImplClassInfo(generateInfo), sw);
+                break;
+        }
+        return sw;
+    }
 }

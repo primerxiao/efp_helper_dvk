@@ -1,5 +1,8 @@
 package com.efp.plugins.codeHelper.bean;
 
+/**
+ * @author HIFeng
+ */
 public class GenerateJava {
 
     private String baseClassName;
@@ -7,25 +10,40 @@ public class GenerateJava {
     private String voPackageName;
     private String voClassName;
     private String voPackagePath;
+    private String voFileName;
 
     private String domainPackageName;
     private String domainClassName;
     private String domainPackagePath;
+    private String domainFileName;
 
     private String daoPackageName;
     private String daoClassName;
     private String daoPackagePath;
+    private String daoFileName;
 
     private String servicePackageName;
     private String serviceClassName;
     private String servicePackagePath;
+    private String serviceFileName;
 
     private String serviceImplPackageName;
     private String serviceImplClassName;
     private String serviceImplPackagePath;
+    private String serviceImplFileName;
 
     private String mapperPath;
+    private String mapperFileNameWithoutExt;
     private String mapperFileName;
+
+    public String getBaseClassName() {
+        return baseClassName;
+    }
+
+    public void setBaseClassName(String baseClassName) {
+        this.baseClassName = baseClassName;
+    }
+
     public String getVoPackageName() {
         return voPackageName;
     }
@@ -48,6 +66,14 @@ public class GenerateJava {
 
     public void setVoPackagePath(String voPackagePath) {
         this.voPackagePath = voPackagePath;
+    }
+
+    public String getVoFileName() {
+        return voFileName;
+    }
+
+    public void setVoFileName(String voFileName) {
+        this.voFileName = voFileName;
     }
 
     public String getDomainPackageName() {
@@ -74,6 +100,14 @@ public class GenerateJava {
         this.domainPackagePath = domainPackagePath;
     }
 
+    public String getDomainFileName() {
+        return domainFileName;
+    }
+
+    public void setDomainFileName(String domainFileName) {
+        this.domainFileName = domainFileName;
+    }
+
     public String getDaoPackageName() {
         return daoPackageName;
     }
@@ -96,6 +130,14 @@ public class GenerateJava {
 
     public void setDaoPackagePath(String daoPackagePath) {
         this.daoPackagePath = daoPackagePath;
+    }
+
+    public String getDaoFileName() {
+        return daoFileName;
+    }
+
+    public void setDaoFileName(String daoFileName) {
+        this.daoFileName = daoFileName;
     }
 
     public String getServicePackageName() {
@@ -122,6 +164,14 @@ public class GenerateJava {
         this.servicePackagePath = servicePackagePath;
     }
 
+    public String getServiceFileName() {
+        return serviceFileName;
+    }
+
+    public void setServiceFileName(String serviceFileName) {
+        this.serviceFileName = serviceFileName;
+    }
+
     public String getServiceImplPackageName() {
         return serviceImplPackageName;
     }
@@ -146,12 +196,12 @@ public class GenerateJava {
         this.serviceImplPackagePath = serviceImplPackagePath;
     }
 
-    public String getBaseClassName() {
-        return baseClassName;
+    public String getServiceImplFileName() {
+        return serviceImplFileName;
     }
 
-    public void setBaseClassName(String baseClassName) {
-        this.baseClassName = baseClassName;
+    public void setServiceImplFileName(String serviceImplFileName) {
+        this.serviceImplFileName = serviceImplFileName;
     }
 
     public String getMapperPath() {
@@ -160,6 +210,14 @@ public class GenerateJava {
 
     public void setMapperPath(String mapperPath) {
         this.mapperPath = mapperPath;
+    }
+
+    public String getMapperFileNameWithoutExt() {
+        return mapperFileNameWithoutExt;
+    }
+
+    public void setMapperFileNameWithoutExt(String mapperFileNameWithoutExt) {
+        this.mapperFileNameWithoutExt = mapperFileNameWithoutExt;
     }
 
     public String getMapperFileName() {
