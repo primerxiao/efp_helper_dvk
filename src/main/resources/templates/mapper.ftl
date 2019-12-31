@@ -22,7 +22,7 @@
     </insert>
 
     <delete id="deleteByPk" parameterType="${domainQuaName}">
-        delete from ${tableName} where <#list classFields as field><#if field.primaryKey>${field.fieldName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+        delete from ${tableName} where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.fieldName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
     </delete>
 
     <update id="updateByPk" parameterType="${domainQuaName}">
@@ -32,13 +32,13 @@
                 <if test="${field.fieldName?uncap_first}!=null and ${field.fieldName?uncap_first}!=''">${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}},</if>
             </#list>
         </trim>
-        where <#list classFields as field><#if field.primaryKey>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+        where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if> </#list>
     </update>
 
     <select id="queryByPk" resultMap="${baseClassName}List" parameterType="${domainQuaName}">
         select
         <include refid="Base_Column_List"/>
-        from ${tableName} where  <#list classFields as field><#if field.primaryKey>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+        from ${tableName} where  <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
     </select>
 
 </mapper>

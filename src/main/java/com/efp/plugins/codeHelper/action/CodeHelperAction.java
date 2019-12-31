@@ -11,14 +11,20 @@ import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.highlighter.JavaFileType;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.application.Result;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
@@ -31,10 +37,12 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.util.IconUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +61,11 @@ public class CodeHelperAction extends AnAction {
 
     private List<VirtualFile> vfs = new ArrayList<>();
 
+    /**
+     * 是否对原有代码进行覆盖
+     */
+    private boolean isOverride;
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         vfs.clear();
@@ -63,28 +76,44 @@ public class CodeHelperAction extends AnAction {
             return;
         }
         final GenerateInfo generateInfo = getGenerateInfo(e, (DasTable) psiElement);
-        //判断主键数量 暂时不支持联合主键
-        if (getPrimaryKeyNum(generateInfo) > 1) {
-            Messages.showErrorDialog("暂时不支持联合主键的生成", PluginContants.GENERATOR_UI_TITLE);
+        int checkFlag = Messages.showCheckboxOkCancelDialog("如果已经存在代码，请确实是否需要覆盖", null, "覆盖代码", true, 0, 1, IconUtil.getEditIcon());
+        if (checkFlag == 1) {
+            this.isOverride = true;
+        } else if (checkFlag ==0) {
+            this.isOverride = false;
+        } else {
             return;
         }
-        try {
-            generateDomain(generateInfo);
-            generateVo(generateInfo);
-            generateDao(generateInfo);
-            VirtualFile service = generateService(generateInfo);
-            generateServiceImpl(generateInfo);
-            generateMapper(generateInfo);
-            //生成dubbo配置
-            generateDubboConfig(e, generateInfo, service);
-            doOptimize(e.getProject());
-            //保存文档
-            FileDocumentManagerImpl.getInstance().saveAllDocuments();
-            Messages.showInfoMessage("代码生成成功", PluginContants.GENERATOR_UI_TITLE);
-        } catch (IOException | TemplateException ex) {
-            ex.printStackTrace();
-            Messages.showErrorDialog(ex.getLocalizedMessage(), PluginContants.GENERATOR_UI_TITLE);
-        }
+        startGenerate(e, generateInfo);
+    }
+
+    private void startGenerate(AnActionEvent e, final GenerateInfo generateInfo) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(generateInfo.getProject(), "生成文件") {
+            @Override
+            public void run(@NotNull ProgressIndicator indicator) {
+                indicator.checkCanceled();
+                WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
+                    try {
+                        generateDomain(generateInfo);
+                        generateVo(generateInfo);
+                        generateDao(generateInfo);
+                        VirtualFile service = generateService(generateInfo);
+                        generateServiceImpl(generateInfo);
+                        generateMapper(generateInfo);
+                        if (!Objects.isNull(service)) {
+                            generateDubboConfig(e, generateInfo, service);
+                        }
+                        doOptimize(e.getProject());
+                        //保存文档
+                        FileDocumentManagerImpl.getInstance().saveAllDocuments();
+                        Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE, "所有文件生成完成", NotificationType.INFORMATION));
+                    } catch (IOException | TemplateException e) {
+                        String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
+                        Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE, message, NotificationType.ERROR));
+                    }
+                });
+            }
+        });
     }
 
     private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, VirtualFile service) {
@@ -95,23 +124,29 @@ public class CodeHelperAction extends AnAction {
         }
     }
 
-    private void generateDomain( GenerateInfo generateInfo) throws IOException, TemplateException {
+    private void generateDomain(GenerateInfo generateInfo) throws IOException, TemplateException {
+        String fileName = generateInfo.getGenerateJava().getDomainClassName() + ".java";
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getDomainPackagePath());
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getDomainClassName() + ".java");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, fileName, packageDir);
+        if (virtualFile == null) {
+            return;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("domain.ftl");
         template.process(covertToDomainClassInfo(generateInfo), sw);
         virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
         reformatJavaFile(generateInfo, virtualFile);
     }
-
     private void generateVo(GenerateInfo generateInfo) throws IOException, TemplateException {
         File voPackagePath = new File(generateInfo.getGenerateJava().getVoPackagePath());
         if (!voPackagePath.exists()) {
             FileUtils.forceMkdir(voPackagePath);
         }
         VirtualFile packageDir = VfsUtil.findFile(voPackagePath.toPath(), true);
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getVoClassName() + ".java");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getVoClassName() + ".java", packageDir);
+        if (virtualFile == null) {
+            return;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("vo.ftl");
         template.process(covertToVoClassInfo(generateInfo), sw);
@@ -121,7 +156,10 @@ public class CodeHelperAction extends AnAction {
 
     private VirtualFile generateDao(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getDaoPackagePath());
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getDaoClassName() + ".java");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getDaoClassName() + ".java", packageDir);
+        if (virtualFile == null) {
+            return null;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("dao.ftl");
         template.process(covertToDaoClassInfo(generateInfo), sw);
@@ -129,10 +167,12 @@ public class CodeHelperAction extends AnAction {
         reformatJavaFile(generateInfo, virtualFile);
         return virtualFile;
     }
-
     private VirtualFile generateService(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getServicePackagePath());
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getServiceClassName() + ".java");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getServiceClassName() + ".java", packageDir);
+        if (virtualFile == null) {
+            return null;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("service.ftl");
         template.process(covertToServiceClassInfo(generateInfo), sw);
@@ -143,7 +183,10 @@ public class CodeHelperAction extends AnAction {
 
     private void generateServiceImpl(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getServiceImplPackagePath());
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getServiceImplClassName() + ".java");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getServiceImplClassName() + ".java", packageDir);
+        if (virtualFile == null) {
+            return;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("service_impl.ftl");
         template.process(covertToServiceImplClassInfo(generateInfo), sw);
@@ -153,7 +196,10 @@ public class CodeHelperAction extends AnAction {
 
     private void generateMapper(GenerateInfo generateInfo) throws IOException, TemplateException {
         VirtualFile packageDir = VfsUtil.createDirectoryIfMissing(generateInfo.getGenerateJava().getMapperPath());
-        VirtualFile virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getMapperFileName() + ".xml");
+        VirtualFile virtualFile = getVirtualFile(generateInfo, generateInfo.getGenerateJava().getMapperFileName() + ".xml", packageDir);
+        if (virtualFile == null) {
+            return;
+        }
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate("mapper.ftl");
         template.process(covertToMapperInfo(generateInfo), sw);
@@ -162,19 +208,6 @@ public class CodeHelperAction extends AnAction {
 
     private void reformatJavaFile(GenerateInfo generateInfo, VirtualFile virtualFile) {
         vfs.add(virtualFile);
-        if (true) {
-            return;
-        }
-        CommandProcessor.getInstance().executeCommand(generateInfo.getProject(), () -> {
-            PsiJavaFile javaFile = (PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile);
-            if (javaFile != null) {
-                CodeStyleManager.getInstance(generateInfo.getProject()).reformat(javaFile);
-                JavaCodeStyleManager.getInstance(generateInfo.getProject()).optimizeImports(javaFile);
-                JavaCodeStyleManager.getInstance(generateInfo.getProject()).removeRedundantImports(javaFile);
-                JavaCodeStyleManager.getInstance(generateInfo.getProject()).shortenClassReferences(javaFile);
-                javaFile.navigate(true);
-            }
-        }, null, null);
     }
 
     private Domain covertToDomainClassInfo(GenerateInfo generateInfo) {
@@ -399,6 +432,19 @@ public class CodeHelperAction extends AnAction {
                 vfs.clear();
             }
         }.execute());
+    }
+
+    @Nullable
+    private VirtualFile getVirtualFile(GenerateInfo generateInfo, String fileName, VirtualFile packageDir) throws IOException {
+        VirtualFile virtualFile = packageDir.findChild(fileName);
+        if (!Objects.isNull(virtualFile)) {
+            if (isOverride) {
+                return null;
+            }
+        } else {
+            virtualFile = packageDir.createChildData(generateInfo.getProject(), fileName);
+        }
+        return virtualFile;
     }
 
 }

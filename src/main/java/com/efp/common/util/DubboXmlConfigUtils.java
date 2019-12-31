@@ -1,9 +1,7 @@
 package com.efp.common.util;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
@@ -32,18 +30,14 @@ public class DubboXmlConfigUtils {
                 //判断是否已经存在id
                 String idValue = StringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
-                if (checkTagId(rootTag, idValue)) {
-                    Messages.showErrorDialog("已经存在消费者配置，不进行消费者配置生产", "提示信息");
-                } else {
+                if (!checkTagId(rootTag, idValue)) {
                     //生成配置
-                    WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
                         final XmlTag xmlTag = rootTag.createChildTag("dubbo:reference", rootTag.getNamespace(), null, false);
                         xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
                         xmlTag.setAttribute("version", "1.0.0");
                         rootTag.add(xmlTag);
                         consumerXmlFile.navigate(true);
-                    });
                 }
 
             }
@@ -67,11 +61,8 @@ public class DubboXmlConfigUtils {
                 //判断是否已经存在id
                 String idValue = StringUtils.initCap(serviceClass.getName()) + "Provider";
                 //判断是否存在该id的tag
-                if (checkTagId(rootTag, idValue)) {
-                    Messages.showErrorDialog("已经存在生产者配置，不进行生产者配置生产", "提示信息");
-                } else {
+                if (!checkTagId(rootTag, idValue)) {
                     //生成配置
-                    WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
                         final XmlTag xmlTag = rootTag.createChildTag("dubbo:service", rootTag.getNamespace(), null, false);
                         xmlTag.setAttribute("id", idValue);
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
@@ -82,7 +73,6 @@ public class DubboXmlConfigUtils {
                         xmlTag.setAttribute("timeout", "150000");
                         rootTag.add(xmlTag);
                         providerXmlFile.navigate(true);
-                    });
                 }
 
             }

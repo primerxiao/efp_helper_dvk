@@ -3,23 +3,28 @@
   <name>efp项目助手</name>
   <vendor>efp项目组</vendor>
   <description><![CDATA[关于Efp项目高度定制的IDEA插件。提供配置生成、代码生成等功能，极大提高开发效率]]></description>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.java</depends>
+  <depends>com.intellij.modules.xml</depends>
   <depends>com.intellij.properties</depends>
-  <depends config-file="" optional="true">com.intellij.database</depends>
+  <depends config-file="" optional="true">com.intellij.modules.database</depends>
   <idea-version since-build="183.0"/>
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
   </extensions>
 
   <actions>
+    <group id="efp_helper_dvk_tools_menu" text="efp项目助手" popup="true">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+    </group>
     <!--dubboxml配置生成-->
     <action id="dubbo-xml-config" class="com.efp.plugins.dubbo.action.DubboXmlConfigAction" text="EFP:生成dubbo配置">
       <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
+      <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
     </action>
     <!--code-helper-->
     <action id="efp-plugin-code-helper" description="代码助手" text="EFP:根据表生成代码"
@@ -28,6 +33,9 @@
     </action>
     <action id="efp-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke" text="EFP:发起dubbo调用">
       <add-to-group group-id="GenerateGroup" anchor="first"/>
+    </action>
+    <action id="test" class="com.efp.plugins.test.testAction" text="EFP:test">
+      <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
     </action>
   </actions>
 </idea-plugin>
