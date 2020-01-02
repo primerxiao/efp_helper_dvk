@@ -65,6 +65,8 @@ public class CodeHelperAction extends AnAction {
      */
     private boolean isOverride;
 
+    private boolean isGenerateController;
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         AnAction action = ActionManager.getInstance().getAction("DatabaseView.Refresh");
@@ -93,6 +95,15 @@ public class CodeHelperAction extends AnAction {
         } else {
             return;
         }
+        int checkController = Messages.showCheckboxOkCancelDialog("是否需要生成Controller代码", null,
+                "生成Controller代码", true, 0, 1, IconUtil.getEditIcon());
+        if (checkController == 1) {
+            this.isGenerateController = true;
+        } else if (checkController == 0) {
+            this.isGenerateController = false;
+        } else {
+            return;
+        }
         startGenerate(e, generateInfo);
     }
 
@@ -108,11 +119,16 @@ public class CodeHelperAction extends AnAction {
                         VirtualFile dao = new DaoGenerator(isOverride, generateInfo, TemplateFileNameEnum.DAO).generate();
                         VirtualFile service = new ServiceGenerator(isOverride, generateInfo, TemplateFileNameEnum.SERVICE).generate();
                         VirtualFile serviceImpl = new ServiceImplGenerator(isOverride, generateInfo, TemplateFileNameEnum.SERVICEIMPL).generate();
-                        VirtualFile generate = new MapperGenerator(isOverride, generateInfo, TemplateFileNameEnum.MAPPER).generate();
+                        VirtualFile mapper = new MapperGenerator(isOverride, generateInfo, TemplateFileNameEnum.MAPPER).generate();
                         if (!Objects.isNull(service)) {
                             generateDubboConfig(e, generateInfo, service);
                         }
-                        addVfs(domain, vo, dao, service, serviceImpl,generate);
+                        //Controller
+                        VirtualFile controller = null;
+                        if (isGenerateController) {
+                            controller = new ControllerGenerator(isOverride, generateInfo, TemplateFileNameEnum.CONTROLLER).generate();
+                        }
+                        addVfs(domain, vo, dao, service, serviceImpl,mapper,controller);
                         doOptimize(e.getProject());
                         //保存文档
                         FileDocumentManagerImpl.getInstance().saveAllDocuments();
@@ -177,11 +193,19 @@ public class CodeHelperAction extends AnAction {
             implModuleName = implModuleName.replaceFirst("risk", "riskm");
         }
         generateInfo.setImplModule(ModuleManager.getInstance(e.getProject()).findModuleByName(implModuleName));
+
         String serviceModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".service";
         if (serviceModuleName.contains("risk")) {
             serviceModuleName = serviceModuleName.replaceFirst("risk", "riskm");
         }
         generateInfo.setServiceModule(ModuleManager.getInstance(e.getProject()).findModuleByName(serviceModuleName));
+
+        String apiModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".api";
+        if (apiModuleName.contains("risk")) {
+            apiModuleName = apiModuleName.replaceFirst("risk", "riskm");
+        }
+        generateInfo.setApiModule(ModuleManager.getInstance(e.getProject()).findModuleByName(apiModuleName));
+
         generateInfo.setGenerateJava(getGenerateJava(generateInfo));
         return generateInfo;
     }
@@ -190,6 +214,7 @@ public class CodeHelperAction extends AnAction {
         GenerateJava generateJava = new GenerateJava();
         final String[] implModuleNameArr = generateInfo.getImplModule().getName().split("\\.");
         final String[] serviceModuleNameArr = generateInfo.getServiceModule().getName().split("\\.");
+        final String[] apiModuleNameArr = generateInfo.getApiModule().getName().split("\\.");
         //判断路径是否存在
         //base
         generateJava.setBaseClassName(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, generateInfo.getDasTable().getName()));
@@ -222,8 +247,12 @@ public class CodeHelperAction extends AnAction {
         generateJava.setMapperPath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/resources/mybatis/mapper/");
         generateJava.setMapperFileNameWithoutExt(generateJava.getBaseClassName() + "Mapper");
         generateJava.setMapperFileName(generateJava.getBaseClassName() + "Mapper.xml");
+        //controller
+        generateJava.setControllerClassName(generateJava.getBaseClassName() + "Controller");
+        generateJava.setControllerPathName("com.irdstudio." + apiModuleNameArr[0] + "." + apiModuleNameArr[1] + ".api.rest");
+        generateJava.setControllerPackagePath(generateInfo.getApiModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
+        generateJava.setControllerFileName(generateJava.getBaseClassName() + "Controller.java");
         return generateJava;
-
     }
 
     private boolean checkPrimaryKey(DasColumn dasColumn) {

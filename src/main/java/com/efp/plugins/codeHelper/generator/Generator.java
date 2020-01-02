@@ -110,6 +110,9 @@ public abstract class Generator {
             case SERVICEIMPL:
                 template.process(covertToServiceImplClassInfo(generateInfo), sw);
                 break;
+            case CONTROLLER:
+                template.process(generateInfo,sw);
+                break;
         }
         return sw;
     }

@@ -45,6 +45,11 @@ public class GenerateInfo {
     private Module implModule;
 
     /**
+     * apiModule
+     */
+    private Module apiModule;
+
+    /**
      * 创建的包、类等信息
      */
     private GenerateJava generateJava;
@@ -111,5 +116,13 @@ public class GenerateInfo {
 
     public void setGenerateJava(GenerateJava generateJava) {
         this.generateJava = generateJava;
+    }
+
+    public Module getApiModule() {
+        return apiModule;
+    }
+
+    public void setApiModule(Module apiModule) {
+        this.apiModule = apiModule;
     }
 }

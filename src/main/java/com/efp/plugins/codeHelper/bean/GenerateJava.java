@@ -36,6 +36,11 @@ public class GenerateJava {
     private String mapperFileNameWithoutExt;
     private String mapperFileName;
 
+    private String controllerPathName;
+    private String controllerClassName;
+    private String controllerPackagePath;
+    private String controllerFileName;
+
     public String getBaseClassName() {
         return baseClassName;
     }
@@ -226,5 +231,37 @@ public class GenerateJava {
 
     public void setMapperFileName(String mapperFileName) {
         this.mapperFileName = mapperFileName;
+    }
+
+    public String getControllerPathName() {
+        return controllerPathName;
+    }
+
+    public void setControllerPathName(String controllerPathName) {
+        this.controllerPathName = controllerPathName;
+    }
+
+    public String getControllerClassName() {
+        return controllerClassName;
+    }
+
+    public void setControllerClassName(String controllerClassName) {
+        this.controllerClassName = controllerClassName;
+    }
+
+    public String getControllerPackagePath() {
+        return controllerPackagePath;
+    }
+
+    public void setControllerPackagePath(String controllerPackagePath) {
+        this.controllerPackagePath = controllerPackagePath;
+    }
+
+    public String getControllerFileName() {
+        return controllerFileName;
+    }
+
+    public void setControllerFileName(String controllerFileName) {
+        this.controllerFileName = controllerFileName;
     }
 }
