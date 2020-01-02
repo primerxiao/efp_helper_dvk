@@ -1,13 +1,15 @@
 package com.efp.common.util;
 
+import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiFile;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.*;
+import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -32,12 +34,16 @@ public class DubboXmlConfigUtils {
                 //判断是否存在该id的tag
                 if (!checkTagId(rootTag, idValue)) {
                     //生成配置
-                        final XmlTag xmlTag = rootTag.createChildTag("dubbo:reference", rootTag.getNamespace(), null, false);
-                        xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
-                        xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
-                        xmlTag.setAttribute("version", "1.0.0");
-                        rootTag.add(xmlTag);
-                        consumerXmlFile.navigate(true);
+                    XmlTag xmlTag = XmlElementFactory.getInstance(e.getProject()).createTagFromText("<dubbo:reference/>", XMLLanguage.INSTANCE);
+                    //final XmlTag xmlTag = rootTag.createChildTag("dubbo:reference", rootTag.getNamespace(), null, false);
+                    xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
+                    xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
+                    xmlTag.setAttribute("version", "1.0.0");
+                    //rootTag.add(xmlTag);
+                    rootTag.addSubTag(xmlTag, false);
+                    //生成注释
+                    //addNoinspectionComment(e.getProject(), xmlTag);
+                    consumerXmlFile.navigate(true);
                 }
 
             }
@@ -91,5 +97,24 @@ public class DubboXmlConfigUtils {
             }
         }
         return false;
+    }
+    private static void addNoinspectionComment(Project project, XmlTag anchor) throws IncorrectOperationException {
+        final XmlComment newComment = createComment(project, "noinspection ");
+        PsiElement parent = anchor.getParentTag();
+        if (parent == null) {
+            parent = PsiTreeUtil.getPrevSiblingOfType(anchor, XmlProlog.class);
+            if (parent != null) {
+                CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.add(newComment));
+            }
+        } else {
+            CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.addBefore(newComment, anchor));
+        }
+    }
+    @NotNull
+    private static XmlComment createComment(Project project, String s) throws IncorrectOperationException {
+        final XmlTag element = XmlElementFactory.getInstance(project).createTagFromText("<foo><!-- " + s + " --></foo>", XMLLanguage.INSTANCE);
+        final XmlComment newComment = PsiTreeUtil.getChildOfType(element, XmlComment.class);
+        assert newComment != null;
+        return newComment;
     }
 }

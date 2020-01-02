@@ -8,7 +8,7 @@ public enum TemplateFileNameEnum {
     DAO("dao.ftl"),
     MAPPER("mapper.ftl"),
     SERVICE("service.ftl"),
-    SERVICEIMPL("service_impl");
+    SERVICEIMPL("service_impl.ftl");
     private String fileName;
     TemplateFileNameEnum(String fileName) {
         this.fileName = fileName;

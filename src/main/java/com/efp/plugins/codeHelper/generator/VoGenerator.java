@@ -13,9 +13,9 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
-public class DomainGenerator extends Generator {
+public class VoGenerator extends Generator {
 
-    public DomainGenerator(Boolean isOverWrite,GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
+    public VoGenerator(Boolean isOverWrite, GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
         super(isOverWrite,generateInfo, tpFileName);
     }
 
@@ -24,15 +24,15 @@ public class DomainGenerator extends Generator {
         //根据模板生成数据
         StringWriter sw = getSw();
         //判断包是否存在
-        File voPackagePath = new File(generateInfo.getGenerateJava().getDomainPackagePath());
+        File voPackagePath = new File(generateInfo.getGenerateJava().getVoPackagePath());
         if (!voPackagePath.exists()) {
             FileUtils.forceMkdir(voPackagePath);
         }
         VirtualFile packageDir = VfsUtil.findFile(voPackagePath.toPath(), true);
 
-        VirtualFile virtualFile = packageDir.findChild(generateInfo.getGenerateJava().getDomainFileName());
+        VirtualFile virtualFile = packageDir.findChild(generateInfo.getGenerateJava().getVoFileName());
         if (Objects.isNull(virtualFile)) {
-            virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getDomainFileName());
+            virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getVoFileName());
         } else {
             if (!isOverWrite) {
                 return null;
