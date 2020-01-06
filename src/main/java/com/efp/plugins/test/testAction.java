@@ -1,6 +1,6 @@
 package com.efp.plugins.test;
 
-import com.efp.common.constant.PluginContants;
+import com.efp.plugins.codeHelper.ui.GenerateOption;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
@@ -8,24 +8,8 @@ import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasTable;
 import com.intellij.database.psi.DataSourceManager;
 import com.intellij.database.util.DasUtil;
-import com.intellij.execution.Executor;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.configurations.ConfigurationTypeUtil;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.dashboard.actions.RunAction;
-import com.intellij.execution.runners.ExecutionUtil;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.ide.macro.MacroManager;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import com.intellij.openapi.ui.CheckBoxWithDescription;
-import com.intellij.openapi.ui.DescriptionLabel;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
@@ -33,7 +17,6 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.JBIterable;
-import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -45,15 +28,13 @@ public class testAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         //获取所有数据库管理
         //Dialog dialog = new Dialog(PluginContants.GENERATOR_UI_TITLE, e.getProject());
+        GenerateOption generateUi = new GenerateOption(true);
+        generateUi.show();
         final DataContext dataContext = e.getDataContext();
-        MacroManager.getInstance().cacheMacrosPreview(e.getDataContext());
-        final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
-        List<RunConfiguration> allConfigurationsList = RunManager.getInstance(e.getProject()).getAllConfigurationsList();
-        /*for (RunConfiguration runConfiguration : allConfigurationsList) {*/
-           // SettingsEditor<? extends RunConfiguration> configurationEditor = runConfiguration.getConfigurationEditor();
-            ExecutionUtil.doRunConfiguration(context.getConfiguration(), Executor.EXECUTOR_EXTENSION_NAME.getExtensionList().get(0), null, null, context.getDataContext());
-
-        /*}*/
+        Object[] data = dataContext.getData(LangDataKeys.SELECTED_ITEMS);
+        for (Object datum : data) {
+            System.out.println(((DasColumn)datum).getName());
+        }
     }
 
     private void getDasList(AnActionEvent e) {

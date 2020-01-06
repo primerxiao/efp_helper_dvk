@@ -1,8 +1,9 @@
 package com.efp.plugins.codeHelper.action;
 
-import com.efp.common.config.FreemarkerConfiguration;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
+import com.efp.common.data.EfpCovert;
+import com.efp.common.data.EfpModuleType;
 import com.efp.common.util.CodeHelperUtils;
 import com.efp.common.util.DubboXmlConfigUtils;
 import com.efp.plugins.codeHelper.bean.ClassField;
@@ -14,7 +15,6 @@ import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -28,7 +28,6 @@ import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -43,9 +42,6 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.formatter.xml.XmlCodeStyleSettings;
-import com.intellij.psi.xml.XmlFile;
-import com.intellij.sql.dataFlow.instructions.SqlPseudoValueSource;
 import com.intellij.util.IconUtil;
 import freemarker.template.TemplateException;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +82,12 @@ public class CodeHelperAction extends AnAction {
             return;
         }
         final GenerateInfo generateInfo = getGenerateInfo(e, (DasTable) psiElement);
+        if (setIsOverride()){ return;}
+        if (setControllerGenerate()){ return;}
+        startGenerate(e, generateInfo);
+    }
+
+    private boolean setIsOverride() {
         int checkFlag = Messages.showCheckboxOkCancelDialog("如果已经存在代码，请确实是否需要覆盖", null,
                 "覆盖代码", true, 0, 1, IconUtil.getEditIcon());
         if (checkFlag == 1) {
@@ -93,8 +95,12 @@ public class CodeHelperAction extends AnAction {
         } else if (checkFlag == 0) {
             this.isOverride = false;
         } else {
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private boolean setControllerGenerate() {
         int checkController = Messages.showCheckboxOkCancelDialog("是否需要生成Controller代码", null,
                 "生成Controller代码", true, 0, 1, IconUtil.getEditIcon());
         if (checkController == 1) {
@@ -102,9 +108,9 @@ public class CodeHelperAction extends AnAction {
         } else if (checkController == 0) {
             this.isGenerateController = false;
         } else {
-            return;
+            return true;
         }
-        startGenerate(e, generateInfo);
+        return false;
     }
 
     private void startGenerate(AnActionEvent e, final GenerateInfo generateInfo) {
@@ -188,33 +194,18 @@ public class CodeHelperAction extends AnAction {
         generateInfo.setDasTable(dasTable);
         generateInfo.setDasColumns(DasUtil.getColumns(dasTable));
         generateInfo.setProject(e.getProject());
-        String implModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".impl";
-        if (implModuleName.contains("risk")) {
-            implModuleName = implModuleName.replaceFirst("risk", "riskm");
-        }
-        generateInfo.setImplModule(ModuleManager.getInstance(e.getProject()).findModuleByName(implModuleName));
-
-        String serviceModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".service";
-        if (serviceModuleName.contains("risk")) {
-            serviceModuleName = serviceModuleName.replaceFirst("risk", "riskm");
-        }
-        generateInfo.setServiceModule(ModuleManager.getInstance(e.getProject()).findModuleByName(serviceModuleName));
-
-        String apiModuleName = generateInfo.getDasNamespace().getName().replace("_", ".") + ".api";
-        if (apiModuleName.contains("risk")) {
-            apiModuleName = apiModuleName.replaceFirst("risk", "riskm");
-        }
-        generateInfo.setApiModule(ModuleManager.getInstance(e.getProject()).findModuleByName(apiModuleName));
-
+        generateInfo.setImplModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.IMPL));
+        generateInfo.setServiceModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.SERVICE));
+        generateInfo.setApiModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.API));
         generateInfo.setGenerateJava(getGenerateJava(generateInfo));
         return generateInfo;
     }
 
     private GenerateJava getGenerateJava(GenerateInfo generateInfo) {
         GenerateJava generateJava = new GenerateJava();
-        final String[] implModuleNameArr = generateInfo.getImplModule().getName().split("\\.");
-        final String[] serviceModuleNameArr = generateInfo.getServiceModule().getName().split("\\.");
-        final String[] apiModuleNameArr = generateInfo.getApiModule().getName().split("\\.");
+        final String[] implModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getImplModule());
+        final String[] serviceModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getServiceModule());
+        final String[] apiModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getApiModule());
         //判断路径是否存在
         //base
         generateJava.setBaseClassName(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, generateInfo.getDasTable().getName()));
