@@ -28,8 +28,8 @@ public class testAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         //获取所有数据库管理
         //Dialog dialog = new Dialog(PluginContants.GENERATOR_UI_TITLE, e.getProject());
-        GenerateOption generateUi = new GenerateOption(true);
-        generateUi.show();
+        //GenerateOption generateUi = new GenerateOption(true);
+        //generateUi.show();
         final DataContext dataContext = e.getDataContext();
         Object[] data = dataContext.getData(LangDataKeys.SELECTED_ITEMS);
         for (Object datum : data) {

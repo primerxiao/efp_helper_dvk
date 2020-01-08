@@ -19,6 +19,8 @@ repositories {
 dependencies {
     //模板
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+    // https://mvnrepository.com/artifact/org.apache.poi/poi
+    compile group: 'org.apache.poi', name: 'poi', version: '4.1.1'
     //test
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
