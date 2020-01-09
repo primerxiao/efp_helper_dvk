@@ -1,6 +1,9 @@
 package com.efp.plugins.test;
 
+import com.alibaba.excel.EasyExcel;
 import com.efp.plugins.codeHelper.ui.GenerateOption;
+import com.efp.plugins.esb.EsbExcelIndexListener;
+import com.efp.plugins.esb.bean.EsbExcelIndexData;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
@@ -10,9 +13,14 @@ import com.intellij.database.psi.DataSourceManager;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.fileChooser.FileChooser;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.fileChooser.FileChooserDialog;
+import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ObjectUtils;
@@ -21,11 +29,26 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 public class testAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
+
+        VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFileDescriptor("xlsx"), e.getProject(), null);
+
+        if (virtualFile == null) {
+            return;
+        }
+        EsbExcelIndexListener esbExcelIndexListener = new EsbExcelIndexListener();
+        EasyExcel.read(virtualFile.getPath(), EsbExcelIndexData.class, esbExcelIndexListener).sheet("索引").doRead();
+        for (EsbExcelIndexData esbExcelIndexData : esbExcelIndexListener.getList()) {
+            System.out.println(esbExcelIndexData.toString());
+        }
+        if (true) {
+            return;
+        }
         //获取所有数据库管理
         //Dialog dialog = new Dialog(PluginContants.GENERATOR_UI_TITLE, e.getProject());
         //GenerateOption generateUi = new GenerateOption(true);

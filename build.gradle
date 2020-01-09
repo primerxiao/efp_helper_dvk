@@ -19,8 +19,10 @@ repositories {
 dependencies {
     //模板
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
-    // https://mvnrepository.com/artifact/org.apache.poi/poi
-    compile group: 'org.apache.poi', name: 'poi', version: '4.1.1'
+// https://mvnrepository.com/artifact/com.alibaba/easyexcel
+    compile (group: 'com.alibaba', name: 'easyexcel', version: '2.0.0') {
+        exclude group: 'org.slf4j'
+    }
     //test
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
