@@ -2,10 +2,17 @@ package com.efp.plugins.codeHelper.generator;
 
 import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.plugins.codeHelper.bean.GenerateInfo;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.search.FilenameIndex;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,24 +28,45 @@ public class ServiceGenerator extends Generator {
 
     @Override
     public VirtualFile generate() throws IOException, TemplateException {
-        //根据模板生成数据
-        StringWriter sw = getSw();
-        //判断包是否存在
-        File packagePath = new File(generateInfo.getGenerateJava().getServicePackagePath());
-        if (!packagePath.exists()) {
-            FileUtils.forceMkdir(packagePath);
-        }
-        VirtualFile packageDir = VfsUtil.findFile(packagePath.toPath(), true);
-
-        VirtualFile virtualFile = packageDir.findChild(generateInfo.getGenerateJava().getServiceFileName());
-        if (Objects.isNull(virtualFile)) {
-            virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getServiceFileName());
-        } else {
+        final String[] simapleGenerateInfo = getSimapleGenerateInfo();
+        VirtualFile virtualFile = null;
+        String packageName = null;
+        //查找文件看是否存在
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(
+                generateInfo.getProject(),
+                simapleGenerateInfo[1],
+                ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+        );
+        if (filesByName != null && filesByName.length > 0) {
             if (!isOverWrite) {
                 return null;
             }
+            virtualFile = filesByName[0].getVirtualFile();
+            packageName = ((PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile))
+                    .getPackageStatement().getPackageName();
+        } else {
+            File packagePath = new File(simapleGenerateInfo[2]);
+            if (!packagePath.exists()) {
+                FileUtils.forceMkdir(packagePath);
+            }
+            virtualFile = VfsUtil.findFile(packagePath.toPath(), true)
+                    .createChildData(generateInfo.getProject(), simapleGenerateInfo[1]);
         }
-        virtualFile.setBinaryContent(sw.toString().getBytes(Charset.forName("utf-8")));
+        virtualFile.setBinaryContent(getSw().toString().getBytes(Charset.forName("utf-8")));
+        //重新设置包名
+        if (StringUtils.isNotEmpty(packageName)) {
+            PsiDocumentManager.getInstance(generateInfo.getProject()).commitAllDocuments();
+            PsiJavaFile psiFile = (PsiJavaFile) (
+                    FilenameIndex.getFilesByName(
+                            generateInfo.getProject(),
+                            simapleGenerateInfo[1],
+                            ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+                    )
+            )[0];
+            psiFile.setPackageName(packageName);
+            PsiDocumentManager.getInstance(generateInfo.getProject()).commitAllDocuments();
+            return psiFile.getVirtualFile();
+        }
         return virtualFile;
     }
 

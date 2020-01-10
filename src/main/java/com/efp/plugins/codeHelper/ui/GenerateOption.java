@@ -69,16 +69,7 @@ public class GenerateOption extends DialogWrapper {
         setCancelButtonText("取消");
         init();
         setTitle(PluginContants.GENERATOR_UI_TITLE);
-        serviceImpl.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("serviceImpl_efp_helper"));
-        mapper.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("mapper_efp_helper"));
-        domain.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("domain_efp_helper"));
-        service.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("servic1e_efp_helper"));
-        controller.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("controller_efp_helper"));
-        dao.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dao_efp_helper"));
-        vo.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("vo_efp_helper"));
-        isOverWrite.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("isOverWrite_efp_helper"));
-        dubboConfig.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dubboConfig_efp_helper"));
-        openGenerateFile.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("openGenerateFile_efp_helper"));
+        getCache(generateInfo);
     }
 
     private void createUIComponents() {
@@ -114,16 +105,7 @@ public class GenerateOption extends DialogWrapper {
                 isOverWrite.isSelected(),
                 dubboConfig.isSelected()
         };
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("serviceImpl_efp_helper", serviceImpl.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("mapper_efp_helper", mapper.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("domain_efp_helper", domain.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("servic1e_efp_helper", service.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("controller_efp_helper", controller.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dao_efp_helper", dao.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("vo_efp_helper", vo.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("isOverWrite_efp_helper", isOverWrite.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dubboConfig_efp_helper", dubboConfig.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("openGenerateFile_efp_helper", openGenerateFile.isSelected());
+        setCache();
         super.doOKAction();
         vfs.clear();
         startGenerate(e, generateInfo);
@@ -249,5 +231,31 @@ public class GenerateOption extends DialogWrapper {
                 vfs.clear();
             }
         }.execute());
+    }
+
+    private void getCache(GenerateInfo generateInfo) {
+        serviceImpl.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("serviceImpl_efp_helper"));
+        mapper.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("mapper_efp_helper"));
+        domain.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("domain_efp_helper"));
+        service.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("servic1e_efp_helper"));
+        controller.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("controller_efp_helper"));
+        dao.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dao_efp_helper"));
+        vo.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("vo_efp_helper"));
+        isOverWrite.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("isOverWrite_efp_helper"));
+        dubboConfig.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dubboConfig_efp_helper"));
+        openGenerateFile.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("openGenerateFile_efp_helper"));
+    }
+
+    private void setCache() {
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("serviceImpl_efp_helper", serviceImpl.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("mapper_efp_helper", mapper.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("domain_efp_helper", domain.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("servic1e_efp_helper", service.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("controller_efp_helper", controller.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dao_efp_helper", dao.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("vo_efp_helper", vo.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("isOverWrite_efp_helper", isOverWrite.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dubboConfig_efp_helper", dubboConfig.isSelected());
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("openGenerateFile_efp_helper", openGenerateFile.isSelected());
     }
 }

@@ -195,4 +195,50 @@ public abstract class Generator {
         return mapper;
     }
 
+    /**
+     *
+     * moduleName fileName packagePath
+     */
+    public String[] getSimapleGenerateInfo() throws IOException, TemplateException {
+        String[] arr = new String[3];
+        switch (tpFileName) {
+            case VO:
+                arr[0] = generateInfo.getServiceModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getVoFileName();
+                arr[2] = generateInfo.getGenerateJava().getVoPackagePath();
+                break;
+            case DAO:
+                arr[0] = generateInfo.getImplModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getDaoFileName();
+                arr[2] = generateInfo.getGenerateJava().getDaoPackagePath();
+                break;
+            case DOMAIN:
+                arr[0] = generateInfo.getImplModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getDomainFileName();
+                arr[2] = generateInfo.getGenerateJava().getDomainPackagePath();
+                break;
+            case MAPPER:
+                arr[0] = generateInfo.getImplModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getMapperFileName();
+                arr[2] = generateInfo.getGenerateJava().getMapperPath();
+                break;
+            case SERVICE:
+                arr[0] = generateInfo.getServiceModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getServiceFileName();
+                arr[2] = generateInfo.getGenerateJava().getServicePackagePath();
+                break;
+            case SERVICEIMPL:
+                arr[0] = generateInfo.getImplModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getServiceImplFileName();
+                arr[2] = generateInfo.getGenerateJava().getServiceImplPackagePath();
+                break;
+            case CONTROLLER:
+                arr[0] = generateInfo.getApiModule().getName();
+                arr[1] = generateInfo.getGenerateJava().getControllerFileName();
+                arr[2] = generateInfo.getGenerateJava().getControllerPackagePath();
+                break;
+        }
+        return arr;
+    }
+
 }

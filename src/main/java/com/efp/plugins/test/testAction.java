@@ -1,9 +1,5 @@
 package com.efp.plugins.test;
 
-import com.alibaba.excel.EasyExcel;
-import com.efp.plugins.codeHelper.ui.GenerateOption;
-import com.efp.plugins.esb.EsbExcelIndexListener;
-import com.efp.plugins.esb.bean.EsbExcelIndexData;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
@@ -12,11 +8,12 @@ import com.intellij.database.model.DasTable;
 import com.intellij.database.psi.DataSourceManager;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.ex.FileChooserDialogImpl;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
@@ -29,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 public class testAction extends AnAction {
@@ -41,11 +37,7 @@ public class testAction extends AnAction {
         if (virtualFile == null) {
             return;
         }
-        EsbExcelIndexListener esbExcelIndexListener = new EsbExcelIndexListener();
-        EasyExcel.read(virtualFile.getPath(), EsbExcelIndexData.class, esbExcelIndexListener).sheet("索引").doRead();
-        for (EsbExcelIndexData esbExcelIndexData : esbExcelIndexListener.getList()) {
-            System.out.println(esbExcelIndexData.toString());
-        }
+
         if (true) {
             return;
         }
