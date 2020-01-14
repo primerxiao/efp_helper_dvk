@@ -38,6 +38,10 @@ patchPluginXml {
     description '关于Efp项目高度定制的IDEA插件。提供配置生成、代码生成等功能，极大提高开发效率'
     changeNotes """
 <div>
+  <p>1.0.5(xiaojunhui)</p> 
+  <ul> 
+    <li>提供生成insertOrUpdate的功能</li> 
+  </ul>
   <p>1.0.4(xiaojunhui)</p> 
   <ul> 
     <li>优化代码生成功能：支持内容覆盖，支持联合主键</li> 

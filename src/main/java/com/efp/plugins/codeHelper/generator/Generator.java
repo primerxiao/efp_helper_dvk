@@ -62,7 +62,7 @@ public abstract class Generator {
         doMain.getImports();
         return doMain;
     }
-    public List<ClassField> coverToClassFieldInfos(GenerateInfo generateInfo) {
+    public static List<ClassField> coverToClassFieldInfos(GenerateInfo generateInfo) {
         List<? extends DasColumn> dasColumns = generateInfo.getDasColumns().toList();
         return dasColumns.stream().map(dasColumn ->
                 new ClassField(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dasColumn.getName()),
@@ -71,7 +71,7 @@ public abstract class Generator {
                         checkPrimaryKey(dasColumn))
         ).collect(Collectors.toList());
     }
-    public boolean checkPrimaryKey(DasColumn dasColumn) {
+    public static boolean checkPrimaryKey(DasColumn dasColumn) {
         DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
         if (Objects.isNull(primaryKey)) {
             return false;
@@ -184,7 +184,7 @@ public abstract class Generator {
         return serviceImpl;
     }
 
-    private Mapper covertToMapperInfo(GenerateInfo generateInfo) {
+    public static Mapper covertToMapperInfo(GenerateInfo generateInfo) {
         Mapper mapper = new Mapper();
         mapper.setTableName(generateInfo.getDasTable().getName());
         mapper.setBaseClassName(generateInfo.getGenerateJava().getBaseClassName());

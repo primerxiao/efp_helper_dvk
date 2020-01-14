@@ -65,11 +65,13 @@ public class GenerateOption extends DialogWrapper {
         super(canBeParent);
         this.e = e;
         this.generateInfo = generateInfo;
-        setOKButtonText("确定");
-        setCancelButtonText("取消");
         init();
         setTitle(PluginContants.GENERATOR_UI_TITLE);
         getCache(generateInfo);
+        if (generateInfo.getApiModule() == null) {
+            controller.setSelected(false);
+            controller.disable();
+        }
     }
 
     private void createUIComponents() {
@@ -147,7 +149,7 @@ public class GenerateOption extends DialogWrapper {
                         }
                         //Controller
                         VirtualFile controllerFile = null;
-                        if (controller.isSelected()) {
+                        if (controller.isSelected()&&!Objects.isNull(generateInfo.getApiModule())) {
                             controllerFile = new ControllerGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.CONTROLLER).generate();
                         }
                         addVfs(domainFile, voFile, daoFile, serviceFile, serviceImplFile, mapperFile, controllerFile);

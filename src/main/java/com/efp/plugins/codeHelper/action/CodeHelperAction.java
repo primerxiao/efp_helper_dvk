@@ -51,7 +51,7 @@ public class CodeHelperAction extends AnAction {
 
     }
 
-    private GenerateInfo getGenerateInfo(AnActionEvent e, DasTable dasTable) {
+    public static GenerateInfo getGenerateInfo(AnActionEvent e, DasTable dasTable) {
         DasNamespace namespace = DasUtil.getNamespace(dasTable);
         DasDataSource dataSource = ((DbNamespaceImpl) namespace).getDataSource();
         GenerateInfo generateInfo = new GenerateInfo();
@@ -67,11 +67,11 @@ public class CodeHelperAction extends AnAction {
         return generateInfo;
     }
 
-    private GenerateJava getGenerateJava(GenerateInfo generateInfo) {
+    public static GenerateJava getGenerateJava(GenerateInfo generateInfo) {
         GenerateJava generateJava = new GenerateJava();
         final String[] implModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getImplModule());
         final String[] serviceModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getServiceModule());
-        final String[] apiModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getApiModule());
+
         //判断路径是否存在
         //base
         generateJava.setBaseClassName(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, generateInfo.getDasTable().getName()));
@@ -105,10 +105,14 @@ public class CodeHelperAction extends AnAction {
         generateJava.setMapperFileNameWithoutExt(generateJava.getBaseClassName() + "Mapper");
         generateJava.setMapperFileName(generateJava.getBaseClassName() + "Mapper.xml");
         //controller
-        generateJava.setControllerClassName(generateJava.getBaseClassName() + "Controller");
-        generateJava.setControllerPathName("com.irdstudio." + apiModuleNameArr[0] + "." + apiModuleNameArr[1] + ".api.rest");
-        generateJava.setControllerPackagePath(generateInfo.getApiModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
-        generateJava.setControllerFileName(generateJava.getBaseClassName() + "Controller.java");
+        if (generateInfo.getApiModule() != null) {
+            //api有可能为空
+            final String[] apiModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getApiModule());
+            generateJava.setControllerClassName(generateJava.getBaseClassName() + "Controller");
+            generateJava.setControllerPathName("com.irdstudio." + apiModuleNameArr[0] + "." + apiModuleNameArr[1] + ".api.rest");
+            generateJava.setControllerPackagePath(generateInfo.getApiModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
+            generateJava.setControllerFileName(generateJava.getBaseClassName() + "Controller.java");
+        }
         return generateJava;
     }
 

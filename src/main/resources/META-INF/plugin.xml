@@ -27,8 +27,12 @@
       <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
     </action>
     <!--code-helper-->
-    <action id="efp-plugin-code-helper" description="代码助手" text="EFP:根据表生成代码"
+    <action id="efp-plugin-code-helper" description="代码助手" text="EFP Generate Code"
             class="com.efp.plugins.codeHelper.action.CodeHelperAction">
+      <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
+    </action>
+    <action id="efp-plugin-Generate-InsertOrUpdate" description="代码助手" text="EFP Generate InsertOrUpdate"
+            class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
       <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
     </action>
     <action id="efp-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke" text="EFP:发起dubbo调用">
