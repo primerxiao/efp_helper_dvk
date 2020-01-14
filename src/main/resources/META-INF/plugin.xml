@@ -1,9 +1,8 @@
 <idea-plugin>
   <id>com.primer.efp_plugin</id>
-  <name>efp项目助手</name>
-  <vendor>efp项目组</vendor>
-  <description><![CDATA[关于Efp项目高度定制的IDEA插件。提供配置生成、代码生成等功能，极大提高开发效率]]></description>
-  <version>1.0.4</version>
+  <name>EfpHelper</name>
+  <vendor>EfpDever</vendor>
+  <description>IDEA plug-in for highly customized Efp projects.Provide configuration generation, code generation and other functions, greatly improve the development efficiency</description>
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
   <depends>com.intellij.modules.platform</depends>
@@ -27,11 +26,11 @@
       <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
     </action>
     <!--code-helper-->
-    <action id="efp-plugin-code-helper" description="代码助手" text="EFP Generate Code"
+    <action id="efp-plugin-code-helper" description="Generate Code" text="EFP Generate Code"
             class="com.efp.plugins.codeHelper.action.CodeHelperAction">
       <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
     </action>
-    <action id="efp-plugin-Generate-InsertOrUpdate" description="代码助手" text="EFP Generate InsertOrUpdate"
+    <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate InsertOrUpdateCode" text="EFP Generate InsertOrUpdate"
             class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
       <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
     </action>

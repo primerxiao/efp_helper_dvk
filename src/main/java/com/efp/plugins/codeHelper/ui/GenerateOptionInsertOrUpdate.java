@@ -102,9 +102,9 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
                         //保存文档
                         FileDocumentManagerImpl.getInstance().saveAllDocuments();
                         Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
-                                "所有文件生成完成", NotificationType.INFORMATION));
+                                "Generate Success", NotificationType.INFORMATION));
                     } catch (Exception e) {
-                        String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
+                        String message = "generate.error";
                         Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
                                 message, NotificationType.ERROR));
                     }
@@ -117,7 +117,7 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.SERVICE);
         PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
-            throw new RuntimeException("获取不到dao文件");
+            throw new RuntimeException("service file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
@@ -130,7 +130,7 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
         PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceImplFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
-            throw new RuntimeException("获取不到dao文件");
+            throw new RuntimeException("serviceImpl file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
@@ -148,7 +148,7 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
         PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getDaoFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
-            throw new RuntimeException("获取不到dao文件");
+            throw new RuntimeException("dao file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
@@ -162,7 +162,7 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
         PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getMapperFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
-            throw new RuntimeException("获取不到maper文件");
+            throw new RuntimeException("mapper file not found");
         }
         StringWriter sw = new StringWriter();
         Template template = Generator.freemarker.getTemplate("insert_or_update_mapper.ftl");
