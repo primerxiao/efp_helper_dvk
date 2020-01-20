@@ -1,12 +1,10 @@
 package com.efp.plugins.codeHelper.ui;
 
 import com.efp.common.constant.PluginContants;
-import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
-import com.efp.common.util.StringUtils;
 import com.efp.plugins.codeHelper.bean.GenerateInfo;
-import com.efp.plugins.codeHelper.generator.*;
+import com.efp.plugins.codeHelper.generator.Generator;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.notification.Notification;
@@ -14,31 +12,22 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.java.ImportStatementElement;
 import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.util.PsiUtil;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.apache.xmlbeans.XmlLanguage;
-import org.apache.xmlbeans.impl.values.XmlLanguageImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Objects;
 
 public class GenerateOptionInsertOrUpdate extends DialogWrapper {
 

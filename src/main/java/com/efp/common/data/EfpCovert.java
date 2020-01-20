@@ -112,7 +112,23 @@ public class EfpCovert {
             }
         }
         //如果不存在 那么按默认规则返回
-        //a_b efp.a.b
+        String dasNamespaceName = dasNamespace.getName();
+        final String[] dasNamespaceNameArr = dasNamespaceName.split("_");
+        //a_b a.b.*
+        switch (moduleType) {
+            case API:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".api");
+            case IMPL:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".impl");
+            case FRONT:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".front");
+            case COMMON:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".common");
+            case MIDDLE:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".middle");
+            case SERVICE:
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".service");
+        }
         return null;
     }
 
