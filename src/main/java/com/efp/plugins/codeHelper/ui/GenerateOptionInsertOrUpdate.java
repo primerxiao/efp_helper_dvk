@@ -53,8 +53,6 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
         this.dao.setSelected(true);
         this.service.setSelected(true);
         this.serviceImpl.setSelected(true);
-        setOKButtonText("确定");
-        setCancelButtonText("取消");
         init();
         setTitle(PluginContants.GENERATOR_UI_TITLE);
     }
@@ -93,9 +91,8 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
                         Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
                                 "Generate Success", NotificationType.INFORMATION));
                     } catch (Exception e) {
-                        String message = "generate.error";
                         Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
-                                message, NotificationType.ERROR));
+                                "Generate Error", NotificationType.ERROR));
                     }
                 });
             }

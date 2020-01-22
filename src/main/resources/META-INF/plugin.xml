@@ -1,44 +1,58 @@
 <idea-plugin>
-  <id>com.primer.efp_plugin</id>
-  <name>EfpHelper</name>
-  <vendor>EfpDever</vendor>
-  <description>IDEA plug-in for highly customized Efp projects.Provide configuration generation, code generation and other functions, greatly improve the development efficiency</description>
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <depends>com.intellij.modules.platform</depends>
-  <depends>com.intellij.modules.lang</depends>
-  <depends>com.intellij.modules.java</depends>
-  <depends>com.intellij.modules.xml</depends>
-  <depends>com.intellij.properties</depends>
-  <depends config-file="" optional="true">com.intellij.modules.database</depends>
-  <idea-version since-build="183.0"/>
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <id>com.primer.efp_plugin</id>
+    <name>EfpHelper</name>
+    <vendor>EfpDever</vendor>
+    <description>IDEA plug-in for highly customized Efp projects.Provide configuration generation, code generation and
+        other functions, greatly improve the development efficiency
+    </description>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.xml</depends>
+    <depends>com.intellij.properties</depends>
+    <depends config-file="" optional="true">com.intellij.modules.database</depends>
+    <idea-version since-build="183.0"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
 
-  <actions>
-    <group id="efp_helper_dvk_tools_menu" text="efp项目助手" popup="true">
-      <add-to-group group-id="ToolsMenu" anchor="last"/>
-    </group>
-    <!--dubboxml配置生成-->
-    <action id="dubbo-xml-config" class="com.efp.plugins.dubbo.action.DubboXmlConfigAction" text="EFP:生成dubbo配置">
-      <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
-      <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
-    </action>
-    <!--code-helper-->
-    <action id="efp-plugin-code-helper" description="Generate Code" text="EFP Generate Code"
-            class="com.efp.plugins.codeHelper.action.CodeHelperAction">
-      <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
-    </action>
-    <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate InsertOrUpdateCode" text="EFP Generate InsertOrUpdate"
-            class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
-      <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
-    </action>
-    <action id="efp-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke" text="EFP:发起dubbo调用">
-      <add-to-group group-id="GenerateGroup" anchor="first"/>
-    </action>
-    <action id="test" class="com.efp.plugins.test.testAction" text="EFP:test">
-      <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
-    </action>
-  </actions>
+    <actions>
+        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+        <!--dubboxml配置生成-->
+        <action id="dubbo-xml-config" class="com.efp.plugins.dubbo.action.DubboXmlConfigAction" text="EFP: Generate Dubbo Config">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
+            <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
+        </action>
+        <!--生成curd代码-->
+        <action id="efp-plugin-code-helper" description="EFP: Generate Code" text="EFP Generate Code"
+                class="com.efp.plugins.codeHelper.action.CodeHelperAction">
+            <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
+        </action>
+        <!--生成insertOrUpdate相关代码-->
+        <action id="efp-plugin-Generate-InsertOrUpdate" description="EFP: Generate InsertOrUpdateCode"
+                text="EFP Generate InsertOrUpdate"
+                class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
+            <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
+        </action>
+        <!--直接对当前的dubbo服务发起调用-->
+        <action id="efp-plugin-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke"
+                text="EFP: Call Current Dubbo Method">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+        </action>
+        <action id="test" class="com.efp.plugins.test.testAction" text="test">
+            <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
+        </action>
+        <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.bookmark.action.ExportBookMarkAction"
+                text="Export BookMark To File">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
+        <action id="efp-plugin-ImportBookMarkAction" class="com.efp.plugins.bookmark.action.ImportBookMarkAction"
+                text="Import BookMark From File">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
+    </actions>
 </idea-plugin>

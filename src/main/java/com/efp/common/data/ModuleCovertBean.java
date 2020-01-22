@@ -2,10 +2,24 @@ package com.efp.common.data;
 
 /**
  * 模块转换对象
+ *
+ * @author gcb
  */
 public class ModuleCovertBean {
+
+    /**
+     * 模块名称
+     */
     private String moduleName;
+
+    /**
+     * 数据库名称
+     */
     private String nameSpaceName;
+
+    /**
+     * 模块类型
+     */
     private EfpModuleType efpModuleType;
 
     public ModuleCovertBean(String moduleName, String nameSpaceName, EfpModuleType efpModuleType) {
@@ -18,23 +32,12 @@ public class ModuleCovertBean {
         return moduleName;
     }
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
-
     public String getNameSpaceName() {
         return nameSpaceName;
-    }
-
-    public void setNameSpaceName(String nameSpaceName) {
-        this.nameSpaceName = nameSpaceName;
     }
 
     public EfpModuleType getEfpModuleType() {
         return efpModuleType;
     }
 
-    public void setEfpModuleType(EfpModuleType efpModuleType) {
-        this.efpModuleType = efpModuleType;
-    }
 }

@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author HIFeng
@@ -117,23 +118,67 @@ public class EfpCovert {
         //a_b a.b.*
         switch (moduleType) {
             case API:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".api");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".api");
             case IMPL:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".impl");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".impl");
             case FRONT:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".front");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".front");
             case COMMON:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".common");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".common");
             case MIDDLE:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".middle");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".middle");
             case SERVICE:
-                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0]+"."+dasNamespaceNameArr[1]+".service");
+                return ModuleManager.getInstance(project).findModuleByName(dasNamespaceNameArr[0] + "." + dasNamespaceNameArr[1] + ".service");
         }
         return null;
     }
 
     /**
+     * 根据模块获取对应的模块对象
+     *
+     * @param module     模块
+     * @param moduleType 要获取的模块类型
+     * @return
+     */
+    public static Module getModule(Module module, EfpModuleType moduleType) {
+        //判断当前模块的模块类型
+        final String moduleName = module.getName();
+        final ModuleCovertBean moduleCovertBean = list.stream().
+                filter(e -> e.getModuleName().equalsIgnoreCase(moduleName) && e.getEfpModuleType().getModuleTypeValue() == moduleType.getModuleTypeValue()).
+                findFirst().orElse(null);
+        if (module != null) {
+            return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleCovertBean.getModuleName());
+        }
+        //找到为空的话按约定来找
+
+        final String[] moduleNameArr = getModuleNameArr(module);
+        //a_b a.b.*
+        switch (moduleType) {
+            case API:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".api");
+            case IMPL:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".impl");
+            case FRONT:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".front");
+            case COMMON:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".common");
+            case MIDDLE:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".middle");
+            case SERVICE:
+                return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleNameArr[0] + "." + moduleNameArr[1] + ".service");
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        String n = "efp.val";
+        final String[] split = n.split(".");
+        System.out.println(split[0]);
+    }
+
+    /**
      * 或者模块名的切割数组
+     *
      * @param module
      * @return
      */

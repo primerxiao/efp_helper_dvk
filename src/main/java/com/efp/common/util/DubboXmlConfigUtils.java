@@ -17,6 +17,7 @@ import java.util.Objects;
 public class DubboXmlConfigUtils {
     /**
      * 消费者配置
+     *
      * @param e
      * @param serviceModule
      * @param serviceClass
@@ -52,6 +53,7 @@ public class DubboXmlConfigUtils {
 
     /**
      * 生产者配置
+     *
      * @param e
      * @param implModule
      * @param serviceClass
@@ -69,22 +71,29 @@ public class DubboXmlConfigUtils {
                 //判断是否存在该id的tag
                 if (!checkTagId(rootTag, idValue)) {
                     //生成配置
-                        final XmlTag xmlTag = rootTag.createChildTag("dubbo:service", rootTag.getNamespace(), null, false);
-                        xmlTag.setAttribute("id", idValue);
-                        xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
-                        xmlTag.setAttribute("ref", StringUtils.initCap(serviceClass.getName()));
-                        xmlTag.setAttribute("version", "1.0.0");
-                        xmlTag.setAttribute("retries", "0");
-                        xmlTag.setAttribute("cluster", "failover");
-                        xmlTag.setAttribute("timeout", "150000");
-                        rootTag.add(xmlTag);
-                        providerXmlFile.navigate(true);
+                    final XmlTag xmlTag = rootTag.createChildTag("dubbo:service", rootTag.getNamespace(), null, false);
+                    xmlTag.setAttribute("id", idValue);
+                    xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
+                    xmlTag.setAttribute("ref", StringUtils.initCap(serviceClass.getName()));
+                    xmlTag.setAttribute("version", "1.0.0");
+                    xmlTag.setAttribute("retries", "0");
+                    xmlTag.setAttribute("cluster", "failover");
+                    xmlTag.setAttribute("timeout", "150000");
+                    rootTag.add(xmlTag);
+                    providerXmlFile.navigate(true);
                 }
 
             }
         }
     }
 
+    /**
+     * 判断rootTag标签下的所有子标签是否含有id位idValue的标签
+     *
+     * @param rootTag 根标签
+     * @param idValue id值
+     * @return
+     */
     private static boolean checkTagId(XmlTag rootTag, String idValue) {
         XmlTag[] subTags = rootTag.getSubTags();
         for (XmlTag subTag : subTags) {
@@ -98,6 +107,7 @@ public class DubboXmlConfigUtils {
         }
         return false;
     }
+
     private static void addNoinspectionComment(Project project, XmlTag anchor) throws IncorrectOperationException {
         final XmlComment newComment = createComment(project, "noinspection ");
         PsiElement parent = anchor.getParentTag();
@@ -110,6 +120,7 @@ public class DubboXmlConfigUtils {
             CodeStyleManager.getInstance(PsiManager.getInstance(project).getProject()).reformat(parent.addBefore(newComment, anchor));
         }
     }
+
     @NotNull
     private static XmlComment createComment(Project project, String s) throws IncorrectOperationException {
         final XmlTag element = XmlElementFactory.getInstance(project).createTagFromText("<foo><!-- " + s + " --></foo>", XMLLanguage.INSTANCE);

@@ -3,6 +3,8 @@ package com.efp.plugins.codeHelper.action;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
+import com.efp.common.util.DasUtils;
+import com.efp.common.util.EditorUtils;
 import com.efp.plugins.codeHelper.bean.GenerateInfo;
 import com.efp.plugins.codeHelper.bean.GenerateJava;
 import com.efp.plugins.codeHelper.ui.GenerateOption;
@@ -12,33 +14,19 @@ import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasTable;
 import com.intellij.database.psi.DbNamespaceImpl;
 import com.intellij.database.util.DasUtil;
-import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CodeHelperAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        AnAction action = ActionManager.getInstance().getAction("DatabaseView.Refresh");
-        if (action != null) {
-            action.actionPerformed(e);
-        }
-        FileEditor[] allEditors = FileEditorManager.getInstance(e.getProject()).getAllEditors();
-        if (allEditors != null && allEditors.length > 0) {
-            AnAction xCloseAllEditors = ActionManager.getInstance().getAction("CloseAllEditors");
-            xCloseAllEditors.actionPerformed(e);
-        }
+        DasUtils.refreshDas(e);
+        EditorUtils.closeAllEditor(e);
         //获取数据库配置
         PsiElement psiElement = e.getData(LangDataKeys.PSI_ELEMENT);
         if (!(psiElement instanceof DasTable)) {

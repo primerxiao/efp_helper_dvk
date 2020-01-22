@@ -2,15 +2,11 @@ package com.efp.plugins.codeHelper.generator;
 
 import com.efp.common.config.FreemarkerConfiguration;
 import com.efp.common.constant.TemplateFileNameEnum;
-import com.efp.common.util.CodeHelperUtils;
+import com.efp.common.util.DasUtils;
 import com.efp.common.util.SystemUtils;
 import com.efp.plugins.codeHelper.bean.*;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.DasColumn;
-import com.intellij.database.model.DasTableKey;
-import com.intellij.database.model.DasTypedObject;
-import com.intellij.database.model.MultiRef;
-import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -21,7 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Generator {
@@ -40,8 +35,10 @@ public abstract class Generator {
      * 模板文件
      */
     public TemplateFileNameEnum tpFileName;
+
     /**
      * 新生成
+     *
      * @return
      */
     abstract VirtualFile generate() throws IOException, TemplateException;
@@ -51,6 +48,7 @@ public abstract class Generator {
         this.generateInfo = generateInfo;
         this.tpFileName = tpFileName;
     }
+
     public Domain covertToDomainClassInfo(GenerateInfo generateInfo) {
         Domain doMain = new Domain();
         doMain.setClassName(generateInfo.getGenerateJava().getDomainClassName());
@@ -62,32 +60,17 @@ public abstract class Generator {
         doMain.getImports();
         return doMain;
     }
+
     public static List<ClassField> coverToClassFieldInfos(GenerateInfo generateInfo) {
         List<? extends DasColumn> dasColumns = generateInfo.getDasColumns().toList();
         return dasColumns.stream().map(dasColumn ->
                 new ClassField(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dasColumn.getName()),
-                        dasColumn.getComment(), CodeHelperUtils.getTypeClass(dasColumn.getDataType().typeName),
+                        dasColumn.getComment(), DasUtils.getJavaTypeClass(dasColumn),
                         dasColumn.getName(),
-                        checkPrimaryKey(dasColumn))
+                        DasUtils.checkPrimaryKey(dasColumn))
         ).collect(Collectors.toList());
     }
-    public static boolean checkPrimaryKey(DasColumn dasColumn) {
-        DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
-        if (Objects.isNull(primaryKey)) {
-            return false;
-        }
-        MultiRef<? extends DasTypedObject> columnsRef = primaryKey.getColumnsRef();
-        if (Objects.isNull(columnsRef)) {
-            return false;
-        }
-        Iterable<String> names = columnsRef.names();
-        for (String name : names) {
-            if (name.equalsIgnoreCase(dasColumn.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     public StringWriter getSw() throws IOException, TemplateException {
         StringWriter sw = new StringWriter();
         Template template = freemarker.getTemplate(tpFileName.getFileName());
@@ -111,11 +94,12 @@ public abstract class Generator {
                 template.process(covertToServiceImplClassInfo(generateInfo), sw);
                 break;
             case CONTROLLER:
-                template.process(generateInfo,sw);
+                template.process(generateInfo, sw);
                 break;
         }
         return sw;
     }
+
     private Domain covertToVoClassInfo(GenerateInfo generateInfo) {
         Domain doMain = new Domain();
         doMain.setClassName(generateInfo.getGenerateJava().getVoClassName());
@@ -196,7 +180,6 @@ public abstract class Generator {
     }
 
     /**
-     *
      * moduleName fileName packagePath
      */
     public String[] getSimapleGenerateInfo() throws IOException, TemplateException {

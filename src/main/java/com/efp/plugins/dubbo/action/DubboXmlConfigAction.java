@@ -1,6 +1,10 @@
 package com.efp.plugins.dubbo.action;
 
+import com.efp.common.data.EfpCovert;
+import com.efp.common.data.EfpModuleType;
 import com.efp.common.util.StringUtils;
+import com.intellij.codeInspection.DefaultXmlSuppressionProvider;
+import com.intellij.codeInspection.InspectionManager;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.properties.PropertiesReferenceManager;
 import com.intellij.lang.properties.psi.PropertiesFile;
@@ -8,6 +12,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -16,10 +21,15 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.XmlElementFactory;
+import com.intellij.psi.impl.source.xml.XmlElementChangeUtil;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlComment;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.xml.util.XmlTagUtil;
+import com.intellij.xml.util.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -46,9 +56,9 @@ public class DubboXmlConfigAction extends AnAction {
                     throw new RuntimeException("当前模块暂不支持dubbo配置");
                 }
                 //serviceMoudle
-                Module serviceModule = getServiceModule(editModule);
+                Module serviceModule = EfpCovert.getModule(editModule, EfpModuleType.SERVICE);
                 //implMoudle
-                Module implModule = getImplModule(editModule);
+                Module implModule = EfpCovert.getModule(editModule, EfpModuleType.IMPL);
                 //获取service类
                 PsiClass serviceClass = getServiceClass(editPsiFile);
                 consumerXmlConfigSet(e, serviceModule, implModule, serviceClass);
@@ -65,6 +75,7 @@ public class DubboXmlConfigAction extends AnAction {
 
     /**
      * 消费者配置
+     *
      * @param e
      * @param serviceModule
      * @param implModule
@@ -90,7 +101,8 @@ public class DubboXmlConfigAction extends AnAction {
                         xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
                         xmlTag.setAttribute("version", "1.0.0");
-                        rootTag.add(xmlTag);
+
+                        rootTag.addSubTag(xmlTag, false);
                         consumerXmlFile.navigate(true);
                     });
                 }
@@ -101,6 +113,7 @@ public class DubboXmlConfigAction extends AnAction {
 
     /**
      * 生产者配置
+     *
      * @param e
      * @param implModule
      * @param serviceClass
@@ -150,20 +163,6 @@ public class DubboXmlConfigAction extends AnAction {
             }
         }
         return false;
-    }
-
-    public Module getImplModule(Module module) {
-        if (module.getName().endsWith(".impl")) {
-            return module;
-        }
-        return ModuleManager.getInstance(module.getProject()).findModuleByName(module.getName().replace("service", "impl"));
-    }
-
-    public Module getServiceModule(Module module) {
-        if (module.getName().endsWith(".service")) {
-            return module;
-        }
-        return ModuleManager.getInstance(module.getProject()).findModuleByName(module.getName().replace("impl", "service"));
     }
 
     public PsiClass getServiceClass(PsiFile editPsiFile) {
