@@ -3,13 +3,19 @@ plugins {
     id 'idea'
     id 'org.jetbrains.intellij' version '0.4.15'
 }
+
 tasks.withType(JavaCompile) {
     options.encoding = "utf-8"
 }
+
 group 'com.efp.plugins'
+
 version '1.0.6'
+
 sourceCompatibility = JavaVersion.VERSION_1_8
+
 targetCompatibility = JavaVersion.VERSION_1_8
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -33,6 +39,7 @@ intellij {
     localSourcesPath LOCAL_SOURCES_PATH
     plugins 'java', 'properties', 'DatabaseTools'
 }
+
 patchPluginXml {
     version '1.0.6'
     changeNotes """
@@ -77,11 +84,13 @@ task cleanPackTempFiles(type: Delete) {
         mkdir "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
     }
 }
+
 task copyPlugin(type: Copy) {
     dependsOn(cleanPackTempFiles)
     from "${buildDir}/idea-sandbox/plugins/EfpHelper/"
     into "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
 }
+
 //插件打包
 task packPlugin(type: Zip) {
     dependsOn(copyPlugin)

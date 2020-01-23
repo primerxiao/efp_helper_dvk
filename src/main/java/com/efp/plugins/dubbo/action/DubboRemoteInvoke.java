@@ -17,13 +17,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 /**
- * 需求编号:2019D0519
- * 问题编号:
- * 开发人员: caoxin
- * 创建日期:2019/12/25
- * 功能描述:
- * 修改日期:2019/12/25
- * 修改描述:
+ * dubbo调用
+ *
+ * @author caoxin
  */
 public class DubboRemoteInvoke extends AnAction {
     public static final String IP = "127.0.0.1";
@@ -33,6 +29,7 @@ public class DubboRemoteInvoke extends AnAction {
     public static final String POINT = ".";
     public static final String STRING = "java.lang.String";
     public static String PORT = null;
+
     @Override
     public void actionPerformed(AnActionEvent e) {
         // 获取当前操作的项目
@@ -49,7 +46,7 @@ public class DubboRemoteInvoke extends AnAction {
 
         if (Classfile.getVirtualFile().getNameWithoutExtension().endsWith("Impl")) {
             final String impl = Classfile.getVirtualFile().getNameWithoutExtension().replace("Impl", "");
-            Classfile = FilenameIndex.getFilesByName(e.getProject(), impl+".java", GlobalSearchScope.allScope(e.getProject()))[0];
+            Classfile = FilenameIndex.getFilesByName(e.getProject(), impl + ".java", GlobalSearchScope.allScope(e.getProject()))[0];
         }
         Module implModule = getImplModule(ModuleUtil.findModuleForFile(Classfile));
         PropertiesFile propertiesFile = PropertiesReferenceManager.getInstance(e.getProject()).findPropertiesFiles(implModule, PROPERTIES_FILE_NAME).get(0);
@@ -64,38 +61,51 @@ public class DubboRemoteInvoke extends AnAction {
         try {
             TelnetClient telnetClient = new TelnetClient("vt200");  //指明Telnet终端类型，否则会返回来的数据中文会乱码
             telnetClient.setDefaultTimeout(5000); //socket延迟时间：5000ms
-            telnetClient.connect(IP,Integer.valueOf(PORT));  //建立一个连接,默认端口是23
+            telnetClient.connect(IP, Integer.valueOf(PORT));  //建立一个连接,默认端口是23
             PrintStream pStream = new PrintStream(telnetClient.getOutputStream());  //写命令的流
             pStream.println(invokeMethod); //写命令
             pStream.flush(); //将命令发送到telnet Server
-            if(null != pStream) {
+            if (null != pStream) {
                 pStream.close();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
+
     public Module getImplModule(Module module) {
         if (module.getName().endsWith(".impl")) {
             return module;
         }
         return ModuleManager.getInstance(module.getProject()).findModuleByName(module.getName().replace("service", "impl"));
     }
+
     public String getMethodParameters(PsiMethod method) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
         PsiParameter[] parameters = method.getParameterList().getParameters();
         if (parameters.length > 0) {
             for (int i = 0; i < parameters.length; i++) {
-                if (PsiType.INT.equals(parameters[i].getType())) sb.append("0");
-                else if (PsiType.LONG.equals(parameters[i].getType())) sb.append("0");
-                else if (PsiType.FLOAT.equals(parameters[i].getType())) sb.append("0f");
-                else if (PsiType.DOUBLE.equals(parameters[i].getType())) sb.append("0.0");
-                else if (PsiType.BOOLEAN.equals(parameters[i].getType())) sb.append("false");
-                else if (PsiType.CHAR.equals(parameters[i].getType())) sb.append("''");
-                else if (STRING.equals(parameters[i].getType())) sb.append("\"\"");
-                else sb.append("{}");
-                if (i < parameters.length - 1) sb.append(",");
+                if (PsiType.INT.equals(parameters[i].getType())) {
+                    sb.append("0");
+                } else if (PsiType.LONG.equals(parameters[i].getType())) {
+                    sb.append("0");
+                } else if (PsiType.FLOAT.equals(parameters[i].getType())) {
+                    sb.append("0f");
+                } else if (PsiType.DOUBLE.equals(parameters[i].getType())) {
+                    sb.append("0.0");
+                } else if (PsiType.BOOLEAN.equals(parameters[i].getType())) {
+                    sb.append("false");
+                } else if (PsiType.CHAR.equals(parameters[i].getType())) {
+                    sb.append("''");
+                } else if (STRING.equals(parameters[i].getType())) {
+                    sb.append("\"\"");
+                } else {
+                    sb.append("{}");
+                }
+                if (i < parameters.length - 1) {
+                    sb.append(",");
+                }
             }
         }
         sb.append(")");

@@ -8,6 +8,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.JBIterable;
 
+import java.util.List;
+
 /**
  * 选择的信息
  */
@@ -48,6 +50,8 @@ public class GenerateInfo {
      * apiModule
      */
     private Module apiModule;
+
+    private List<DasColumn> selectDasColumns;
 
     /**
      * 创建的包、类等信息
@@ -124,5 +128,13 @@ public class GenerateInfo {
 
     public void setApiModule(Module apiModule) {
         this.apiModule = apiModule;
+    }
+
+    public List<DasColumn> getSelectDasColumns() {
+        return selectDasColumns;
+    }
+
+    public void setSelectDasColumns(List<DasColumn> selectDasColumns) {
+        this.selectDasColumns = selectDasColumns;
     }
 }

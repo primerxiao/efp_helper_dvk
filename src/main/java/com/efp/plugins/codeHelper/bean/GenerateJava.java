@@ -41,6 +41,9 @@ public class GenerateJava {
     private String controllerPackagePath;
     private String controllerFileName;
 
+    //其他属性--当前的函数名
+    private String currentMethodName;
+
     public String getBaseClassName() {
         return baseClassName;
     }
@@ -263,5 +266,13 @@ public class GenerateJava {
 
     public void setControllerFileName(String controllerFileName) {
         this.controllerFileName = controllerFileName;
+    }
+
+    public String getCurrentMethodName() {
+        return currentMethodName;
+    }
+
+    public void setCurrentMethodName(String currentMethodName) {
+        this.currentMethodName = currentMethodName;
     }
 }

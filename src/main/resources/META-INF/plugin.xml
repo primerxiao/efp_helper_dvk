@@ -38,6 +38,11 @@
                 class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
             <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
         </action>
+        <action id="efp-plugin-Generate-Select" description="EFP: Generate Select"
+                text="EFP Generate Select"
+                class="com.efp.plugins.codeHelper.action.GenerateSelect">
+            <add-to-group anchor="last" group-id="DatabaseViewPopupMenu"/>
+        </action>
         <!--直接对当前的dubbo服务发起调用-->
         <action id="efp-plugin-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke"
                 text="EFP: Call Current Dubbo Method">
