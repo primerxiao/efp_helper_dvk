@@ -51,6 +51,9 @@ public class GenerateInfo {
      */
     private Module apiModule;
 
+    /**
+     * 当前选择的字段数组
+     */
     private List<DasColumn> selectDasColumns;
 
     /**

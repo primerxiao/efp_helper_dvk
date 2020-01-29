@@ -2,6 +2,9 @@ package com.efp.plugins.codeHelper.bean;
 
 import java.util.List;
 
+/**
+ * @author primerxiao
+ */
 public class Mapper {
     /**
      * 数据库表名

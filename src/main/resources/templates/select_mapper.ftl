@@ -1,13 +1,18 @@
-<insert id="${generateJava.currentMethodName}" parameterType="java.util.List">
-   insert into ${tableName}(<#list classFields as field><#if field_index!=0>,</#if>${field.dasColumnName}</#list>)
-      values
-   <foreach collection="list" item="item" index="index" separator=",">
-    <#list classFields as field>
-    <#if field_index==0>(</#if><#noparse>#{</#noparse>item.${field.fieldName?uncap_first}}<#if field_has_next>,<#else>)</#if>
-    </#list>
-   </foreach>
-   ON DUPLICATE KEY UPDATE
-  <#list classFields as field>
-   ${field.dasColumnName} = values(${field.dasColumnName})<#if field_has_next>,</#if>
-  </#list>
-</insert>
+<#function dashedToCamel(s)>
+   <#return s
+   ?replace('(^_+)|(_+$)', '', 'r')
+   ?replace('\\_+(\\w)?', ' $1', 'r')
+   ?replace('([A-Z])', ' $1', 'r')
+   ?capitalize
+   ?replace(' ' , '')
+   ?uncap_first
+   >
+</#function>
+<select id="${generateJava.currentMethodName}" resultMap="${dashedToCamel(dasTable.name)}List">
+   SELECT
+   <include refid="Base_Column_List"/>
+   FROM ${dasTable.name} where
+   <#list selectDasColumns as field>
+      ${field.name}=<#noparse>#{</#noparse>${dashedToCamel(field.name)}}<#if field_has_next> and </#if>
+   </#list>
+</select>

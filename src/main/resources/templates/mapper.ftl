@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="${daoQuaName}">
 
-    <resultMap type="${domainQuaName}" id="${baseClassName}List">
+    <resultMap type="${domainQuaName}" id="${baseClassName?uncap_first}List">
         <#list classFields as field>
             <#if field.primaryKey>
                 <id property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>

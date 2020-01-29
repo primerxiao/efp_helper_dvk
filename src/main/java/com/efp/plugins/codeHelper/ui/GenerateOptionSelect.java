@@ -3,6 +3,7 @@ package com.efp.plugins.codeHelper.ui;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
+import com.efp.common.util.StringUtils;
 import com.efp.plugins.codeHelper.bean.GenerateInfo;
 import com.efp.plugins.codeHelper.generator.Generator;
 import com.intellij.lang.java.JavaLanguage;
@@ -107,7 +108,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getGenerateJava().getVoClassName()+"> list);",aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(generateInfo.getGenerateJava().getVoClassName() + " " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ");", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
@@ -120,9 +121,8 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-
         StringWriter sw = new StringWriter();
-        Template template = Generator.freemarker.getTemplate("insert_or_update_serviceImpl.ftl");
+        Template template = Generator.freemarker.getTemplate("select_serviceImpl.ftl");
         template.process(generateInfo,sw);
         PsiJavaFile ftlJavaFile = (PsiJavaFile) PsiFileFactory.getInstance(e.getProject()).createFileFromText(JavaLanguage.INSTANCE, sw.toString().replaceAll("\r\n", "\n"));
         final PsiMethod[] methods = ftlJavaFile.getClasses()[0].getMethods();
@@ -138,7 +138,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getGenerateJava().getDomainClassName()+"> list);",aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(generateInfo.getGenerateJava().getDomainClassName() + " " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getDomainClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getDomainClassName()) + ");", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
@@ -152,7 +152,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         StringWriter sw = new StringWriter();
         Template template = Generator.freemarker.getTemplate("select_mapper.ftl");
-        template.process(Generator.covertToMapperInfo(generateInfo),sw);
+        template.process(generateInfo,sw);
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(e.getProject()).createTagFromText(sw.toString().replaceAll("\r\n","\n"), XMLLanguage.INSTANCE);
         mapperFile.getRootTag().addSubTag(tagFromText,false);
