@@ -18,8 +18,8 @@
         <!-- Add your extensions here -->
     </extensions>
 
-    <actions>
-        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true">
+    <actions><!--AllIcons.Actions.Back-->
+        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true" icon="AllIcons.Actions.New">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
         <!--dubboxml配置生成-->

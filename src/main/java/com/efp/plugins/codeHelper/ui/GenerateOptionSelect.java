@@ -108,7 +108,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(generateInfo.getGenerateJava().getVoClassName() + " " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ");", aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getVoClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ");", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
@@ -138,7 +138,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(generateInfo.getGenerateJava().getDomainClassName() + " " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getDomainClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getDomainClassName()) + ");", aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getDomainClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getDomainClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getDomainClassName()) + ");", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
