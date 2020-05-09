@@ -5,7 +5,7 @@
     <resultMap type="${domainQuaName}" id="${baseClassName?uncap_first}List">
         <#list classFields as field>
             <#if field.primaryKey>
-                <id property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
+                <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
             <#else>
                 <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
             </#if>
@@ -35,7 +35,7 @@
         where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if> </#list>
     </update>
 
-    <select id="queryByPk" resultMap="${baseClassName}List" parameterType="${domainQuaName}">
+    <select id="queryByPk" resultMap="${baseClassName?uncap_first}List" parameterType="${domainQuaName}">
         select
         <include refid="Base_Column_List"/>
         from ${tableName} where  <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
