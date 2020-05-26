@@ -11,6 +11,6 @@ import javax.swing.*;
  */
 public class PluginContants {
 
-	public static final String GENERATOR_UI_TITLE = "Efp Little Helper";
+	public static final String GENERATOR_UI_TITLE = "Efp idea plugin";
 
 }

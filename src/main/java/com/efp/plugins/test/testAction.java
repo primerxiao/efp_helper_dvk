@@ -1,5 +1,6 @@
 package com.efp.plugins.test;
 
+import com.efp.common.util.EditorUtils;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
@@ -8,10 +9,7 @@ import com.intellij.database.model.DasTable;
 import com.intellij.database.psi.DataSourceManager;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
@@ -29,6 +27,10 @@ public class testAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
 
+        EditorUtils.closeAllEditor(e);
+        //执行gitcomparewith branch动作
+        AnAction gitCompareWithBranchAction = ActionManager.getInstance().getAction("Git.CompareWithBranch");
+        gitCompareWithBranchAction.actionPerformed(e);
         if (true) {
             return;
         }

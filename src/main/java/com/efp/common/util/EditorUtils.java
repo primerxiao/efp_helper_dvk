@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.vfs.VirtualFile;
 
 public class EditorUtils {
 
@@ -14,6 +15,10 @@ public class EditorUtils {
             AnAction xCloseAllEditors = ActionManager.getInstance().getAction("CloseAllEditors");
             xCloseAllEditors.actionPerformed(e);
         }
+    }
+
+    public static void openFileInEditor(AnActionEvent e, VirtualFile virtualFile) {
+        FileEditorManager.getInstance(e.getProject()).openFile(virtualFile, true);
     }
 
 }

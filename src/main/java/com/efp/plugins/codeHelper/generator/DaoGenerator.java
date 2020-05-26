@@ -16,9 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 public class DaoGenerator extends Generator {
 

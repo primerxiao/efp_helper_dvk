@@ -13,12 +13,19 @@
     <depends>com.intellij.modules.xml</depends>
     <depends>com.intellij.properties</depends>
     <depends config-file="" optional="true">com.intellij.modules.database</depends>
+    <depends>com.intellij.modules.vcs</depends>
     <idea-version since-build="183.0"/>
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <!--dubbo服务调用-->
+        <intentionAction>
+            <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
+            <category>Other</category>
+        </intentionAction>
     </extensions>
 
     <actions><!--AllIcons.Actions.Back-->
+
         <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true" icon="AllIcons.Actions.New">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
@@ -48,7 +55,10 @@
                 text="EFP: Call Current Dubbo Method">
             <add-to-group group-id="GenerateGroup" anchor="first"/>
         </action>
-        <action id="test" class="com.efp.plugins.test.testAction" text="test">
+        <action id="efp-plugin-DiffCompare" class="com.efp.plugins.diffcompare.action.DiffCompareAction" text="DiffCompare">
+            <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
+        </action>
+        <action id="EFP-test" class="com.efp.plugins.test.testAction" text="EFP: test">
             <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
         </action>
         <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.bookmark.action.ExportBookMarkAction"
