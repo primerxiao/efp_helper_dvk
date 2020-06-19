@@ -34,10 +34,11 @@ intellij {
     pluginName 'EfpHelper'
     //version 'IU-2019.3'
     localPath IDEA_ROOT_PATH
+    localSourcesPath LOCAL_SOURCES_PATH
     updateSinceUntilBuild true
     downloadSources true
     localSourcesPath LOCAL_SOURCES_PATH
-    plugins 'java', 'properties', 'DatabaseTools'
+    plugins 'java', 'properties', 'DatabaseTools','git4idea'
 }
 
 patchPluginXml {
