@@ -23,19 +23,10 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int insert(${baseClassName}VO ${baseClassName?uncap_first}Vo) {
-        logger.debug("当前新增数据为:"+ ${baseClassName?uncap_first}Vo.toString());
-        int num = 0;
-        try {
-            ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
-            beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
-            num = ${baseClassName?uncap_first}Dao.insert(${baseClassName?uncap_first});
-        } catch (Exception e) {
-            logger.error("新增数据发生异常!", e);
-            num = -1;
-        }
-        logger.debug("当前新增数据条数为:"+ num);
-        return num;
+    public int insert(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+        ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
+        beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
+        return ${baseClassName?uncap_first}Dao.insert(${baseClassName?uncap_first});
     }
 
     /**
@@ -44,19 +35,10 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) {
-        logger.debug("当前删除数据条件为:"+ ${baseClassName?uncap_first}Vo);
-        int num = 0;
-        try {
-            ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
-            beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
-            num = ${baseClassName?uncap_first}Dao.deleteByPk(${baseClassName?uncap_first});
-        } catch (Exception e) {
-            logger.error("删除数据发生异常!", e);
-            num = -1;
-        }
-        logger.debug("根据条件:"+ ${baseClassName?uncap_first}Vo +"删除的数据条数为"+ num);
-        return num;
+    public int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+        ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
+        beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
+        return ${baseClassName?uncap_first}Dao.deleteByPk(${baseClassName?uncap_first});
     }
 
     /**
@@ -65,19 +47,10 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) {
-        logger.debug("当前修改数据为:"+ ${baseClassName?uncap_first}Vo.toString());
-        int num = 0;
-        try {
-            ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
-            beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
-            num = ${baseClassName?uncap_first}Dao.updateByPk(${baseClassName?uncap_first});
-        } catch (Exception e) {
-            logger.error("修改数据发生异常!", e);
-            num = -1;
-        }
-        logger.debug("根据条件:"+ ${baseClassName?uncap_first}Vo +"修改的数据条数为"+ num);
-        return num;
+    public int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+        ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
+        beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
+        return ${baseClassName?uncap_first}Dao.updateByPk(${baseClassName?uncap_first});
     }
 
     /**
@@ -86,20 +59,10 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public ${baseClassName}VO queryByPk(${baseClassName}VO in${baseClassName}Vo) {
-        logger.debug("当前查询参数信息为:"+ in${baseClassName}Vo);
-        try {
-            ${baseClassName} query${baseClassName} = new ${baseClassName}();
-            beanCopy(in${baseClassName}Vo, query${baseClassName});
-            ${baseClassName} queryRsl${baseClassName} = ${baseClassName?uncap_first}Dao.queryByPk(query${baseClassName});
-            if (Objects.nonNull(queryRsl${baseClassName})) {
-                return beanCopy(queryRsl${baseClassName}, new ${baseClassName}VO());
-            } else {
-                logger.debug("当前查询结果为空!");
-            }
-        } catch (Exception e) {
-            logger.error("查询数据发生异常!", e);
-        }
-        return null;
+    public ${baseClassName}VO queryByPk(${baseClassName}VO in${baseClassName}Vo) throw Exception {
+        ${baseClassName} query${baseClassName} = new ${baseClassName}();
+        beanCopy(in${baseClassName}Vo, query${baseClassName});
+        ${baseClassName} queryRsl${baseClassName} = ${baseClassName?uncap_first}Dao.queryByPk(query${baseClassName});
+        return beanCopy(queryRsl${baseClassName}, new ${baseClassName}VO());
     }
 }

@@ -22,11 +22,12 @@
             <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
             <category>Other</category>
         </intentionAction>
-        <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base" displayName="Efp Intellij Plugin Settings"
+
+<!--        <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base" displayName="Efp Intellij Plugin Settings"
         instance="com.efp.plugins.settings.EfpCommonConfigurable">
 
 
-        </applicationConfigurable>
+        </applicationConfigurable>-->
     </extensions>
 
     <actions><!--AllIcons.Actions.Back-->
