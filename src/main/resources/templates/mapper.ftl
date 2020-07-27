@@ -4,11 +4,7 @@
 
     <resultMap type="${domainQuaName}" id="${baseClassName?uncap_first}List">
         <#list classFields as field>
-            <#if field.primaryKey>
-                <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
-            <#else>
-                <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
-            </#if>
+            <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
         </#list>
     </resultMap>
 
