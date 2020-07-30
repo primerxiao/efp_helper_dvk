@@ -18,7 +18,7 @@
     </insert>
 
     <delete id="deleteByPk" parameterType="${domainQuaName}">
-        delete from ${tableName} where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.fieldName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
+        delete from ${tableName} where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.fieldName?uncap_first}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if></#list>
     </delete>
 
     <update id="updateByPk" parameterType="${domainQuaName}">

@@ -13,5 +13,6 @@ public class FreemarkerConfiguration extends Configuration {
 		super(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		setDefaultEncoding("UTF-8");
 		setClassForTemplateLoading(getClass(), basePackagePath);
+		setClassicCompatible(true);
 	}
 }

@@ -20,7 +20,8 @@
         <!--dubbo服务调用-->
         <intentionAction>
             <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
-            <category>Other</category>
+            <category>Java/Annotations</category>
+            <descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>
         </intentionAction>
 
 <!--        <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base" displayName="Efp Intellij Plugin Settings"

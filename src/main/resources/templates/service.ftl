@@ -15,26 +15,26 @@ public interface ${className} {
     * @param  ${baseClassName?uncap_first}VO
     * @return
     */
-    int insert(${baseClassName}VO  ${baseClassName?uncap_first}VO) throw Exception;
+    int insert(${baseClassName}VO  ${baseClassName?uncap_first}VO) throws Exception;
 
     /**
     * 根据主键删除信息
     * @param ${baseClassName?uncap_first}VO
     * @return
     */
-    int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throw Exception;
+    int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throws Exception;
 
     /**
     * 根据主键更新信息
     * @param ${baseClassName?uncap_first}VO
     * @return
     */
-    int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throw Exception;
+    int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throws Exception;
 
     /**
     * 根据主键查询详情
     * @param ${baseClassName?uncap_first}VO
     * @return
     */
-    ${baseClassName}VO queryByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throw Exception;
+    ${baseClassName}VO queryByPk(${baseClassName}VO ${baseClassName?uncap_first}VO) throws Exception;
 }

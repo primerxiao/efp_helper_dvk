@@ -23,7 +23,7 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int insert(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+    public int insert(${baseClassName}VO ${baseClassName?uncap_first}Vo) throws Exception {
         ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
         beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
         return ${baseClassName?uncap_first}Dao.insert(${baseClassName?uncap_first});
@@ -35,7 +35,7 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+    public int deleteByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throws Exception {
         ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
         beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
         return ${baseClassName?uncap_first}Dao.deleteByPk(${baseClassName?uncap_first});
@@ -47,7 +47,7 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throw Exception {
+    public int updateByPk(${baseClassName}VO ${baseClassName?uncap_first}Vo) throws Exception {
         ${baseClassName} ${baseClassName?uncap_first} = new ${baseClassName}();
         beanCopy(${baseClassName?uncap_first}Vo, ${baseClassName?uncap_first});
         return ${baseClassName?uncap_first}Dao.updateByPk(${baseClassName?uncap_first});
@@ -59,7 +59,7 @@ public class ${className} implements ${baseClassName}Service, FrameworkService {
     * @return
     */
     @Override
-    public ${baseClassName}VO queryByPk(${baseClassName}VO in${baseClassName}Vo) throw Exception {
+    public ${baseClassName}VO queryByPk(${baseClassName}VO in${baseClassName}Vo) throws Exception {
         ${baseClassName} query${baseClassName} = new ${baseClassName}();
         beanCopy(in${baseClassName}Vo, query${baseClassName});
         ${baseClassName} queryRsl${baseClassName} = ${baseClassName?uncap_first}Dao.queryByPk(query${baseClassName});
