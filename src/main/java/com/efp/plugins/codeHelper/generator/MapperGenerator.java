@@ -49,7 +49,7 @@ public class MapperGenerator extends Generator {
             if (!isOverWrite) {
                 //不覆盖 那么就替换更新
                 //先根据模板生成一份虚拟的
-                XmlFile fileFromText = (XmlFile) PsiFileFactory.getInstance(generateInfo.getProject()).createFileFromText(XMLLanguage.INSTANCE, sw.toString());
+                XmlFile fileFromText = (XmlFile) PsiFileFactory.getInstance(generateInfo.getProject()).createFileFromText(XMLLanguage.INSTANCE, sw.toString().replaceAll("\r\n", "\n"));
                 XmlFile mapperFile = (XmlFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile);
                 XmlTag[] mapperFileSubTags = mapperFile.getRootTag().getSubTags();
                 XmlTag[] subTags = fileFromText.getRootTag().getSubTags();

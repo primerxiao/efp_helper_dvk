@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 /**
- * 测试数据
+ * 直接发起dubbo调用
  */
 public class DubboServiceCall extends PsiElementBaseIntentionAction {
     public static final String IP = "127.0.0.1";
@@ -84,7 +84,7 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
     @NotNull
     @Override
     public String getFamilyName() {
-        return "Dubbo service call";
+        return "Invote dubbo service method";
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)

@@ -108,7 +108,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getVoClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ");", aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getVoClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ")  throws Exception;", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }

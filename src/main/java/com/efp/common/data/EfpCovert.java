@@ -146,11 +146,10 @@ public class EfpCovert {
         final ModuleCovertBean moduleCovertBean = list.stream().
                 filter(e -> e.getModuleName().equalsIgnoreCase(moduleName) && e.getEfpModuleType().getModuleTypeValue() == moduleType.getModuleTypeValue()).
                 findFirst().orElse(null);
-        if (module != null) {
+        if (moduleCovertBean != null) {
             return ModuleManager.getInstance(module.getProject()).findModuleByName(moduleCovertBean.getModuleName());
         }
         //找到为空的话按约定来找
-
         final String[] moduleNameArr = getModuleNameArr(module);
         //a_b a.b.*
         switch (moduleType) {

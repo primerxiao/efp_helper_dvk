@@ -1,89 +1,114 @@
 package com.efp.plugins.dubbo.action;
 
+import com.efp.common.constant.PluginContants;
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
 import com.efp.common.util.StringUtils;
-import com.intellij.codeInspection.DefaultXmlSuppressionProvider;
-import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.properties.PropertiesReferenceManager;
 import com.intellij.lang.properties.psi.PropertiesFile;
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.XmlElementFactory;
-import com.intellij.psi.impl.source.xml.XmlElementChangeUtil;
+import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlComment;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.xml.util.XmlTagUtil;
-import com.intellij.xml.util.XmlUtil;
+import com.intellij.util.IncorrectOperationException;
+import org.apache.commons.net.telnet.TelnetClient;
+import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Objects;
 
 /**
- * dubbo生产者以及消费者配置动作
+ * 测试数据
  */
-public class DubboXmlConfigAction extends AnAction {
+public class DubboConfigCall extends PsiElementBaseIntentionAction {
+
     @Override
-    public void actionPerformed(@NotNull AnActionEvent e) {
-        try {
-            PsiFile editPsiFile = e.getData(LangDataKeys.PSI_FILE);
-            if (Objects.isNull(editPsiFile)) {
-                throw new RuntimeException("获取不到编辑中的文件");
+    public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
+        PsiFile editPsiFile = PsiTreeUtil.getParentOfType(psiElement, PsiFile.class);
+        if (editPsiFile == null) return;
+        FileType fileType = editPsiFile.getFileType();
+        if (fileType instanceof JavaFileType) {
+            //获取当前编辑的module
+            Module editModule = ModuleUtil.findModuleForFile(editPsiFile);
+            if (!editModule.getName().endsWith(".impl") && !editModule.getName().endsWith(".service")) {
+                throw new RuntimeException("当前模块暂不支持dubbo配置");
             }
-            FileType fileType = editPsiFile.getFileType();
-            if (fileType instanceof JavaFileType) {
-                //获取当前编辑的module
-                Module editModule = ModuleUtil.findModuleForFile(editPsiFile);
-                if (!editModule.getName().endsWith(".impl") && !editModule.getName().endsWith(".service")) {
-                    throw new RuntimeException("当前模块暂不支持dubbo配置");
-                }
-                //serviceMoudle
-                Module serviceModule = EfpCovert.getModule(editModule, EfpModuleType.SERVICE);
-                //implMoudle
-                Module implModule = EfpCovert.getModule(editModule, EfpModuleType.IMPL);
-                //获取service类
-                PsiClass serviceClass = getServiceClass(editPsiFile);
-                consumerXmlConfigSet(e, serviceModule, implModule, serviceClass);
-                poviderXmlConfigSet(e, implModule, serviceClass);
-            } else {
-                Messages.showInfoMessage("非java文件，无法添加dubbo配置", "提示信息");
-                return;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Messages.showErrorDialog(ex.getLocalizedMessage(), "错误提示：");
+            //serviceMoudle
+            Module serviceModule = EfpCovert.getModule(editModule, EfpModuleType.SERVICE);
+            //implMoudle
+            Module implModule = EfpCovert.getModule(editModule, EfpModuleType.IMPL);
+            //获取service类
+            PsiClass serviceClass = getServiceClass(editPsiFile);
+            consumerXmlConfigSet(project, serviceModule, implModule, serviceClass);
+            poviderXmlConfigSet(project, implModule, serviceClass);
+        } else {
+            Messages.showInfoMessage("非java文件，无法添加dubbo配置", "提示信息");
+            return;
         }
+
+    }
+
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
+        final PsiElement parent = psiElement.getParent();
+        if (!(parent instanceof PsiClass)) return false;
+        return true;
+    }
+
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "Generate dubbo config";
+    }
+
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    @NotNull
+    @Override
+    public String getText() {
+        return this.getFamilyName();
+    }
+
+    public Module getImplModule(Module module) {
+        if (module.getName().endsWith(".impl")) {
+            return module;
+        }
+        return ModuleManager.getInstance(module.getProject()).findModuleByName(module.getName().replace("service", "impl"));
     }
 
     /**
      * 消费者配置
      *
-     * @param e
+     * @param project
      * @param serviceModule
      * @param implModule
      * @param serviceClass
      */
-    private void consumerXmlConfigSet(@NotNull AnActionEvent e, Module serviceModule, Module implModule, PsiClass serviceClass) {
+    private void consumerXmlConfigSet(@NotNull Project project, Module serviceModule, Module implModule, PsiClass serviceClass) {
         if (!Objects.isNull(serviceModule)) {
             String[] split = implModule.getName().split("\\.");
             String consumerXmlFileName = "dubbo-consumer-" + split[0] + "-" + split[1] + ".xml";
-            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), consumerXmlFileName, serviceModule.getModuleScope());
+            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(project, consumerXmlFileName, serviceModule.getModuleScope());
             if (consumerXmlFileArr.length > 0) {
                 XmlFile consumerXmlFile = (XmlFile) consumerXmlFileArr[0];
                 XmlTag rootTag = consumerXmlFile.getRootTag();
@@ -94,7 +119,7 @@ public class DubboXmlConfigAction extends AnAction {
                     Messages.showErrorDialog("已经存在消费者配置，不进行消费者配置生产", "提示信息");
                 } else {
                     //生成配置
-                    WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
+                    WriteCommandAction.runWriteCommandAction(project, () -> {
                         final XmlTag xmlTag = rootTag.createChildTag("dubbo:reference", rootTag.getNamespace(), null, false);
                         xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
@@ -112,15 +137,15 @@ public class DubboXmlConfigAction extends AnAction {
     /**
      * 生产者配置
      *
-     * @param e
+     * @param project
      * @param implModule
      * @param serviceClass
      */
-    private void poviderXmlConfigSet(@NotNull AnActionEvent e, Module implModule, PsiClass serviceClass) {
+    private void poviderXmlConfigSet(@NotNull Project project, Module implModule, PsiClass serviceClass) {
         if (!Objects.isNull(implModule)) {
             String[] split = implModule.getName().split("\\.");
             String providerXmlFileName = "dubbo-provider-" + split[0] + "-" + split[1] + ".xml";
-            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), providerXmlFileName, implModule.getModuleScope());
+            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(project, providerXmlFileName, implModule.getModuleScope());
             if (providerXmlFileArr.length > 0) {
                 XmlFile providerXmlFile = (XmlFile) providerXmlFileArr[0];
                 XmlTag rootTag = providerXmlFile.getRootTag();
@@ -131,7 +156,7 @@ public class DubboXmlConfigAction extends AnAction {
                     Messages.showErrorDialog("已经存在生产者配置，不进行生产者配置生产", "提示信息");
                 } else {
                     //生成配置
-                    WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
+                    WriteCommandAction.runWriteCommandAction(project, () -> {
                         final XmlTag xmlTag = rootTag.createChildTag("dubbo:service", rootTag.getNamespace(), null, false);
                         xmlTag.setAttribute("id", idValue);
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
@@ -178,4 +203,6 @@ public class DubboXmlConfigAction extends AnAction {
         }
         throw new RuntimeException("获取service出错");
     }
+
+
 }
