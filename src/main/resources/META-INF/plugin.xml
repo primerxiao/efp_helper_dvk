@@ -23,72 +23,50 @@
             <category>Java/Annotations</category>
             <descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>
         </intentionAction>
+        <!--dubbo配置添加-->
         <intentionAction>
             <className>com.efp.plugins.dubbo.action.DubboConfigCall</className>
             <category>Java/Annotations</category>
             <descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>
         </intentionAction>
-
+        <!--插件配置-->
         <!--<applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base" displayName="Efp Intellij Plugin Settings"
                 instance="com.efp.plugins.settings.EfpCommonConfigurable">
                 </applicationConfigurable>-->
-
     </extensions>
 
     <actions><!--AllIcons.Actions.Back-->
-
         <!--toolmenu配置-->
-        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true" >
+        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
-<!--
-
-        &lt;!&ndash;dubboxml配置生成&ndash;&gt;
-        <action id="dubbo-xml-config" class="com.efp.plugins.dubbo.action.DubboXmlConfigAction"
-                text="EFP: Generate Dubbo Config">
-            &lt;!&ndash;<add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>&ndash;&gt;
-            <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
-        </action>
--->
-
         <!--dabatase插件配置-->
-        <group id="efp_database_plugin" text="Efp Database Plugin" popup="true" >
+        <group id="efp_database_plugin" text="Efp Database Plugin" popup="true">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="last"/>
         </group>
         <!--生成curd代码-->
-        <action id="efp-plugin-code-helper" description="Generate Crud Code" text="Generate Crud Code"
+        <action id="efp-plugin-code-helper" description="Generate crud code" text="Generate Crud Code"
                 class="com.efp.plugins.codeHelper.action.CodeHelperAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
-        <!--生成insertOrUpdate相关代码-->
-        <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate InsertOrUpdate Method Code"
+        <!--生成insertOrUpdate代码-->
+        <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"
                 text="Generate InsertOrUpdate Method Code"
                 class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
-        <action id="efp-plugin-Generate-Select" description="Generate Select Method Code"
+        <!--生成查询函数-->
+        <action id="efp-plugin-Generate-Select" description="Generate select method code"
                 text="Generate Select Method Code"
                 class="com.efp.plugins.codeHelper.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
-
-        <!--直接对当前的dubbo服务发起调用-->
-        <action id="efp-plugin-DubboRemoteInvoke" class="com.efp.plugins.dubbo.action.DubboRemoteInvoke"
-                text="EFP: Call Current Dubbo Method">
-            <add-to-group group-id="GenerateGroup" anchor="first"/>
-        </action>
-        <!--        <action id="efp-plugin-DiffCompare" class="com.efp.plugins.diffcompare.action.DiffCompareAction" text="DiffCompare">
-                    <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
-                </action>-->
-        <!--        <action id="EFP-test" class="com.efp.plugins.test.testAction" text="EFP: test">
-                    <add-to-group group-id="efp_helper_dvk_tools_menu" anchor="first"/>
-                </action>-->
-
-       <!--标签管理-->
+        <!--标签导出-->
         <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.bookmark.action.ExportBookMarkAction"
                 text="Export BookMark To File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+        <!--标签导入-->
         <action id="efp-plugin-ImportBookMarkAction" class="com.efp.plugins.bookmark.action.ImportBookMarkAction"
                 text="Import BookMark From File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
