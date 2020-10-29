@@ -18,10 +18,15 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <!--dubbo服务调用-->
-        <intentionAction>
+<!--        <intentionAction>
             <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
             <category>Java/Annotations</category>
             <descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>
+        </intentionAction>-->
+        <intentionAction>
+            <className>com.efp.plugins.dubbo.action.DubboServiceCallExe</className>
+            <category>Java/Annotations</category>
+            <!--<descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>-->
         </intentionAction>
         <!--dubbo配置添加-->
         <intentionAction>
@@ -30,9 +35,12 @@
             <descriptionDirectoryName>MakeAnnotationExternal</descriptionDirectoryName>
         </intentionAction>
         <!--插件配置-->
-        <!--<applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base" displayName="Efp Intellij Plugin Settings"
-                instance="com.efp.plugins.settings.EfpCommonConfigurable">
-                </applicationConfigurable>-->
+        <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base"
+                                 displayName="Efp Plugin Settings"
+                                 instance="com.efp.plugins.settings.AppSettingsConfigurable">
+        </applicationConfigurable>
+        <!--插件持久化配置-->
+        <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
     </extensions>
 
     <actions><!--AllIcons.Actions.Back-->

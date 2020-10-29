@@ -10,6 +10,8 @@ import com.intellij.database.psi.DataSourceManager;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
@@ -17,6 +19,8 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.JBIterable;
+import git4idea.commands.Git;
+import git4idea.repo.GitRepositoryImpl;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,10 +31,18 @@ public class testAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
 
-        EditorUtils.closeAllEditor(e);
+
+        Module[] modules = ModuleManager.getInstance(e.getProject()).getModules();
+        for (Module module : modules) {
+            System.out.println(module.getModuleFilePath());
+        }
+
+        //EditorUtils.closeAllEditor(e);
         //执行gitcomparewith branch动作
-        AnAction gitCompareWithBranchAction = ActionManager.getInstance().getAction("Git.CompareWithBranch");
-        gitCompareWithBranchAction.actionPerformed(e);
+       // AnAction gitCompareWithBranchAction = ActionManager.getInstance().getAction("Git.ShowHistory");
+        //gitCompareWithBranchAction.actionPerformed(e);
+        Git instance = Git.getInstance();
+
         if (true) {
             return;
         }

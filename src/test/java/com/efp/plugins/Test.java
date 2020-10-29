@@ -1,5 +1,8 @@
 package com.efp.plugins;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+
 public class Test {
 
     @org.junit.Test

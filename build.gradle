@@ -25,6 +25,8 @@ repositories {
 dependencies {
     //模板
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+    // https://mvnrepository.com/artifact/com.101tec/zkclient
+    compile group: 'com.101tec', name: 'zkclient', version: '0.11'
     //test
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
@@ -33,11 +35,11 @@ dependencies {
 intellij {
     pluginName 'EfpHelper'
     //version 'IU-2019.3'
-    localPath IDEA_ROOT_PATH
-    localSourcesPath LOCAL_SOURCES_PATH
+    localPath IDEA_ROOT_PATH_2019_3
+    //localSourcesPath LOCAL_SOURCES_PATH
     updateSinceUntilBuild true
-    downloadSources true
-    localSourcesPath LOCAL_SOURCES_PATH
+    //downloadSources true
+    //localSourcesPath LOCAL_SOURCES_PATH
     plugins 'java', 'properties', 'DatabaseTools','git4idea'
 }
 

@@ -1,39 +1,36 @@
 package com.efp.plugins.settings;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SearchableConfigurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class EfpCommonConfigurable implements SearchableConfigurable {
-    private EfpCommonConfigurablePanel mySettingsPane;
+public class AppSettingsConfigurable implements Configurable {
 
-    @NotNull
-    @Override
-    public String getId() {
-        return getHelpTopic();
-    }
+    /**
+     * 配置界面面板
+     */
+    private EfpSettingsComponent mySettingsPane;
 
     @Nls
     @Override
     public String getDisplayName() {
-        return "Diff & Merge";
+        return "插件配置";
     }
 
     @NotNull
     @Override
     public String getHelpTopic() {
-        return "diff.base";
+        return "efp.help";
     }
 
     @Nullable
     @Override
     public JComponent createComponent() {
         if (mySettingsPane == null) {
-            mySettingsPane = new EfpCommonConfigurablePanel();
+            mySettingsPane = new EfpSettingsComponent();
         }
         return mySettingsPane.getPanel();
     }
@@ -46,7 +43,7 @@ public class EfpCommonConfigurable implements SearchableConfigurable {
     @Override
     public void apply() {
         if (mySettingsPane != null) {
-            //mySettingsPane.apply();
+            mySettingsPane.apply();
         }
     }
 
