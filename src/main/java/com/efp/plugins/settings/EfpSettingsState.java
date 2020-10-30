@@ -8,6 +8,9 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * efp插件持久化数据对象
+ */
 @State(
         name = "com.efp.plugins.settings.EfpSettingsState",
         storages = {@Storage("EfpPluginSettings.xml")}
@@ -15,6 +18,10 @@ import org.jetbrains.annotations.Nullable;
 public class EfpSettingsState implements PersistentStateComponent<EfpSettingsState> {
 
     public String dubboRegistryAddress = "127.0.0.1:2181";
+    public boolean providerCheckBox = true;
+    public boolean comsumerCheckBox = true;
+
+
     public static EfpSettingsState getInstance() {
         return ServiceManager.getService(EfpSettingsState.class);
     }

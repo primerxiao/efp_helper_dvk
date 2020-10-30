@@ -38,27 +38,35 @@ import java.io.PrintStream;
 import java.util.Objects;
 
 /**
- * 测试数据
+ * 添加dubbo配置
  */
 public class DubboConfigCall extends PsiElementBaseIntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
-        PsiFile editPsiFile = PsiTreeUtil.getParentOfType(psiElement, PsiFile.class);
-        if (editPsiFile == null) return;
-        FileType fileType = editPsiFile.getFileType();
+        //获取当前操作的类对象
+        PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
+        if (psiClass == null) return;
+        //获取当前操作的文件对象
+        PsiFile psiFile = psiClass.getContainingFile();
+        //获取当前操作的文件类型
+        FileType fileType = psiFile.getFileType();
         if (fileType instanceof JavaFileType) {
-            //获取当前编辑的module
-            Module editModule = ModuleUtil.findModuleForFile(editPsiFile);
-            if (!editModule.getName().endsWith(".impl") && !editModule.getName().endsWith(".service")) {
-                throw new RuntimeException("当前模块暂不支持dubbo配置");
+            //判断当前类是接口还是实现类
+            Module serviceModule = null;
+            Module implModule = null;
+            if (psiClass.isInterface()) {
+                //service
+                serviceModule = ModuleUtil.findModuleForFile(psiFile);
+                PsiFile[] filesByName = FilenameIndex.getFilesByName(project, psiClass.getName() + "Impl.java", GlobalSearchScope.projectScope(project));
+                implModule = ModuleUtil.findModuleForFile(filesByName[0]);
+            } else {
+                //impl
+                PsiClass superClass = psiClass.getSuperClass();
+                serviceModule = ModuleUtil.findModuleForFile(superClass.getContainingFile());
+                implModule = ModuleUtil.findModuleForFile(psiFile);
             }
-            //serviceMoudle
-            Module serviceModule = EfpCovert.getModule(editModule, EfpModuleType.SERVICE);
-            //implMoudle
-            Module implModule = EfpCovert.getModule(editModule, EfpModuleType.IMPL);
-            //获取service类
-            PsiClass serviceClass = getServiceClass(editPsiFile);
+            PsiClass serviceClass = getServiceClass(psiFile);
             consumerXmlConfigSet(project, serviceModule, implModule, serviceClass);
             poviderXmlConfigSet(project, implModule, serviceClass);
         } else {

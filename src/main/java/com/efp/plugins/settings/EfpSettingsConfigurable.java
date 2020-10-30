@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class AppSettingsConfigurable implements Configurable {
+public class EfpSettingsConfigurable implements Configurable {
 
     /**
      * 配置界面面板

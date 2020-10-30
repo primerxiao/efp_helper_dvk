@@ -8,17 +8,18 @@ import java.util.Objects;
 public class EfpSettingsComponent {
     private JPanel myPanel;
     private JTextField dubboRegistryAddress;
+    private JCheckBox providerCheckBox;
+    private JCheckBox comsumerCheckBox;
+
     public JComponent getPanel() {
         return myPanel;
     }
 
     public void reset() {
         EfpSettingsState state = EfpSettingsState.getInstance().getState();
-        if (StringUtils.isNotEmpty(state.dubboRegistryAddress)) {
-            dubboRegistryAddress.setText(state.dubboRegistryAddress);
-        } else {
-            dubboRegistryAddress.setText("127.0.0.1:2181");
-        }
+        dubboRegistryAddress.setText(Objects.isNull(state) ? "127.0.0.1:2181" : state.dubboRegistryAddress);
+        providerCheckBox.setSelected(Objects.isNull(state) || state.providerCheckBox);
+        comsumerCheckBox.setSelected(Objects.isNull(state) || state.comsumerCheckBox);
     }
 
     public boolean isModified() {
@@ -36,6 +37,8 @@ public class EfpSettingsComponent {
     public void apply() {
         EfpSettingsState instance = EfpSettingsState.getInstance();
         instance.dubboRegistryAddress = dubboRegistryAddress.getText();
+        instance.providerCheckBox = providerCheckBox.isSelected();
+        instance.comsumerCheckBox = comsumerCheckBox.isSelected();
         instance.loadState(instance);
     }
 }
