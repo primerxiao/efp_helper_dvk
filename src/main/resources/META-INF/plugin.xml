@@ -59,12 +59,13 @@
         <intentionAction>
             <!--dubbo服务调用-->
             <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
-            <category>Java/Annotations</category>
+            <category>Java/Other</category>
+            <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
             <!--dubbo配置添加-->
             <className>com.efp.plugins.dubbo.action.DubboConfigCall</className>
-            <category>Java/Annotations</category>
+            <category>Java/Other</category>
         </intentionAction>
         <!--Setting方面相关的配置-->
         <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base"

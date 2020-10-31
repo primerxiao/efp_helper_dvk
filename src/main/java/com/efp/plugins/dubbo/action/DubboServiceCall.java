@@ -24,6 +24,7 @@ import java.util.List;
 /**
  * 直接发起dubbo接口调试
  * 通过telnet发送invote命令的方式调用dubbo接口
+ * @author HIFeng
  */
 public class DubboServiceCall extends PsiElementBaseIntentionAction {
 

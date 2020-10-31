@@ -2,16 +2,13 @@ package com.efp.plugins.bookmark.action;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.util.BookMarkUtils;
-import com.efp.plugins.dubbo.bean.BookMarkData;
 import com.google.gson.GsonBuilder;
 import com.intellij.ide.bookmarks.Bookmark;
-import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

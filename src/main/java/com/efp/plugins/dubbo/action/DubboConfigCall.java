@@ -4,6 +4,7 @@ import com.efp.common.constant.PluginContants;
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
 import com.efp.common.util.StringUtils;
+import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.lang.properties.PropertiesReferenceManager;
@@ -39,6 +40,7 @@ import java.util.Objects;
 
 /**
  * 添加dubbo配置
+ * @author HIFeng
  */
 public class DubboConfigCall extends PsiElementBaseIntentionAction {
 
@@ -46,7 +48,9 @@ public class DubboConfigCall extends PsiElementBaseIntentionAction {
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         //获取当前操作的类对象
         PsiClass psiClass = PsiTreeUtil.getParentOfType(psiElement, PsiClass.class);
-        if (psiClass == null) return;
+        if (psiClass == null) {
+            return;
+        }
         //获取当前操作的文件对象
         PsiFile psiFile = psiClass.getContainingFile();
         //获取当前操作的文件类型
@@ -62,16 +66,20 @@ public class DubboConfigCall extends PsiElementBaseIntentionAction {
                 implModule = ModuleUtil.findModuleForFile(filesByName[0]);
             } else {
                 //impl
-                PsiClass superClass = psiClass.getSuperClass();
-                serviceModule = ModuleUtil.findModuleForFile(superClass.getContainingFile());
+                psiClass = psiClass.getSuperClass();
+                serviceModule = ModuleUtil.findModuleForFile(Objects.requireNonNull(psiClass).getContainingFile());
                 implModule = ModuleUtil.findModuleForFile(psiFile);
             }
-            PsiClass serviceClass = getServiceClass(psiFile);
-            consumerXmlConfigSet(project, serviceModule, implModule, serviceClass);
-            poviderXmlConfigSet(project, implModule, serviceClass);
+            //获取配置
+            EfpSettingsState state = EfpSettingsState.getInstance().getState();
+            if (Objects.requireNonNull(state).comsumerCheckBox) {
+                consumerXmlConfigSet(project, serviceModule, implModule, psiClass);
+            }
+            if (state.providerCheckBox) {
+                poviderXmlConfigSet(project, implModule, psiClass);
+            }
         } else {
             Messages.showInfoMessage("非java文件，无法添加dubbo配置", "提示信息");
-            return;
         }
 
     }
@@ -132,7 +140,6 @@ public class DubboConfigCall extends PsiElementBaseIntentionAction {
                         xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
                         xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
                         xmlTag.setAttribute("version", "1.0.0");
-
                         rootTag.addSubTag(xmlTag, false);
                         consumerXmlFile.navigate(true);
                     });
