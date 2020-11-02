@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * efp插件持久化数据对象
+ * 插件持久化数据对象
  */
 @State(
         name = "com.efp.plugins.settings.EfpSettingsState",
@@ -17,8 +17,17 @@ import org.jetbrains.annotations.Nullable;
 )
 public class EfpSettingsState implements PersistentStateComponent<EfpSettingsState> {
 
+    /**
+     * dubbo注册中心地址
+     */
     public String dubboRegistryAddress = "127.0.0.1:2181";
+    /**
+     * 生产者配置选择
+     */
     public boolean providerCheckBox = true;
+    /**
+     * 消费者配置选择
+     */
     public boolean comsumerCheckBox = true;
 
 

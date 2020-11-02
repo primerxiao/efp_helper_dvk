@@ -74,7 +74,5 @@
         </applicationConfigurable>
         <!--插件持久化配置-->
         <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
-        service配置
-        <projectService serviceImplementation="com.efp.common.service.JavaService"/>
     </extensions>
 </idea-plugin>
