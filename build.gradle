@@ -33,14 +33,14 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    pluginName 'EfpHelper'
+    pluginName = 'EfpHelper'
     //version 'IU-2019.3'
-    localPath IDEA_ROOT_PATH_2019_3
-    //localSourcesPath LOCAL_SOURCES_PATH
-    updateSinceUntilBuild true
-    //downloadSources true
-    //localSourcesPath LOCAL_SOURCES_PATH
-    plugins 'java', 'properties', 'DatabaseTools','git4idea'
+    localPath = IDEA_ROOT_PATH_2019_3
+    localSourcesPath = LOCAL_SOURCES_PATH
+    updateSinceUntilBuild = true
+    //downloadSources = true
+    //localSourcesPath = LOCAL_SOURCES_PATH
+    plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']
 }
 
 patchPluginXml {
@@ -80,21 +80,21 @@ patchPluginXml {
        """
     sinceBuild '174.*'
 }
-
+//插件打包-1
 task cleanPackTempFiles(type: Delete) {
     delete file("${buildDir}/packTemp")
     doLast {
         mkdir "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
     }
 }
-
+//插件打包-2
 task copyPlugin(type: Copy) {
     dependsOn(cleanPackTempFiles)
     from "${buildDir}/idea-sandbox/plugins/EfpHelper/"
     into "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
 }
 
-//插件打包
+//插件打包-3
 task packPlugin(type: Zip) {
     dependsOn(copyPlugin)
     archiveName = "efp_helper_dvk.zip"
