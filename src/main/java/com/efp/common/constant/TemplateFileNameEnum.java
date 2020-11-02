@@ -1,7 +1,5 @@
 package com.efp.common.constant;
 
-import com.efp.plugins.codeHelper.bean.ServiceImpl;
-
 public enum TemplateFileNameEnum {
     DOMAIN("domain.ftl"),
     VO("vo.ftl"),

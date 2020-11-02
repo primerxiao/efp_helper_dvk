@@ -1,8 +1,6 @@
 package com.efp.common;
 
 import com.intellij.openapi.util.IconLoader;
-import com.intellij.ui.IconManager;
-import com.intellij.util.PlatformIcons;
 
 import javax.swing.*;
 

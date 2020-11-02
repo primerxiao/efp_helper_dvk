@@ -1,6 +1,5 @@
 package com.efp.common.util;
 
-import com.efp.common.notifier.MyEfpPluginErrorsNotifier;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
@@ -18,8 +17,10 @@ public class NotifyUtils {
      * 展示错误信息
      * @param msg 信息内容
      */
-    public static void notifyError(String msg) {
-        new MyEfpPluginErrorsNotifier().notify(msg);
+    public static Notification notifyError(String msg) {
+        final Notification notification = NOTIFICATION_GROUP.createNotification(msg, NotificationType.ERROR);
+        notification.notify(null);
+        return notification;
     }
 
     public static Notification notifyInfo(String msg) {
