@@ -1,10 +1,11 @@
 package com.efp.plugins.settings;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.swing.*;
 import java.util.Objects;
 
+/**
+ * 插件配置面板
+ */
 public class EfpSettingsComponent {
     private JPanel myPanel;
     private JTextField dubboRegistryAddress;

@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+/**
+ * 插件配置
+ */
 public class EfpSettingsConfigurable implements Configurable {
 
     /**

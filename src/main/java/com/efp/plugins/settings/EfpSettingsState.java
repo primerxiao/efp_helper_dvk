@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 插件持久化数据对象
+ * 插件配置持久化数据对象
  */
 @State(
         name = "com.efp.plugins.settings.EfpSettingsState",
