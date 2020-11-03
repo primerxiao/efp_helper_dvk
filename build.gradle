@@ -34,11 +34,11 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     pluginName = 'EfpHelper'
-    version = 'IU-2019.3'
-    //localPath = IDEA_ROOT_PATH_2019_3
+    //version = 'IU-2019.3'
+    localPath = IDEA_ROOT_PATH_2019_3
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
-    //downloadSources = true
+    downloadSources = false
     //localSourcesPath = LOCAL_SOURCES_PATH
     plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']
 }

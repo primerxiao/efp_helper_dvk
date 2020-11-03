@@ -81,11 +81,6 @@
         </applicationConfigurable>
         <!--插件持久化配置-->
         <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
-        <!--service配置-->
-        <applicationService serviceImplementation="com.efp.service.project.ProjectCountingService"/>
     </extensions>
-    <!--监听器配置-->
-    <applicationListeners>
-        <listener class="com.efp.service.project.ProjectOpenCloseListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+
 </idea-plugin>
