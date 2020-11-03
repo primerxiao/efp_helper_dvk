@@ -14,10 +14,10 @@
     <depends>com.intellij.properties</depends>
     <depends config-file="" optional="true">com.intellij.modules.database</depends>
     <depends>com.intellij.modules.vcs</depends>
-    <idea-version since-build="183.0"/>
+    <idea-version since-build="193.0"/>
     <actions><!--AllIcons.Actions.Back-->
         <!--toolmenu配置-->
-        <group id="efp_helper_dvk_tools_menu" text="Efp Little Helper" popup="true">
+        <group id="efp_helper_dvk_tools_menu" text="Efp Helper" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
         <!--dabatase插件配置-->
@@ -26,19 +26,19 @@
         </group>
         <!--生成curd代码-->
         <action id="efp-plugin-code-helper" description="Generate crud code" text="Generate Crud Code"
-                class="com.efp.plugins.codeHelper.action.CodeHelperAction">
+                class="com.efp.plugins.coder.action.CodeHelperAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成insertOrUpdate代码-->
         <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"
                 text="Generate InsertOrUpdate Method Code"
-                class="com.efp.plugins.codeHelper.action.GenerateInsertOrUpdate">
+                class="com.efp.plugins.coder.action.GenerateInsertOrUpdate">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成查询函数-->
         <action id="efp-plugin-Generate-Select" description="Generate select method code"
                 text="Generate Select Method Code"
-                class="com.efp.plugins.codeHelper.action.GenerateSelect">
+                class="com.efp.plugins.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--标签导出-->
@@ -51,8 +51,15 @@
                 text="Import BookMark From File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+        <!--json可视化-->
+        <action id="com.efp.plugins.jsonviewer.action.JsonViewAction"
+                class="com.efp.plugins.jsonviewer.action.JsonViewAction" text="JsonViewAction" keymap="$default">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+            <!--<keyboard-shortcut first-keystroke="alt shift j" keymap="$default" replace-all="true"/>-->
+        </action>
     </actions>
 
+    <!--拓展点配置-->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <!--内联动作配置-->
@@ -74,5 +81,11 @@
         </applicationConfigurable>
         <!--插件持久化配置-->
         <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
+        <!--service配置-->
+        <applicationService serviceImplementation="com.efp.service.project.ProjectCountingService"/>
     </extensions>
+    <!--监听器配置-->
+    <applicationListeners>
+        <listener class="com.efp.service.project.ProjectOpenCloseListener" topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </applicationListeners>
 </idea-plugin>

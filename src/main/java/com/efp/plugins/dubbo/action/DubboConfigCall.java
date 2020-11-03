@@ -30,7 +30,7 @@ import java.util.Objects;
 
 /**
  * 添加dubbo配置
- * @author HIFeng
+ * @author primerxiao
  */
 public class DubboConfigCall extends PsiElementBaseIntentionAction {
 

@@ -2,7 +2,11 @@ package com.efp.common.config;
 
 import freemarker.template.Configuration;
 
+/**
+ * freemaiker配置
+ */
 public class FreemarkerConfiguration extends Configuration {
+
 	private String basePackagePath;
 
 	public FreemarkerConfiguration() {

@@ -18,9 +18,9 @@ public class DubboXmlConfigUtils {
     /**
      * 消费者配置
      *
-     * @param e
-     * @param serviceModule
-     * @param serviceClass
+     * @param e 事件对象
+     * @param serviceModule service模块
+     * @param serviceClass service类
      */
     public static void consumerXmlConfigSet(@NotNull AnActionEvent e, Module serviceModule, PsiClass serviceClass) {
         if (!Objects.isNull(serviceModule)) {

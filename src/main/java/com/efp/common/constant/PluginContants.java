@@ -1,9 +1,5 @@
 package com.efp.common.constant;
 
-import com.intellij.openapi.util.IconLoader;
-
-import javax.swing.*;
-
 /**
  * 插件常量类
  *

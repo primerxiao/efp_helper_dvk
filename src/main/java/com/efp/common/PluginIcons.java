@@ -6,7 +6,7 @@ import javax.swing.*;
 
 /**
  * 插件相关icon图标
- * @author HIFeng
+ * @author primerxiao
  */
 public interface PluginIcons {
 

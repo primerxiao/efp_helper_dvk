@@ -2,8 +2,8 @@ package com.efp.common.util;
 
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
-import com.efp.plugins.codeHelper.bean.GenerateInfo;
-import com.efp.plugins.codeHelper.bean.GenerateJava;
+import com.efp.plugins.coder.bean.GenerateInfo;
+import com.efp.plugins.coder.bean.GenerateJava;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
@@ -22,8 +22,8 @@ import java.util.Objects;
 
 public class DasUtils {
     /**
-     * @param dasColumn
-     * @return
+     * @param dasColumn 字段
+     * @return boolean
      */
     public static boolean checkPrimaryKey(DasColumn dasColumn) {
         DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
@@ -46,7 +46,7 @@ public class DasUtils {
     /**
      * 刷新数据库信息
      *
-     * @param e
+     * @param e 事件
      */
     public static void refreshDas(AnActionEvent e) {
         AnAction action = ActionManager.getInstance().getAction("DatabaseView.Refresh");
@@ -59,9 +59,9 @@ public class DasUtils {
      * 获取数据库字段对应的java类型
      *
      * @param dasColumn 数据表字段对象
-     * @return
+     * @return Class<? extends Object>
      */
-    public static Class<? extends Object> getJavaTypeClass(DasColumn dasColumn) {
+    public static Class<?> getJavaTypeClass(DasColumn dasColumn) {
 
         if ("char".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
@@ -182,7 +182,7 @@ public class DasUtils {
      * 根据数据库字段获取需要import的数据
      *
      * @param dasColumn 数据表字段对象
-     * @return
+     * @return String
      */
     public static String getJavaImport(DasColumn dasColumn) {
         Class<?> typeClass = getJavaTypeClass(dasColumn);
@@ -202,9 +202,9 @@ public class DasUtils {
     /**
      * 根据数据库表对象获取有关代码生成的信息封装对象
      *
-     * @param e
-     * @param dasTable
-     * @return
+     * @param e 事件对象
+     * @param dasTable 数据库表
+     * @return GenerateInfo
      */
     public static GenerateInfo getGenerateInfo(AnActionEvent e, DasTable dasTable) {
         DasNamespace namespace = DasUtil.getNamespace(dasTable);
@@ -225,8 +225,8 @@ public class DasUtils {
     /**
      * 根据有关代码生成的信息封装对象获取java相关的封装对象
      *
-     * @param generateInfo
-     * @return
+     * @param generateInfo 建造信息
+     * @return GenerateJava
      */
     public static GenerateJava getGenerateJava(GenerateInfo generateInfo) {
         GenerateJava generateJava = new GenerateJava();

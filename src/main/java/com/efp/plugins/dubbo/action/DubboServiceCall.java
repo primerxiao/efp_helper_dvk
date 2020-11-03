@@ -20,11 +20,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 直接发起dubbo接口调试
  * 通过telnet发送invote命令的方式调用dubbo接口
- * @author HIFeng
+ * @author primerxiao
  */
 public class DubboServiceCall extends PsiElementBaseIntentionAction {
 
@@ -34,8 +35,8 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             //获取当前操作的函数对象
             PsiMethod psiMethod = PsiTreeUtil.getParentOfType(psiElement, PsiMethod.class);
             //获取当前操作的类对象
-            PsiClass psiClass = psiMethod.getContainingClass();
-            if (!psiClass.isInterface()) {
+            PsiClass psiClass = Objects.requireNonNull(psiMethod).getContainingClass();
+            if (!Objects.requireNonNull(psiClass).isInterface()) {
                 //不是接口
                 PsiMethod[] superMethods = psiMethod.findSuperMethods();
                 psiMethod = superMethods[0];
@@ -43,11 +44,11 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                 psiClass = psiMethod.getContainingClass();
             }
             //获取包名
-            String qualifiedName = psiClass.getQualifiedName();
+            String qualifiedName = Objects.requireNonNull(psiClass).getQualifiedName();
             //获取注册中心的持久化配置
             EfpSettingsState state = EfpSettingsState.getInstance().getState();
             //zk客户端操作
-            ZkClient zkClient = new ZkClient(state.dubboRegistryAddress, 5000);
+            ZkClient zkClient = new ZkClient(Objects.requireNonNull(state).dubboRegistryAddress, 5000);
             //获取注册中心上面的该类的提供者列表
             List<String> providers = zkClient.getChildren("/dubbo/" + qualifiedName + "/providers");
             if (providers == null) {
@@ -93,13 +94,21 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             telnetClient.setDefaultTimeout(5000);
             telnetClient.connect(providerConfigArr[0], Integer.parseInt(providerConfigArr[1]));
             pStream = new PrintStream(telnetClient.getOutputStream());
-            pStream.println("invoke " + psiMethod.getContainingClass().getQualifiedName() + "." + psiMethod.getName() + getMethodParameters(psiMethod));
+            pStream.println("invoke " + Objects.requireNonNull(psiMethod.getContainingClass()).getQualifiedName() + "." + psiMethod.getName() + getMethodParameters(psiMethod));
             pStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
-            try { pStream.close(); } catch (Exception e) { e.printStackTrace(); }
-            try { telnetClient.disconnect(); } catch (IOException e) { e.printStackTrace(); }
+            try {
+                if (pStream != null) {
+                    pStream.close();
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+            try {
+                if (telnetClient != null) {
+                    telnetClient.disconnect();
+                }
+            } catch (IOException e) { e.printStackTrace(); }
         }
     }
 

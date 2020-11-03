@@ -6,8 +6,8 @@ package com.efp.common.util;
 public class StringUtils {
     /**
      * 将字符串首位小写
-     * @param str
-     * @return
+     * @param str 字符串
+     * @return String
      */
     public static String initCap(String str) {
         if (org.apache.commons.lang.StringUtils.isEmpty(str)) {
