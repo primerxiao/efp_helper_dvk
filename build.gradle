@@ -40,7 +40,7 @@ intellij {
     localPath = IDEA_ROOT_PATH_2019_3
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
-    //downloadSources = true
+    downloadSources = false
     //localSourcesPath = LOCAL_SOURCES_PATH
     //加载的插件
     plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']

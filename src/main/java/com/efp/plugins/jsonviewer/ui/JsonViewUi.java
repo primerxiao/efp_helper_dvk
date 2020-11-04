@@ -8,13 +8,26 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class JsonViewUi extends DialogWrapper {
 
     private JPanel jPanel;
     private JScrollPane jscrollPane;
     private JTextArea textArea;
+    /**
+     * 搜索字符串
+     */
+    private JTextField searchTextField;
+    /**
+     * 搜索按钮
+     */
+    private JButton searchButton;
 
     public JsonViewUi(@Nullable Project project) {
         super(project, true);
@@ -23,6 +36,25 @@ public class JsonViewUi extends DialogWrapper {
         setOKActionEnabled(true);
         setOKButtonText("格式化");
         setCancelButtonText("关闭");
+        searchButton.addActionListener(e -> {
+            Highlighter highLighter = textArea.getHighlighter();
+            String text = textArea.getText();
+            DefaultHighlighter.DefaultHighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+            int pos = 0;
+            String keyWord = searchTextField.getText();
+            if (StringUtils.isEmpty(keyWord)) {
+                return;
+            }
+            highLighter.removeAllHighlights();
+            while ((pos = text.indexOf(keyWord, pos)) >= 0) {
+                try {
+                    highLighter.addHighlight(pos, pos + keyWord.length(), p);
+                    pos += keyWord.length();
+                } catch (BadLocationException badLocationException) {
+                    badLocationException.printStackTrace();
+                }
+            }
+        });
         init();
     }
 
