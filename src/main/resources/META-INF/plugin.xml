@@ -42,12 +42,14 @@
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--标签导出-->
-        <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.general.bookmark.action.ExportBookMarkAction"
+        <action id="efp-plugin-ExportBookMarkAction"
+                class="com.efp.plugins.general.bookmark.action.ExportBookMarkAction"
                 text="Export BookMark To File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
         <!--标签导入-->
-        <action id="efp-plugin-ImportBookMarkAction" class="com.efp.plugins.general.bookmark.action.ImportBookMarkAction"
+        <action id="efp-plugin-ImportBookMarkAction"
+                class="com.efp.plugins.general.bookmark.action.ImportBookMarkAction"
                 text="Import BookMark From File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
@@ -61,6 +63,11 @@
                 class="com.efp.plugins.general.cron.action.CronAction" text="CronBuilder">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+       <!--正则表达式-->
+        <action id="AnyRule" class="com.efp.plugins.general.regex.action.AnyRuleFindAction" text="Regex" description="正则表达式">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
+
     </actions>
 
     <!--拓展点配置-->
@@ -85,6 +92,9 @@
         </applicationConfigurable>
         <!--插件持久化配置-->
         <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
+        <!--相关service配置-->
+        <projectService
+                serviceImplementation="com.efp.plugins.general.regex.service.RuleDataService"/>
     </extensions>
 
 </idea-plugin>
