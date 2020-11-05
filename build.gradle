@@ -1,7 +1,6 @@
 plugins {
     id 'java'
-    id 'idea'
-    id 'org.jetbrains.intellij' version '0.4.15'
+    id "org.jetbrains.intellij" version "0.6.1"
 }
 
 tasks.withType(JavaCompile) {
@@ -35,13 +34,17 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+    //插件名称
     pluginName = 'EfpHelper'
+    //基于idea的版本 跟localPath互斥
     //version = 'IU-2019.3'
+    //idea的本地路径
     localPath = IDEA_ROOT_PATH_2019_3
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
     downloadSources = false
     //localSourcesPath = LOCAL_SOURCES_PATH
+    //加载的插件
     plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']
 }
 
