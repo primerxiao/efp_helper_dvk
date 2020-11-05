@@ -14,7 +14,7 @@
     <depends>com.intellij.properties</depends>
     <depends config-file="" optional="true">com.intellij.modules.database</depends>
     <depends>com.intellij.modules.vcs</depends>
-    <idea-version since-build="193.0"/>
+    <idea-version since-build="183.0"/>
     <actions><!--AllIcons.Actions.Back-->
         <!--toolmenu配置-->
         <group id="efp_helper_dvk_tools_menu" text="Efp Helper" popup="true">
@@ -53,9 +53,13 @@
         </action>
         <!--json可视化-->
         <action id="com.efp.plugins.jsonviewer.action.JsonViewAction"
-                class="com.efp.plugins.jsonviewer.action.JsonViewAction" text="JsonViewAction" keymap="$default">
+                class="com.efp.plugins.jsonviewer.action.JsonViewAction" text="JsonView">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
-            <!--<keyboard-shortcut first-keystroke="alt shift j" keymap="$default" replace-all="true"/>-->
+        </action>
+        <!--cron表达式-->
+        <action id="com.efp.plugins.cron.action.CronAction"
+                class="com.efp.plugins.cron.action.CronAction" text="CronBuilder">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
     </actions>
 

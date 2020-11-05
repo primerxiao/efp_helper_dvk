@@ -27,6 +27,8 @@ dependencies {
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
     // https://mvnrepository.com/artifact/com.101tec/zkclient
     compile group: 'com.101tec', name: 'zkclient', version: '0.11'
+    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
     //test
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

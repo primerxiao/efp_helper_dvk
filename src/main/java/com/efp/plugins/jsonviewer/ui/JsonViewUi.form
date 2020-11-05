@@ -18,8 +18,9 @@
           <component id="77f22" class="javax.swing.JTextArea" binding="textArea">
             <constraints/>
             <properties>
-              <lineWrap value="true"/>
-              <wrapStyleWord value="true"/>
+              <editable value="true"/>
+              <lineWrap value="false"/>
+              <wrapStyleWord value="false"/>
             </properties>
           </component>
         </children>

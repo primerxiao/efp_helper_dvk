@@ -19,4 +19,5 @@ public class MyEfpPluginErrorsNotifier {
         notification.notify(project);
         return notification;
     }
+
 }
