@@ -26,19 +26,19 @@
         </group>
         <!--生成curd代码-->
         <action id="efp-plugin-code-helper" description="Generate crud code" text="Generate Crud Code"
-                class="com.efp.plugins.frame.coder.action.CodeHelperAction">
+                class="com.efp.plugins.project.coder.action.CodeHelperAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成insertOrUpdate代码-->
         <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"
                 text="Generate InsertOrUpdate Method Code"
-                class="com.efp.plugins.frame.coder.action.GenerateInsertOrUpdate">
+                class="com.efp.plugins.project.coder.action.GenerateInsertOrUpdate">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成查询函数-->
         <action id="efp-plugin-Generate-Select" description="Generate select method code"
                 text="Generate Select Method Code"
-                class="com.efp.plugins.frame.coder.action.GenerateSelect">
+                class="com.efp.plugins.project.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--标签导出-->
