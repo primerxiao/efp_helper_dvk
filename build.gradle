@@ -49,8 +49,8 @@ intellij {
 }
 
 patchPluginXml {
-    version '1.0.6'
-    changeNotes """
+    version = '1.0.6'
+    changeNotes = """
 <div>
   <p>1.0.6(xiaojunhui)</p> 
   <ul> 
@@ -83,7 +83,7 @@ patchPluginXml {
   </ul>
 </div>
        """
-    sinceBuild '174.*'
+    sinceBuild = '174.*'
 }
 //插件打包-1
 task cleanPackTempFiles(type: Delete) {

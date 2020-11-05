@@ -1,9 +1,8 @@
 package com.efp.common.util;
 
-import com.efp.plugins.bookmark.bean.BookMarkLocal;
+import com.efp.plugins.general.bookmark.bean.BookMarkLocal;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
-import com.intellij.openapi.module.impl.scopes.LibraryScope;
 import com.intellij.openapi.project.Project;
 
 import java.util.List;

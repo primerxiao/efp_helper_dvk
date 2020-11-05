@@ -1,0 +1,2733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.efp.plugins.general.cron.ui.CronUi">
+  <grid id="27dc6" binding="jPanel" layout-manager="FormLayout">
+    <rowspec value="center:d:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:d:grow"/>
+    <colspec value="fill:d:grow"/>
+    <constraints>
+      <xy x="20" y="20" width="1128" height="800"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <tabbedpane id="b9996" binding="tabbedPane">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
+          </grid>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="55dca" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="秒 "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="89dc6">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="c6f28" class="javax.swing.JRadioButton" binding="sRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="每秒"/>
+                    </properties>
+                  </component>
+                  <component id="5af49" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="d336b">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="efb08" class="javax.swing.JRadioButton" binding="mRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="8a898" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="815f9" class="javax.swing.JSpinner" binding="sArroundStartSpinner">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="3a889" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="a84d3" class="javax.swing.JSpinner" binding="sArroundEndSpinner">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="b7ec2" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="秒"/>
+                    </properties>
+                  </component>
+                  <component id="1d125" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                              "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="c6a1a">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="f68dc" class="javax.swing.JRadioButton" binding="sRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="1a695" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="ae213" class="javax.swing.JSpinner" binding="sIntervalStartSpinner">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="32122" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="秒开始，每"/>
+                    </properties>
+                  </component>
+                  <component id="4aef3" class="javax.swing.JSpinner" binding="sIntervalEndSpinner">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="fd63" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="秒执行一次"/>
+                    </properties>
+                  </component>
+                  <component id="31e45" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                         "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="4807d">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3ee87" class="javax.swing.JRadioButton" binding="sRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定"/>
+                    </properties>
+                  </component>
+                  <component id="ac6e5" class="javax.swing.JCheckBox" binding="sAssignCheckBox0">
+                    <constraints/>
+                    <properties>
+                      <selected value="false"/>
+                      <text value="0"/>
+                    </properties>
+                  </component>
+                  <component id="db9a7" class="javax.swing.JCheckBox" binding="sAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="62a5d" class="javax.swing.JCheckBox" binding="sAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="f6fb1" class="javax.swing.JCheckBox" binding="sAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="decf3" class="javax.swing.JCheckBox" binding="sAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="f9c3a" class="javax.swing.JCheckBox" binding="sAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="b617a" class="javax.swing.JCheckBox" binding="sAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="b486a" class="javax.swing.JCheckBox" binding="sAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                  <component id="b6605" class="javax.swing.JCheckBox" binding="sAssignCheckBox8">
+                    <constraints/>
+                    <properties>
+                      <text value="8"/>
+                    </properties>
+                  </component>
+                  <component id="333a" class="javax.swing.JCheckBox" binding="sAssignCheckBox9">
+                    <constraints/>
+                    <properties>
+                      <text value="9"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="1dd35">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="26bad" class="javax.swing.JCheckBox" binding="sAssignCheckBox10">
+                    <constraints/>
+                    <properties>
+                      <text value="10"/>
+                    </properties>
+                  </component>
+                  <component id="c8325" class="javax.swing.JCheckBox" binding="sAssignCheckBox11">
+                    <constraints/>
+                    <properties>
+                      <text value="11"/>
+                    </properties>
+                  </component>
+                  <component id="9dbb0" class="javax.swing.JCheckBox" binding="sAssignCheckBox12">
+                    <constraints/>
+                    <properties>
+                      <text value="12"/>
+                    </properties>
+                  </component>
+                  <component id="26b58" class="javax.swing.JCheckBox" binding="sAssignCheckBox13">
+                    <constraints/>
+                    <properties>
+                      <text value="13"/>
+                    </properties>
+                  </component>
+                  <component id="a2e1c" class="javax.swing.JCheckBox" binding="sAssignCheckBox14">
+                    <constraints/>
+                    <properties>
+                      <text value="14"/>
+                    </properties>
+                  </component>
+                  <component id="183d" class="javax.swing.JCheckBox" binding="sAssignCheckBox15">
+                    <constraints/>
+                    <properties>
+                      <text value="15"/>
+                    </properties>
+                  </component>
+                  <component id="8d107" class="javax.swing.JCheckBox" binding="sAssignCheckBox16">
+                    <constraints/>
+                    <properties>
+                      <text value="16"/>
+                    </properties>
+                  </component>
+                  <component id="2a153" class="javax.swing.JCheckBox" binding="sAssignCheckBox17">
+                    <constraints/>
+                    <properties>
+                      <text value="17"/>
+                    </properties>
+                  </component>
+                  <component id="b35e1" class="javax.swing.JCheckBox" binding="sAssignCheckBox18">
+                    <constraints/>
+                    <properties>
+                      <text value="18"/>
+                    </properties>
+                  </component>
+                  <component id="a5326" class="javax.swing.JCheckBox" binding="sAssignCheckBox19">
+                    <constraints/>
+                    <properties>
+                      <text value="19"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="6d6d3">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3a8e9" class="javax.swing.JCheckBox" binding="sAssignCheckBox20">
+                    <constraints/>
+                    <properties>
+                      <text value="20"/>
+                    </properties>
+                  </component>
+                  <component id="c1bb2" class="javax.swing.JCheckBox" binding="sAssignCheckBox21">
+                    <constraints/>
+                    <properties>
+                      <text value="21"/>
+                    </properties>
+                  </component>
+                  <component id="c4304" class="javax.swing.JCheckBox" binding="sAssignCheckBox22">
+                    <constraints/>
+                    <properties>
+                      <text value="22"/>
+                    </properties>
+                  </component>
+                  <component id="afa32" class="javax.swing.JCheckBox" binding="sAssignCheckBox23">
+                    <constraints/>
+                    <properties>
+                      <text value="23"/>
+                    </properties>
+                  </component>
+                  <component id="72c02" class="javax.swing.JCheckBox" binding="sAssignCheckBox24">
+                    <constraints/>
+                    <properties>
+                      <text value="24"/>
+                    </properties>
+                  </component>
+                  <component id="52813" class="javax.swing.JCheckBox" binding="sAssignCheckBox25">
+                    <constraints/>
+                    <properties>
+                      <text value="25"/>
+                    </properties>
+                  </component>
+                  <component id="e9145" class="javax.swing.JCheckBox" binding="sAssignCheckBox26">
+                    <constraints/>
+                    <properties>
+                      <text value="26"/>
+                    </properties>
+                  </component>
+                  <component id="3014a" class="javax.swing.JCheckBox" binding="sAssignCheckBox27">
+                    <constraints/>
+                    <properties>
+                      <text value="27"/>
+                    </properties>
+                  </component>
+                  <component id="d1de4" class="javax.swing.JCheckBox" binding="sAssignCheckBox28">
+                    <constraints/>
+                    <properties>
+                      <text value="28"/>
+                    </properties>
+                  </component>
+                  <component id="3aa7d" class="javax.swing.JCheckBox" binding="sAssignCheckBox29">
+                    <constraints/>
+                    <properties>
+                      <text value="29"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="a0df4">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="e6cec" class="javax.swing.JCheckBox" binding="sAssignCheckBox30">
+                    <constraints/>
+                    <properties>
+                      <text value="30"/>
+                    </properties>
+                  </component>
+                  <component id="55b64" class="javax.swing.JCheckBox" binding="sAssignCheckBox31">
+                    <constraints/>
+                    <properties>
+                      <text value="31"/>
+                    </properties>
+                  </component>
+                  <component id="875ed" class="javax.swing.JCheckBox" binding="sAssignCheckBox32">
+                    <constraints/>
+                    <properties>
+                      <text value="32"/>
+                    </properties>
+                  </component>
+                  <component id="52b14" class="javax.swing.JCheckBox" binding="sAssignCheckBox33">
+                    <constraints/>
+                    <properties>
+                      <text value="33"/>
+                    </properties>
+                  </component>
+                  <component id="f4cae" class="javax.swing.JCheckBox" binding="sAssignCheckBox34">
+                    <constraints/>
+                    <properties>
+                      <text value="34"/>
+                    </properties>
+                  </component>
+                  <component id="57a76" class="javax.swing.JCheckBox" binding="sAssignCheckBox35">
+                    <constraints/>
+                    <properties>
+                      <text value="35"/>
+                    </properties>
+                  </component>
+                  <component id="c0226" class="javax.swing.JCheckBox" binding="sAssignCheckBox36">
+                    <constraints/>
+                    <properties>
+                      <text value="36"/>
+                    </properties>
+                  </component>
+                  <component id="8c14a" class="javax.swing.JCheckBox" binding="sAssignCheckBox37">
+                    <constraints/>
+                    <properties>
+                      <text value="37"/>
+                    </properties>
+                  </component>
+                  <component id="8946f" class="javax.swing.JCheckBox" binding="sAssignCheckBox38">
+                    <constraints/>
+                    <properties>
+                      <text value="38"/>
+                    </properties>
+                  </component>
+                  <component id="8466" class="javax.swing.JCheckBox" binding="sAssignCheckBox39">
+                    <constraints/>
+                    <properties>
+                      <text value="39"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="21a53">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="893b8" class="javax.swing.JCheckBox" binding="sAssignCheckBox40">
+                    <constraints/>
+                    <properties>
+                      <text value="40"/>
+                    </properties>
+                  </component>
+                  <component id="3ffbb" class="javax.swing.JCheckBox" binding="sAssignCheckBox41">
+                    <constraints/>
+                    <properties>
+                      <text value="41"/>
+                    </properties>
+                  </component>
+                  <component id="12dad" class="javax.swing.JCheckBox" binding="sAssignCheckBox42">
+                    <constraints/>
+                    <properties>
+                      <text value="42"/>
+                    </properties>
+                  </component>
+                  <component id="13cda" class="javax.swing.JCheckBox" binding="sAssignCheckBox43">
+                    <constraints/>
+                    <properties>
+                      <text value="43"/>
+                    </properties>
+                  </component>
+                  <component id="3ae16" class="javax.swing.JCheckBox" binding="sAssignCheckBox44">
+                    <constraints/>
+                    <properties>
+                      <text value="44"/>
+                    </properties>
+                  </component>
+                  <component id="ee6ac" class="javax.swing.JCheckBox" binding="sAssignCheckBox45">
+                    <constraints/>
+                    <properties>
+                      <text value="45"/>
+                    </properties>
+                  </component>
+                  <component id="9f4f6" class="javax.swing.JCheckBox" binding="sAssignCheckBox46">
+                    <constraints/>
+                    <properties>
+                      <text value="46"/>
+                    </properties>
+                  </component>
+                  <component id="551f2" class="javax.swing.JCheckBox" binding="sAssignCheckBox47">
+                    <constraints/>
+                    <properties>
+                      <text value="47"/>
+                    </properties>
+                  </component>
+                  <component id="a132b" class="javax.swing.JCheckBox" binding="sAssignCheckBox48">
+                    <constraints/>
+                    <properties>
+                      <text value="48"/>
+                    </properties>
+                  </component>
+                  <component id="5d83f" class="javax.swing.JCheckBox" binding="sAssignCheckBox49">
+                    <constraints/>
+                    <properties>
+                      <text value="49"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="da4dc">
+                <constraints>
+                  <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="16c31" class="javax.swing.JCheckBox" binding="sAssignCheckBox50">
+                    <constraints/>
+                    <properties>
+                      <text value="50"/>
+                    </properties>
+                  </component>
+                  <component id="d5ebe" class="javax.swing.JCheckBox" binding="sAssignCheckBox51">
+                    <constraints/>
+                    <properties>
+                      <text value="51"/>
+                    </properties>
+                  </component>
+                  <component id="85be5" class="javax.swing.JCheckBox" binding="sAssignCheckBox52">
+                    <constraints/>
+                    <properties>
+                      <text value="52"/>
+                    </properties>
+                  </component>
+                  <component id="f3fb2" class="javax.swing.JCheckBox" binding="sAssignCheckBox53">
+                    <constraints/>
+                    <properties>
+                      <text value="53"/>
+                    </properties>
+                  </component>
+                  <component id="75c10" class="javax.swing.JCheckBox" binding="sAssignCheckBox54">
+                    <constraints/>
+                    <properties>
+                      <text value="54"/>
+                    </properties>
+                  </component>
+                  <component id="c3d9e" class="javax.swing.JCheckBox" binding="sAssignCheckBox55">
+                    <constraints/>
+                    <properties>
+                      <text value="55"/>
+                    </properties>
+                  </component>
+                  <component id="15af7" class="javax.swing.JCheckBox" binding="sAssignCheckBox56">
+                    <constraints/>
+                    <properties>
+                      <text value="56"/>
+                    </properties>
+                  </component>
+                  <component id="fff81" class="javax.swing.JCheckBox" binding="sAssignCheckBox57">
+                    <constraints/>
+                    <properties>
+                      <text value="57"/>
+                    </properties>
+                  </component>
+                  <component id="4331f" class="javax.swing.JCheckBox" binding="sAssignCheckBox58">
+                    <constraints/>
+                    <properties>
+                      <text value="58"/>
+                    </properties>
+                  </component>
+                  <component id="7dd0d" class="javax.swing.JCheckBox" binding="sAssignCheckBox59">
+                    <constraints/>
+                    <properties>
+                      <text value="59"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="84788" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="分钟 "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="d77e1">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="7ef25" class="javax.swing.JRadioButton" binding="mRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="分钟"/>
+                    </properties>
+                  </component>
+                  <component id="b264a" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="29d33">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="a2004" class="javax.swing.JRadioButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="dd88e" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="c63b0" class="javax.swing.JSpinner" binding="mArroundSpinnerFrom">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="4195" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="e0c3c" class="javax.swing.JSpinner" binding="mArroundSpinnerTo">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="8b0ed" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="分钟"/>
+                    </properties>
+                  </component>
+                  <component id="c977b" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                      "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="b9eff">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ca777" class="javax.swing.JRadioButton" binding="mRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="463f4" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="296f8" class="javax.swing.JSpinner" binding="mIntervalSpinnerFrom">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="f7851" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="分钟开始，每"/>
+                    </properties>
+                  </component>
+                  <component id="9433c" class="javax.swing.JSpinner" binding="mIntervalSpinnerSpace">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="18d1c" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="分钟执行一次"/>
+                    </properties>
+                  </component>
+                  <component id="32ce8" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                         "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="f328e">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="1d2ad" class="javax.swing.JRadioButton" binding="mRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定"/>
+                    </properties>
+                  </component>
+                  <component id="8790b" class="javax.swing.JCheckBox" binding="mAssignCheckBox0">
+                    <constraints/>
+                    <properties>
+                      <text value="0"/>
+                    </properties>
+                  </component>
+                  <component id="dcacc" class="javax.swing.JCheckBox" binding="mAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="e42c7" class="javax.swing.JCheckBox" binding="mAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="937ef" class="javax.swing.JCheckBox" binding="mAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="24a44" class="javax.swing.JCheckBox" binding="mAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="84e53" class="javax.swing.JCheckBox" binding="mAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="8e82e" class="javax.swing.JCheckBox" binding="mAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="1975d" class="javax.swing.JCheckBox" binding="mAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                  <component id="f4d43" class="javax.swing.JCheckBox" binding="mAssignCheckBox8">
+                    <constraints/>
+                    <properties>
+                      <text value="8"/>
+                    </properties>
+                  </component>
+                  <component id="3fb20" class="javax.swing.JCheckBox" binding="mAssignCheckBox9">
+                    <constraints/>
+                    <properties>
+                      <text value="9"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="402c5">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="bd8a2" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="         "/>
+                    </properties>
+                  </component>
+                  <component id="e868e" class="javax.swing.JCheckBox" binding="mAssignCheckBox10">
+                    <constraints/>
+                    <properties>
+                      <text value="10"/>
+                    </properties>
+                  </component>
+                  <component id="6a18d" class="javax.swing.JCheckBox" binding="mAssignCheckBox11">
+                    <constraints/>
+                    <properties>
+                      <text value="11"/>
+                    </properties>
+                  </component>
+                  <component id="d312e" class="javax.swing.JCheckBox" binding="mAssignCheckBox12">
+                    <constraints/>
+                    <properties>
+                      <text value="12"/>
+                    </properties>
+                  </component>
+                  <component id="948a6" class="javax.swing.JCheckBox" binding="mAssignCheckBox13">
+                    <constraints/>
+                    <properties>
+                      <text value="13"/>
+                    </properties>
+                  </component>
+                  <component id="10151" class="javax.swing.JCheckBox" binding="mAssignCheckBox14">
+                    <constraints/>
+                    <properties>
+                      <text value="14"/>
+                    </properties>
+                  </component>
+                  <component id="8a91" class="javax.swing.JCheckBox" binding="mAssignCheckBox15">
+                    <constraints/>
+                    <properties>
+                      <text value="15"/>
+                    </properties>
+                  </component>
+                  <component id="1f49d" class="javax.swing.JCheckBox" binding="mAssignCheckBox16">
+                    <constraints/>
+                    <properties>
+                      <text value="16"/>
+                    </properties>
+                  </component>
+                  <component id="f4336" class="javax.swing.JCheckBox" binding="mAssignCheckBox17">
+                    <constraints/>
+                    <properties>
+                      <text value="17"/>
+                    </properties>
+                  </component>
+                  <component id="92d01" class="javax.swing.JCheckBox" binding="mAssignCheckBox18">
+                    <constraints/>
+                    <properties>
+                      <text value="18"/>
+                    </properties>
+                  </component>
+                  <component id="1c320" class="javax.swing.JCheckBox" binding="mAssignCheckBox19">
+                    <constraints/>
+                    <properties>
+                      <text value="19"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="460d5">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6d999" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="         "/>
+                    </properties>
+                  </component>
+                  <component id="4b7d8" class="javax.swing.JCheckBox" binding="mAssignCheckBox20">
+                    <constraints/>
+                    <properties>
+                      <text value="20"/>
+                    </properties>
+                  </component>
+                  <component id="1f812" class="javax.swing.JCheckBox" binding="mAssignCheckBox21">
+                    <constraints/>
+                    <properties>
+                      <text value="21"/>
+                    </properties>
+                  </component>
+                  <component id="5d9eb" class="javax.swing.JCheckBox" binding="mAssignCheckBox22">
+                    <constraints/>
+                    <properties>
+                      <text value="22"/>
+                    </properties>
+                  </component>
+                  <component id="c7c8" class="javax.swing.JCheckBox" binding="mAssignCheckBox23">
+                    <constraints/>
+                    <properties>
+                      <text value="23"/>
+                    </properties>
+                  </component>
+                  <component id="6ae72" class="javax.swing.JCheckBox" binding="mAssignCheckBox24">
+                    <constraints/>
+                    <properties>
+                      <text value="24"/>
+                    </properties>
+                  </component>
+                  <component id="cafe" class="javax.swing.JCheckBox" binding="mAssignCheckBox25">
+                    <constraints/>
+                    <properties>
+                      <text value="25"/>
+                    </properties>
+                  </component>
+                  <component id="9e336" class="javax.swing.JCheckBox" binding="mAssignCheckBox26">
+                    <constraints/>
+                    <properties>
+                      <text value="26"/>
+                    </properties>
+                  </component>
+                  <component id="ffb39" class="javax.swing.JCheckBox" binding="mAssignCheckBox27">
+                    <constraints/>
+                    <properties>
+                      <text value="27"/>
+                    </properties>
+                  </component>
+                  <component id="9018" class="javax.swing.JCheckBox" binding="mAssignCheckBox28">
+                    <constraints/>
+                    <properties>
+                      <text value="28"/>
+                    </properties>
+                  </component>
+                  <component id="25f60" class="javax.swing.JCheckBox" binding="mAssignCheckBox29">
+                    <constraints/>
+                    <properties>
+                      <text value="29"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="1a4d7">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="86109" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="         "/>
+                    </properties>
+                  </component>
+                  <component id="5e5cb" class="javax.swing.JCheckBox" binding="mAssignCheckBox30">
+                    <constraints/>
+                    <properties>
+                      <text value="30"/>
+                    </properties>
+                  </component>
+                  <component id="4fe3d" class="javax.swing.JCheckBox" binding="mAssignCheckBox31">
+                    <constraints/>
+                    <properties>
+                      <text value="31"/>
+                    </properties>
+                  </component>
+                  <component id="6af03" class="javax.swing.JCheckBox" binding="mAssignCheckBox32">
+                    <constraints/>
+                    <properties>
+                      <text value="32"/>
+                    </properties>
+                  </component>
+                  <component id="13979" class="javax.swing.JCheckBox" binding="mAssignCheckBox33">
+                    <constraints/>
+                    <properties>
+                      <text value="33"/>
+                    </properties>
+                  </component>
+                  <component id="7bb93" class="javax.swing.JCheckBox" binding="mAssignCheckBox34">
+                    <constraints/>
+                    <properties>
+                      <text value="34"/>
+                    </properties>
+                  </component>
+                  <component id="d257d" class="javax.swing.JCheckBox" binding="mAssignCheckBox35">
+                    <constraints/>
+                    <properties>
+                      <text value="35"/>
+                    </properties>
+                  </component>
+                  <component id="f3305" class="javax.swing.JCheckBox" binding="mAssignCheckBox36">
+                    <constraints/>
+                    <properties>
+                      <text value="36"/>
+                    </properties>
+                  </component>
+                  <component id="3887d" class="javax.swing.JCheckBox" binding="mAssignCheckBox37">
+                    <constraints/>
+                    <properties>
+                      <text value="37"/>
+                    </properties>
+                  </component>
+                  <component id="c2e1e" class="javax.swing.JCheckBox" binding="mAssignCheckBox38">
+                    <constraints/>
+                    <properties>
+                      <text value="38"/>
+                    </properties>
+                  </component>
+                  <component id="45be8" class="javax.swing.JCheckBox" binding="mAssignCheckBox39">
+                    <constraints/>
+                    <properties>
+                      <text value="39"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="b19ef">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="17e75" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="         "/>
+                    </properties>
+                  </component>
+                  <component id="fe060" class="javax.swing.JCheckBox" binding="mAssignCheckBox40">
+                    <constraints/>
+                    <properties>
+                      <text value="40"/>
+                    </properties>
+                  </component>
+                  <component id="e1bfd" class="javax.swing.JCheckBox" binding="mAssignCheckBox41">
+                    <constraints/>
+                    <properties>
+                      <text value="41"/>
+                    </properties>
+                  </component>
+                  <component id="a519" class="javax.swing.JCheckBox" binding="mAssignCheckBox42">
+                    <constraints/>
+                    <properties>
+                      <text value="42"/>
+                    </properties>
+                  </component>
+                  <component id="d41e2" class="javax.swing.JCheckBox" binding="mAssignCheckBox43">
+                    <constraints/>
+                    <properties>
+                      <text value="43"/>
+                    </properties>
+                  </component>
+                  <component id="111d0" class="javax.swing.JCheckBox" binding="mAssignCheckBox44">
+                    <constraints/>
+                    <properties>
+                      <text value="44"/>
+                    </properties>
+                  </component>
+                  <component id="338b9" class="javax.swing.JCheckBox" binding="mAssignCheckBox45">
+                    <constraints/>
+                    <properties>
+                      <text value="45"/>
+                    </properties>
+                  </component>
+                  <component id="b4c61" class="javax.swing.JCheckBox" binding="mAssignCheckBox46">
+                    <constraints/>
+                    <properties>
+                      <text value="46"/>
+                    </properties>
+                  </component>
+                  <component id="edf8" class="javax.swing.JCheckBox" binding="mAssignCheckBox47">
+                    <constraints/>
+                    <properties>
+                      <text value="47"/>
+                    </properties>
+                  </component>
+                  <component id="d5f0b" class="javax.swing.JCheckBox" binding="mAssignCheckBox48">
+                    <constraints/>
+                    <properties>
+                      <text value="48"/>
+                    </properties>
+                  </component>
+                  <component id="dbe7d" class="javax.swing.JCheckBox" binding="mAssignCheckBox49">
+                    <constraints/>
+                    <properties>
+                      <text value="49"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="6ed5f">
+                <constraints>
+                  <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="9d35a" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="         "/>
+                    </properties>
+                  </component>
+                  <component id="39d6a" class="javax.swing.JCheckBox" binding="mAssignCheckBox50">
+                    <constraints/>
+                    <properties>
+                      <text value="50"/>
+                    </properties>
+                  </component>
+                  <component id="4ffa9" class="javax.swing.JCheckBox" binding="mAssignCheckBox51">
+                    <constraints/>
+                    <properties>
+                      <text value="51"/>
+                    </properties>
+                  </component>
+                  <component id="40a89" class="javax.swing.JCheckBox" binding="mAssignCheckBox52">
+                    <constraints/>
+                    <properties>
+                      <text value="52"/>
+                    </properties>
+                  </component>
+                  <component id="13de5" class="javax.swing.JCheckBox" binding="mAssignCheckBox53">
+                    <constraints/>
+                    <properties>
+                      <text value="53"/>
+                    </properties>
+                  </component>
+                  <component id="12a75" class="javax.swing.JCheckBox" binding="mAssignCheckBox54">
+                    <constraints/>
+                    <properties>
+                      <text value="54"/>
+                    </properties>
+                  </component>
+                  <component id="94b04" class="javax.swing.JCheckBox" binding="mAssignCheckBox55">
+                    <constraints/>
+                    <properties>
+                      <text value="55"/>
+                    </properties>
+                  </component>
+                  <component id="40037" class="javax.swing.JCheckBox" binding="mAssignCheckBox56">
+                    <constraints/>
+                    <properties>
+                      <text value="56"/>
+                    </properties>
+                  </component>
+                  <component id="9fab0" class="javax.swing.JCheckBox" binding="mAssignCheckBox57">
+                    <constraints/>
+                    <properties>
+                      <text value="57"/>
+                    </properties>
+                  </component>
+                  <component id="5f441" class="javax.swing.JCheckBox" binding="mAssignCheckBox58">
+                    <constraints/>
+                    <properties>
+                      <text value="58"/>
+                    </properties>
+                  </component>
+                  <component id="b317e" class="javax.swing.JCheckBox" binding="mAssignCheckBox59">
+                    <constraints/>
+                    <properties>
+                      <text value="59"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="5fefa" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="小时 "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="802b0">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="f8059" class="javax.swing.JRadioButton" binding="hRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="小时"/>
+                    </properties>
+                  </component>
+                  <component id="5df8f" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="cb94e">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="eca60" class="javax.swing.JRadioButton" binding="hRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="75779" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="ead6" class="javax.swing.JSpinner" binding="hspinner1">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="e3428" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="f43a7" class="javax.swing.JSpinner" binding="hspinner2">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="fdd0b" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="小时"/>
+                    </properties>
+                  </component>
+                  <component id="dd236" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                              "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="b3e3b">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="32c8a" class="javax.swing.JRadioButton" binding="hRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="8ff0d" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="871f7" class="javax.swing.JSpinner" binding="hspinner3">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="e3f7e" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="小时开始，每"/>
+                    </properties>
+                  </component>
+                  <component id="4daa9" class="javax.swing.JSpinner" binding="hspinner4">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="429b6" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="小时执行一次"/>
+                    </properties>
+                  </component>
+                  <component id="45b04" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                 "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="edbbc">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="9d6d8" class="javax.swing.JRadioButton" binding="hRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="40a02">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="841ac" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="上午："/>
+                    </properties>
+                  </component>
+                  <component id="be716" class="javax.swing.JCheckBox" binding="hAssignCheckBox0">
+                    <constraints/>
+                    <properties>
+                      <text value="0"/>
+                    </properties>
+                  </component>
+                  <component id="8fe35" class="javax.swing.JCheckBox" binding="hAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="55a86" class="javax.swing.JCheckBox" binding="hAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="18003" class="javax.swing.JCheckBox" binding="hAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="1325" class="javax.swing.JCheckBox" binding="hAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="bc01" class="javax.swing.JCheckBox" binding="hAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="deaaf" class="javax.swing.JCheckBox" binding="hAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="e2f6c" class="javax.swing.JCheckBox" binding="hAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                  <component id="4af9" class="javax.swing.JCheckBox" binding="hAssignCheckBox8">
+                    <constraints/>
+                    <properties>
+                      <text value="8"/>
+                    </properties>
+                  </component>
+                  <component id="f52af" class="javax.swing.JCheckBox" binding="hAssignCheckBox9">
+                    <constraints/>
+                    <properties>
+                      <text value="9"/>
+                    </properties>
+                  </component>
+                  <component id="1b97" class="javax.swing.JCheckBox" binding="hAssignCheckBox10">
+                    <constraints/>
+                    <properties>
+                      <text value="10"/>
+                    </properties>
+                  </component>
+                  <component id="9e0b7" class="javax.swing.JCheckBox" binding="hAssignCheckBox11">
+                    <constraints/>
+                    <properties>
+                      <text value="11"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="e67ed">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="b0ea5" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="下午："/>
+                    </properties>
+                  </component>
+                  <component id="fee4e" class="javax.swing.JCheckBox" binding="hAssignCheckBox12">
+                    <constraints/>
+                    <properties>
+                      <text value="12"/>
+                    </properties>
+                  </component>
+                  <component id="ae893" class="javax.swing.JCheckBox" binding="hAssignCheckBox13">
+                    <constraints/>
+                    <properties>
+                      <text value="13"/>
+                    </properties>
+                  </component>
+                  <component id="5ede9" class="javax.swing.JCheckBox" binding="hAssignCheckBox14">
+                    <constraints/>
+                    <properties>
+                      <text value="14"/>
+                    </properties>
+                  </component>
+                  <component id="116cf" class="javax.swing.JCheckBox" binding="hAssignCheckBox15">
+                    <constraints/>
+                    <properties>
+                      <text value="15"/>
+                    </properties>
+                  </component>
+                  <component id="16f20" class="javax.swing.JCheckBox" binding="hAssignCheckBox16">
+                    <constraints/>
+                    <properties>
+                      <text value="16"/>
+                    </properties>
+                  </component>
+                  <component id="23" class="javax.swing.JCheckBox" binding="hAssignCheckBox17">
+                    <constraints/>
+                    <properties>
+                      <text value="17"/>
+                    </properties>
+                  </component>
+                  <component id="b993e" class="javax.swing.JCheckBox" binding="hAssignCheckBox18">
+                    <constraints/>
+                    <properties>
+                      <text value="18"/>
+                    </properties>
+                  </component>
+                  <component id="c15e8" class="javax.swing.JCheckBox" binding="hAssignCheckBox19">
+                    <constraints/>
+                    <properties>
+                      <text value="19"/>
+                    </properties>
+                  </component>
+                  <component id="53c8d" class="javax.swing.JCheckBox" binding="hAssignCheckBox20">
+                    <constraints/>
+                    <properties>
+                      <text value="20"/>
+                    </properties>
+                  </component>
+                  <component id="16118" class="javax.swing.JCheckBox" binding="hAssignCheckBox21">
+                    <constraints/>
+                    <properties>
+                      <text value="21"/>
+                    </properties>
+                  </component>
+                  <component id="6bbc4" class="javax.swing.JCheckBox" binding="hAssignCheckBox22">
+                    <constraints/>
+                    <properties>
+                      <text value="22"/>
+                    </properties>
+                  </component>
+                  <component id="38da7" class="javax.swing.JCheckBox" binding="hAssignCheckBox23">
+                    <constraints/>
+                    <properties>
+                      <text value="23"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="58aab" layout-manager="FormLayout">
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="日 "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="eef59">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="47f92" class="javax.swing.JRadioButton" binding="dRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="日"/>
+                    </properties>
+                  </component>
+                  <component id="de335" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/LW]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="23c44">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6e215" class="javax.swing.JRadioButton" binding="dRadioButtonNone">
+                    <constraints/>
+                    <properties>
+                      <text value="不指定"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="52517">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="e8c4" class="javax.swing.JRadioButton" binding="dRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="e4eb9" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="fc3c7" class="javax.swing.JSpinner" binding="dspinner1">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="c0e50" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="439c6" class="javax.swing.JSpinner" binding="dspinner2">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="1ff42" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="日"/>
+                    </properties>
+                  </component>
+                  <component id="9794d" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                      "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="fb369">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="aacf2" class="javax.swing.JRadioButton" binding="dRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="8f015" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="87221" class="javax.swing.JSpinner" binding="dspinner3">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="bb271" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="日开始，每"/>
+                    </properties>
+                  </component>
+                  <component id="4eb0f" class="javax.swing.JSpinner" binding="dspinner4">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="67b10" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="天执行一次"/>
+                    </properties>
+                  </component>
+                  <component id="1c72d" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                           "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="ac821">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="bc8a6" class="javax.swing.JRadioButton" binding="dRadioButtonWdayOfIntervalDay">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="bb636" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="每月"/>
+                    </properties>
+                  </component>
+                  <component id="d7aa6" class="javax.swing.JSpinner" binding="dspinner5">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="f02d0" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="号最近的那个工作日"/>
+                    </properties>
+                  </component>
+                  <component id="93a3d" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                           "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="4ecd8">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="5a9dc" class="javax.swing.JRadioButton" binding="dRadioButtonLastDayOfMOnth">
+                    <constraints/>
+                    <properties>
+                      <text value="本月最后一天"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="67455">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="51fef" class="javax.swing.JRadioButton" binding="dRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定"/>
+                    </properties>
+                  </component>
+                  <component id="380b3" class="javax.swing.JCheckBox" binding="dAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="a34b4" class="javax.swing.JCheckBox" binding="dAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="54bae" class="javax.swing.JCheckBox" binding="dAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="c5a5f" class="javax.swing.JCheckBox" binding="dAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="89840" class="javax.swing.JCheckBox" binding="dAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="2dd0c" class="javax.swing.JCheckBox" binding="dAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="1a1d3" class="javax.swing.JCheckBox" binding="dAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                  <component id="b9449" class="javax.swing.JCheckBox" binding="dAssignCheckBox8">
+                    <constraints/>
+                    <properties>
+                      <text value="8"/>
+                    </properties>
+                  </component>
+                  <component id="c180a" class="javax.swing.JCheckBox" binding="dAssignCheckBox9">
+                    <constraints/>
+                    <properties>
+                      <text value="9"/>
+                    </properties>
+                  </component>
+                  <component id="8bef8" class="javax.swing.JCheckBox" binding="dAssignCheckBox10">
+                    <constraints/>
+                    <properties>
+                      <text value="10"/>
+                    </properties>
+                  </component>
+                  <component id="3ff1b" class="javax.swing.JCheckBox" binding="dAssignCheckBox11">
+                    <constraints/>
+                    <properties>
+                      <text value="11"/>
+                    </properties>
+                  </component>
+                  <component id="16a14" class="javax.swing.JCheckBox" binding="dAssignCheckBox12">
+                    <constraints/>
+                    <properties>
+                      <text value="12"/>
+                    </properties>
+                  </component>
+                  <component id="f4960" class="javax.swing.JCheckBox" binding="dAssignCheckBox13">
+                    <constraints/>
+                    <properties>
+                      <text value="13"/>
+                    </properties>
+                  </component>
+                  <component id="4a67d" class="javax.swing.JCheckBox" binding="dAssignCheckBox14">
+                    <constraints/>
+                    <properties>
+                      <text value="14"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="2aff0">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="93024" class="javax.swing.JCheckBox" binding="dAssignCheckBox15">
+                    <constraints/>
+                    <properties>
+                      <text value="15"/>
+                    </properties>
+                  </component>
+                  <component id="bcaf2" class="javax.swing.JCheckBox" binding="dAssignCheckBox16">
+                    <constraints/>
+                    <properties>
+                      <text value="16"/>
+                    </properties>
+                  </component>
+                  <component id="4dadf" class="javax.swing.JCheckBox" binding="dAssignCheckBox17">
+                    <constraints/>
+                    <properties>
+                      <text value="17"/>
+                    </properties>
+                  </component>
+                  <component id="c27f2" class="javax.swing.JCheckBox" binding="dAssignCheckBox18">
+                    <constraints/>
+                    <properties>
+                      <text value="18"/>
+                    </properties>
+                  </component>
+                  <component id="ab21b" class="javax.swing.JCheckBox" binding="dAssignCheckBox19">
+                    <constraints/>
+                    <properties>
+                      <text value="19"/>
+                    </properties>
+                  </component>
+                  <component id="7ddfb" class="javax.swing.JCheckBox" binding="dAssignCheckBox20">
+                    <constraints/>
+                    <properties>
+                      <text value="20"/>
+                    </properties>
+                  </component>
+                  <component id="3aaa4" class="javax.swing.JCheckBox" binding="dAssignCheckBox21">
+                    <constraints/>
+                    <properties>
+                      <text value="21"/>
+                    </properties>
+                  </component>
+                  <component id="769ce" class="javax.swing.JCheckBox" binding="dAssignCheckBox22">
+                    <constraints/>
+                    <properties>
+                      <text value="22"/>
+                    </properties>
+                  </component>
+                  <component id="61bbb" class="javax.swing.JCheckBox" binding="dAssignCheckBox23">
+                    <constraints/>
+                    <properties>
+                      <text value="23"/>
+                    </properties>
+                  </component>
+                  <component id="9b315" class="javax.swing.JCheckBox" binding="dAssignCheckBox24">
+                    <constraints/>
+                    <properties>
+                      <text value="24"/>
+                    </properties>
+                  </component>
+                  <component id="ec377" class="javax.swing.JCheckBox" binding="dAssignCheckBox25">
+                    <constraints/>
+                    <properties>
+                      <text value="25"/>
+                    </properties>
+                  </component>
+                  <component id="1eb00" class="javax.swing.JCheckBox" binding="dAssignCheckBox26">
+                    <constraints/>
+                    <properties>
+                      <text value="26"/>
+                    </properties>
+                  </component>
+                  <component id="3d8f2" class="javax.swing.JCheckBox" binding="dAssignCheckBox27">
+                    <constraints/>
+                    <properties>
+                      <text value="27"/>
+                    </properties>
+                  </component>
+                  <component id="601e0" class="javax.swing.JCheckBox" binding="dAssignCheckBox28">
+                    <constraints/>
+                    <properties>
+                      <text value="28"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="e07f8">
+                <constraints>
+                  <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="25c37" class="javax.swing.JCheckBox" binding="dAssignCheckBox29">
+                    <constraints/>
+                    <properties>
+                      <text value="29"/>
+                    </properties>
+                  </component>
+                  <component id="c11ba" class="javax.swing.JCheckBox" binding="dAssignCheckBox30">
+                    <constraints/>
+                    <properties>
+                      <text value="30"/>
+                    </properties>
+                  </component>
+                  <component id="7443b" class="javax.swing.JCheckBox" binding="dAssignCheckBox31">
+                    <constraints/>
+                    <properties>
+                      <text value="31"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="83bc0" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="月份 "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="cf6e9">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="66de8" class="javax.swing.JRadioButton" binding="monthRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="月"/>
+                    </properties>
+                  </component>
+                  <component id="5585e" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="4d1fe">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="efafa" class="javax.swing.JRadioButton" binding="monthRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="f907c" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="d0c0b" class="javax.swing.JSpinner" binding="monthSpinner1">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="63999" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="4ebd7" class="javax.swing.JSpinner" binding="monthSpinner2">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="f35a9" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="月"/>
+                    </properties>
+                  </component>
+                  <component id="343e4" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                   "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="60a40">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6996d" class="javax.swing.JRadioButton" binding="monthRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="ca771" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="5d8b2" class="javax.swing.JSpinner" binding="monthSpinner3">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="d53f8" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="日开始，每"/>
+                    </properties>
+                  </component>
+                  <component id="7356b" class="javax.swing.JSpinner" binding="monthSpinner4">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="a0ac2" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="每月执行一次"/>
+                    </properties>
+                  </component>
+                  <component id="2aefe" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                         "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="9340a">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="2c69d" class="javax.swing.JRadioButton" binding="monthRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定"/>
+                    </properties>
+                  </component>
+                  <component id="fbc25" class="javax.swing.JCheckBox" binding="monthAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="d4fdc" class="javax.swing.JCheckBox" binding="monthAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="dc611" class="javax.swing.JCheckBox" binding="monthAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="cf731" class="javax.swing.JCheckBox" binding="monthAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="5e9" class="javax.swing.JCheckBox" binding="monthAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="b471d" class="javax.swing.JCheckBox" binding="monthAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="2a071" class="javax.swing.JCheckBox" binding="monthAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                  <component id="8ea1d" class="javax.swing.JCheckBox" binding="monthAssignCheckBox8">
+                    <constraints/>
+                    <properties>
+                      <text value="8"/>
+                    </properties>
+                  </component>
+                  <component id="e406b" class="javax.swing.JCheckBox" binding="monthAssignCheckBox9">
+                    <constraints/>
+                    <properties>
+                      <text value="9"/>
+                    </properties>
+                  </component>
+                  <component id="59225" class="javax.swing.JCheckBox" binding="monthAssignCheckBox10">
+                    <constraints/>
+                    <properties>
+                      <text value="10"/>
+                    </properties>
+                  </component>
+                  <component id="fdb0c" class="javax.swing.JCheckBox" binding="monthAssignCheckBox11">
+                    <constraints/>
+                    <properties>
+                      <text value="11"/>
+                    </properties>
+                  </component>
+                  <component id="a9255" class="javax.swing.JCheckBox" binding="monthAssignCheckBox12">
+                    <constraints/>
+                    <properties>
+                      <text value="12"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="aabf8" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="周（星期） "/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="84049">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="6cd5e" class="javax.swing.JRadioButton" binding="wRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <text value="每周"/>
+                    </properties>
+                  </component>
+                  <component id="eb5f9" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/L#]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="7d078">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="a2848" class="javax.swing.JRadioButton" binding="wRadioButtonNone">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="不指定"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="b9656">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="be25b" class="javax.swing.JRadioButton" binding="wRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="b1b0" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从星期"/>
+                    </properties>
+                  </component>
+                  <component id="977b7" class="javax.swing.JSpinner" binding="wSpinner1">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="61a44" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="ed0f" class="javax.swing.JSpinner" binding="wSpinner2">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="3172b" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                   "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="cbe02">
+                <constraints>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="43a55" class="javax.swing.JRadioButton" binding="wRadioButtonInterval">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="43251" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="第"/>
+                    </properties>
+                  </component>
+                  <component id="3ddb0" class="javax.swing.JSpinner" binding="wSpinner3">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="dfd45" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="周的星期"/>
+                    </properties>
+                  </component>
+                  <component id="7188b" class="javax.swing.JSpinner" binding="wSpinner4">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="43bbd" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                   "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="4741a">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="eba60" class="javax.swing.JRadioButton" binding="wRadioButtonAssign">
+                    <constraints/>
+                    <properties>
+                      <text value="指定星期几"/>
+                    </properties>
+                  </component>
+                  <component id="cc9ec" class="javax.swing.JCheckBox" binding="wAssignCheckBox1">
+                    <constraints/>
+                    <properties>
+                      <text value="1"/>
+                    </properties>
+                  </component>
+                  <component id="4fa8b" class="javax.swing.JCheckBox" binding="wAssignCheckBox2">
+                    <constraints/>
+                    <properties>
+                      <text value="2"/>
+                    </properties>
+                  </component>
+                  <component id="e4628" class="javax.swing.JCheckBox" binding="wAssignCheckBox3">
+                    <constraints/>
+                    <properties>
+                      <text value="3"/>
+                    </properties>
+                  </component>
+                  <component id="deb3f" class="javax.swing.JCheckBox" binding="wAssignCheckBox4">
+                    <constraints/>
+                    <properties>
+                      <text value="4"/>
+                    </properties>
+                  </component>
+                  <component id="212c1" class="javax.swing.JCheckBox" binding="wAssignCheckBox5">
+                    <constraints/>
+                    <properties>
+                      <text value="5"/>
+                    </properties>
+                  </component>
+                  <component id="38d37" class="javax.swing.JCheckBox" binding="wAssignCheckBox6">
+                    <constraints/>
+                    <properties>
+                      <text value="6"/>
+                    </properties>
+                  </component>
+                  <component id="1e7fe" class="javax.swing.JCheckBox" binding="wAssignCheckBox7">
+                    <constraints/>
+                    <properties>
+                      <text value="7"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="6ba5e">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="61fe6" class="javax.swing.JRadioButton" binding="wRadioButtonLastw">
+                    <constraints/>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="f97c9" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="本月最后一个星期"/>
+                    </properties>
+                  </component>
+                  <component id="edb9a" class="javax.swing.JSpinner" binding="wSpinner5">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+          <grid id="94fc5" layout-manager="FormLayout">
+            <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <colspec value="fill:d:grow"/>
+            <constraints>
+              <tabbedpane title="年"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <toolbar id="6086f">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="632cf" class="javax.swing.JRadioButton" binding="yRadioButtonEvery">
+                    <constraints/>
+                    <properties>
+                      <text value="每年"/>
+                    </properties>
+                  </component>
+                  <component id="dd31b" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="允许的通配符[,-*/L#]"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="44d32">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="8b24b" class="javax.swing.JRadioButton" binding="yRadioButtonNone">
+                    <constraints/>
+                    <properties>
+                      <selected value="true"/>
+                      <text value="不指定"/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+              <toolbar id="467f1">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="-1" height="20"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="aca59" class="javax.swing.JRadioButton" binding="yRadioButtonArround">
+                    <constraints/>
+                    <properties>
+                      <text value="周期"/>
+                    </properties>
+                  </component>
+                  <component id="86dec" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="从"/>
+                    </properties>
+                  </component>
+                  <component id="8012a" class="javax.swing.JSpinner" binding="ySpinner1">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="a2945" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="-"/>
+                    </properties>
+                  </component>
+                  <component id="b7077" class="javax.swing.JSpinner" binding="ySpinner2">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                  <component id="95b9d" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text value="                                                   "/>
+                    </properties>
+                  </component>
+                </children>
+              </toolbar>
+            </children>
+          </grid>
+        </children>
+      </tabbedpane>
+      <component id="f57b9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <font style="3"/>
+          <text value="Cron表达式"/>
+        </properties>
+      </component>
+      <component id="a52dc" class="javax.swing.JTextField" binding="cronExprTextField">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <horizontalAlignment value="2"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <toolbar id="a2eb1">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="20"/>
+          </grid>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="4ef18" class="javax.swing.JButton" binding="buildCronExpButton">
+            <constraints/>
+            <properties>
+              <text value="生成cron表达式"/>
+            </properties>
+          </component>
+          <component id="4ff64" class="javax.swing.JButton" binding="formatToUIButton">
+            <constraints/>
+            <properties>
+              <text value="反解析到UI"/>
+            </properties>
+          </component>
+        </children>
+      </toolbar>
+      <component id="a9b5d" class="javax.swing.JTextArea" binding="recTenExcuteTextArea">
+        <constraints>
+          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="3a77" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="最近10次运行时间"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+  <buttonGroups>
+    <group name="sRadioButtonGroup">
+      <member id="f68dc"/>
+      <member id="3ee87"/>
+      <member id="efb08"/>
+      <member id="c6f28"/>
+    </group>
+    <group name="mRadioButtonGroup">
+      <member id="7ef25"/>
+      <member id="a2004"/>
+      <member id="ca777"/>
+      <member id="1d2ad"/>
+    </group>
+    <group name="hRadioButtonGroup">
+      <member id="f8059"/>
+      <member id="eca60"/>
+      <member id="32c8a"/>
+      <member id="9d6d8"/>
+    </group>
+    <group name="dRadioButtonGroup">
+      <member id="47f92"/>
+      <member id="6e215"/>
+      <member id="e8c4"/>
+      <member id="aacf2"/>
+      <member id="bc8a6"/>
+      <member id="5a9dc"/>
+      <member id="51fef"/>
+    </group>
+    <group name="monthRadioButtonGroup">
+      <member id="66de8"/>
+      <member id="efafa"/>
+      <member id="6996d"/>
+      <member id="2c69d"/>
+    </group>
+    <group name="wRadioButtonGroup">
+      <member id="6cd5e"/>
+      <member id="a2848"/>
+      <member id="be25b"/>
+      <member id="43a55"/>
+      <member id="eba60"/>
+      <member id="61fe6"/>
+    </group>
+    <group name="yRadioButtonGroup">
+      <member id="632cf"/>
+      <member id="8b24b"/>
+      <member id="aca59"/>
+    </group>
+  </buttonGroups>
+</form>

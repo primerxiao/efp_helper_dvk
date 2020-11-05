@@ -26,39 +26,39 @@
         </group>
         <!--生成curd代码-->
         <action id="efp-plugin-code-helper" description="Generate crud code" text="Generate Crud Code"
-                class="com.efp.plugins.coder.action.CodeHelperAction">
+                class="com.efp.plugins.frame.coder.action.CodeHelperAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成insertOrUpdate代码-->
         <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"
                 text="Generate InsertOrUpdate Method Code"
-                class="com.efp.plugins.coder.action.GenerateInsertOrUpdate">
+                class="com.efp.plugins.frame.coder.action.GenerateInsertOrUpdate">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成查询函数-->
         <action id="efp-plugin-Generate-Select" description="Generate select method code"
                 text="Generate Select Method Code"
-                class="com.efp.plugins.coder.action.GenerateSelect">
+                class="com.efp.plugins.frame.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--标签导出-->
-        <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.bookmark.action.ExportBookMarkAction"
+        <action id="efp-plugin-ExportBookMarkAction" class="com.efp.plugins.general.bookmark.action.ExportBookMarkAction"
                 text="Export BookMark To File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
         <!--标签导入-->
-        <action id="efp-plugin-ImportBookMarkAction" class="com.efp.plugins.bookmark.action.ImportBookMarkAction"
+        <action id="efp-plugin-ImportBookMarkAction" class="com.efp.plugins.general.bookmark.action.ImportBookMarkAction"
                 text="Import BookMark From File">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
         <!--json可视化-->
-        <action id="com.efp.plugins.jsonviewer.action.JsonViewAction"
-                class="com.efp.plugins.jsonviewer.action.JsonViewAction" text="JsonView">
+        <action id="com.efp.plugins.general.jsonviewer.action.JsonViewAction"
+                class="com.efp.plugins.general.jsonviewer.action.JsonViewAction" text="JsonView">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
         <!--cron表达式-->
-        <action id="com.efp.plugins.cron.action.CronAction"
-                class="com.efp.plugins.cron.action.CronAction" text="CronBuilder">
+        <action id="com.efp.plugins.general.cron.action.CronAction"
+                class="com.efp.plugins.general.cron.action.CronAction" text="CronBuilder">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
     </actions>
@@ -69,13 +69,13 @@
         <!--内联动作配置-->
         <intentionAction>
             <!--dubbo服务调用-->
-            <className>com.efp.plugins.dubbo.action.DubboServiceCall</className>
+            <className>com.efp.plugins.frame.dubbo.action.DubboServiceCall</className>
             <category>Java/Other</category>
             <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
             <!--dubbo配置添加-->
-            <className>com.efp.plugins.dubbo.action.DubboConfigCall</className>
+            <className>com.efp.plugins.frame.dubbo.action.DubboConfigCall</className>
             <category>Java/Other</category>
         </intentionAction>
         <!--Setting方面相关的配置-->

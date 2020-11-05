@@ -2,8 +2,8 @@ package com.efp.common.util;
 
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
-import com.efp.plugins.coder.bean.GenerateInfo;
-import com.efp.plugins.coder.bean.GenerateJava;
+import com.efp.plugins.frame.coder.bean.GenerateInfo;
+import com.efp.plugins.frame.coder.bean.GenerateJava;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
