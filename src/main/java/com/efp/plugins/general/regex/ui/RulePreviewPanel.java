@@ -1,6 +1,6 @@
 package com.efp.plugins.general.regex.ui;
 
-import com.efp.common.util.RuleUtil;
+import com.efp.common.util.RuleUtils;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
@@ -148,7 +148,7 @@ public class RulePreviewPanel extends JBPanelWithEmptyText implements Disposable
 				public void run() {
 					String text = checkTextArea.getText();
 					if (StringUtils.isNotEmpty(text)) {
-						String rule = RuleUtil.convertRule(textArea.getText());
+						String rule = RuleUtils.convertRule(textArea.getText());
 						Pattern pattern = Pattern.compile(rule);
 						Matcher matcher = pattern.matcher(text);
 						if (matcher.find()) {

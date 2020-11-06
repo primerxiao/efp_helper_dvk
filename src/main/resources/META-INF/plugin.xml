@@ -67,7 +67,10 @@
         <action id="AnyRule" class="com.efp.plugins.general.regex.action.AnyRuleFindAction" text="Regex" description="正则表达式">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
-
+        <!-- Add your actions here -->
+        <action id="DubboInvoker.frameOpen" class="com.efp.plugins.frame.dubbos.DubboInvokerFrameOpen" text="DubboInvoker" description="DubboInvokerFrameOpen" popup="true">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
     </actions>
 
     <!--拓展点配置-->

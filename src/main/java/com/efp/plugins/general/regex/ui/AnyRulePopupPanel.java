@@ -1,6 +1,6 @@
 package com.efp.plugins.general.regex.ui;
 
-import com.efp.common.util.RuleUtil;
+import com.efp.common.util.RuleUtils;
 import com.efp.plugins.general.regex.bean.MyEnterAction;
 import com.efp.plugins.general.regex.bean.UsageTableCellRenderer;
 import com.efp.plugins.general.regex.service.RuleDataService;
@@ -443,7 +443,7 @@ public class AnyRulePopupPanel extends JBPanel<AnyRulePopupPanel> {
 			return "";
 		}
 		if (this.ignoreSwayRod.isSelected()) {
-			return RuleUtil.convertRule(rule);
+			return RuleUtils.convertRule(rule);
 		}
 		return rule;
 

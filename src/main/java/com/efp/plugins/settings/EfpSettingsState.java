@@ -1,5 +1,6 @@
 package com.efp.plugins.settings;
 
+import com.efp.plugins.settings.bean.RegCenter;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
@@ -7,6 +8,9 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 插件配置持久化数据对象
@@ -21,6 +25,9 @@ public class EfpSettingsState implements PersistentStateComponent<EfpSettingsSta
      * dubbo注册中心地址
      */
     public String dubboRegistryAddress = "127.0.0.1:2181";
+
+    public List<RegCenter> regCenters = new ArrayList<>();
+
     /**
      * 生产者配置选择
      */

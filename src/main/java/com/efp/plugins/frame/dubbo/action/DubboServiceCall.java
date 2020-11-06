@@ -5,10 +5,12 @@ import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.sun.xml.bind.v2.TODO;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.jetbrains.annotations.Nls;
@@ -25,6 +27,7 @@ import java.util.Objects;
 /**
  * 直接发起dubbo接口调试
  * 通过telnet发送invote命令的方式调用dubbo接口
+ *
  * @author primerxiao
  */
 public class DubboServiceCall extends PsiElementBaseIntentionAction {
@@ -47,41 +50,62 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             String qualifiedName = Objects.requireNonNull(psiClass).getQualifiedName();
             //获取注册中心的持久化配置
             EfpSettingsState state = EfpSettingsState.getInstance().getState();
-            //zk客户端操作
-            ZkClient zkClient = new ZkClient(Objects.requireNonNull(state).dubboRegistryAddress, 5000);
-            //获取注册中心上面的该类的提供者列表
-            List<String> providers = zkClient.getChildren("/dubbo/" + qualifiedName + "/providers");
-            if (providers == null) {
-                throw new Exception("从注册中心" + state.dubboRegistryAddress + "获取到" + qualifiedName + "提供者数据为空");
+            if (state.regCenters.isEmpty()) {
+                throw new Exception("注册中心数据为空，请先配置注册中心");
             }
-            //提供者的ip和port集合
-            ArrayList<String> providerIpPorts = new ArrayList<>();
-            providers.forEach(s -> {
-                try {
-                    providerIpPorts.add(URLDecoder.decode(s, "utf-8").split("//")[1].split("/")[0]);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    NotifyUtils.notifyError(e.getMessage());
-                }
-            });
-            //弹出提供者列表进行选择调用
-            PsiMethod finalPsiMethod = psiMethod;
+            PsiMethod finalPsiMethod1 = psiMethod;
             JBPopupFactory.getInstance()
-                    .createPopupChooserBuilder(providerIpPorts)
-                    .setTitle("Select Provider")
-                    .setItemChosenCallback((value) -> {
-                        try {
-                            callDubboService(value, editor, finalPsiMethod);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            NotifyUtils.notifyError(e.getMessage());
+                    .createPopupChooserBuilder(state.regCenters)
+                    .setTitle("选择注册中心")
+                    .setItemChosenCallback((regCenter) -> {
+                        //todo:需要改造为支持其他注册中心
+                        //zk客户端操作
+                        ZkClient zkClient = new ZkClient(regCenter.getIp() + ":" + regCenter.getPort(), 5000);
+                        //获取注册中心上面的该类的提供者列表
+                        List<String> providers = zkClient.getChildren("/dubbo/" + qualifiedName + "/providers");
+                        if (providers.isEmpty()) {
+                            try {
+                                throw new Exception("从注册中心" + state.dubboRegistryAddress + "获取到" + qualifiedName + "提供者数据为空");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Messages.showErrorDialog(e.getMessage(), "错误信息");
+                                return;
+                            }
                         }
+                        //提供者的ip和port集合
+                        ArrayList<String> providerIpPorts = new ArrayList<>();
+                        providers.forEach(s -> {
+                            try {
+                                providerIpPorts.add(URLDecoder.decode(s, "utf-8").split("//")[1].split("/")[0]);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                                Messages.showErrorDialog(e.getMessage(), "错误信息");
+                            }
+                        });
+                        //弹出提供者列表进行选择调用
+                        JBPopupFactory.getInstance()
+                                .createPopupChooserBuilder(providerIpPorts)
+                                .setTitle("选择提供者")
+                                .setItemChosenCallback((value) -> {
+                                    try {
+                                        //todo:区分本地调用和远程调用
+                                        callDubboService(value, editor, finalPsiMethod1);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Messages.showErrorDialog(e.getMessage(), "错误信息");
+                                    }
+                                })
+                                .createPopup()
+                                .showInBestPositionFor(editor);
+
                     })
                     .createPopup()
                     .showInBestPositionFor(editor);
+
+
         } catch (Exception e) {
             e.printStackTrace();
-            NotifyUtils.notifyError(e.getMessage());
+            Messages.showErrorDialog(e.getMessage(), "错误信息");
         }
     }
 
@@ -98,17 +122,21 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             pStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (pStream != null) {
                     pStream.close();
                 }
-            } catch (Exception e) { e.printStackTrace(); }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             try {
                 if (telnetClient != null) {
                     telnetClient.disconnect();
                 }
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
