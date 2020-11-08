@@ -1,6 +1,7 @@
 package com.efp.plugins.frame.dubbo.action;
 
-import com.efp.common.util.NotifyUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
@@ -10,7 +11,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.sun.xml.bind.v2.TODO;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.jetbrains.annotations.Nls;
@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -42,6 +43,9 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             if (!Objects.requireNonNull(psiClass).isInterface()) {
                 //不是接口
                 PsiMethod[] superMethods = psiMethod.findSuperMethods();
+                if (superMethods.length == 0) {
+                    throw new Exception("函数不合法");
+                }
                 psiMethod = superMethods[0];
                 //获取当前操作的类对象
                 psiClass = psiMethod.getContainingClass();
@@ -118,10 +122,14 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             telnetClient.setDefaultTimeout(5000);
             telnetClient.connect(providerConfigArr[0], Integer.parseInt(providerConfigArr[1]));
             pStream = new PrintStream(telnetClient.getOutputStream());
+
+            //String command = String.format("invoke %s.%s(%s)", Objects.requireNonNull(psiMethod.getContainingClass()).getQualifiedName(), psiMethod.getName(), getDefaultParam(psiMethod));
             pStream.println("invoke " + Objects.requireNonNull(psiMethod.getContainingClass()).getQualifiedName() + "." + psiMethod.getName() + getMethodParameters(psiMethod));
+            //pStream.println(command);
             pStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
+            Messages.showErrorDialog(e.getMessage(), "错误信息");
         } finally {
             try {
                 if (pStream != null) {
@@ -134,16 +142,33 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                 if (telnetClient != null) {
                     telnetClient.disconnect();
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+    private String getDefaultParam(PsiMethod psiMethod) {
+        List<Object> paramList = new ArrayList<>();
+        for (PsiParameter psiParameter : psiMethod.getParameterList().getParameters()) {
+            SupportType supportType = SupportType.touch(psiParameter);
+            Object value = supportType.getValue(psiParameter);
+            if(value instanceof Map){
+                if(!((Map) value).containsKey("class")){
+                    ((Map) value).put("class", psiParameter.getType().getCanonicalText());
+                }
+            }
+            paramList.add(value);
+        }
+        String defaultText = JSON.toJSONString(paramList, SerializerFeature.PrettyFormat);
+        return defaultText.replace("\t", "    ");
     }
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
         final PsiElement parent = psiElement.getParent();
-        if (!(parent instanceof PsiMethod)) return false;
+        if (!(parent instanceof PsiMethod)) {
+            return false;
+        }
         return true;
     }
 

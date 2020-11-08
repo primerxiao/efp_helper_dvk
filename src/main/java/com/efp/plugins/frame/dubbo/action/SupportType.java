@@ -2,7 +2,7 @@
  * Copyright ©2014-2019 Youzan.com All rights reserved
  * me.wbean.plugin.dubbo.invoker
  */
-package com.efp.plugins.frame.dubbos;
+package com.efp.plugins.frame.dubbo.action;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -22,7 +22,7 @@ import java.util.*;
  * @author wbean
  * @date 2019/2/15 上午11:59
  */
-enum SupportType {
+public enum SupportType {
     BOOLEAN {
         @Override
         Boolean getRandomValue(PsiVariable psiVariable) {
@@ -30,11 +30,7 @@ enum SupportType {
         }
 
         @Override
-        Boolean getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                return Boolean.valueOf(defaultValue);
-            }
+        public Boolean getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -45,11 +41,7 @@ enum SupportType {
         }
 
         @Override
-        Character getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                return defaultValue.charAt(0);
-            }
+        public Character getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -60,11 +52,7 @@ enum SupportType {
         }
 
         @Override
-        Integer getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null && StringUtils.isNumeric(defaultValue)){
-                return Integer.valueOf(defaultValue);
-            }
+        public Integer getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -75,11 +63,7 @@ enum SupportType {
         }
 
         @Override
-        Float getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null && StringUtils.isNumeric(defaultValue)){
-                return Float.valueOf(defaultValue);
-            }
+        public Float getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -90,11 +74,7 @@ enum SupportType {
         }
 
         @Override
-        String getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                return defaultValue;
-            }
+        public String getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -105,13 +85,7 @@ enum SupportType {
         }
 
         @Override
-        List getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                try{
-                    return JSON.parseArray(defaultValue);
-                }catch (Exception e){}
-            }
+        public List getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -122,13 +96,7 @@ enum SupportType {
         }
 
         @Override
-        Map getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                try{
-                    return JSON.parseObject(defaultValue);
-                }catch (Exception e){}
-            }
+        public Map getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -139,14 +107,7 @@ enum SupportType {
         }
 
         @Override
-        Date getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                try{
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    return simpleDateFormat.parse(defaultValue);
-                }catch (Exception e){}
-            }
+        public Date getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     },
@@ -159,15 +120,9 @@ enum SupportType {
         }
 
         @Override
-        Map getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            JSONObject docValue = null;
-            if(defaultValue != null){
-                try{
-                    docValue = JSON.parseObject(defaultValue);
-                }catch (Exception e){}
-            }
+        public Map getValue(PsiVariable psiVariable) {
 
+            JSONObject docValue = null;
             JSONObject randomValue = getRandomValue(psiVariable);
             return mergeJson(randomValue, docValue).getInnerMap();
         }
@@ -230,11 +185,7 @@ enum SupportType {
         }
 
         @Override
-        String getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap) {
-            String defaultValue = defaultValueMap.get(psiVariable.getName());
-            if(defaultValue != null){
-                return defaultValue;
-            }
+        public String getValue(PsiVariable psiVariable) {
             return getRandomValue(psiVariable);
         }
     }
@@ -242,7 +193,7 @@ enum SupportType {
 
     abstract Object getRandomValue(PsiVariable psiVariable);
 
-    abstract Object getValue(PsiVariable psiVariable, Map<String, String> defaultValueMap);
+    public abstract Object getValue(PsiVariable psiVariable);
 
     public static SupportType touch(PsiVariable parameter) {
         PsiType type = parameter.getType();
