@@ -22,8 +22,8 @@ public class EfpSettingsComponent {
 
     EfpSettingsComponent(){
         super();
-        delRegCenter.addActionListener(e -> new RegCenterAddPanel(true, regCenterTable).show());
-        addRegCenter.addActionListener(e -> {
+        addRegCenter.addActionListener(e -> new RegCenterAddPanel(true, regCenterTable).show());
+        delRegCenter.addActionListener(e -> {
             //获取表格选中数据
             int[] selectedRows = regCenterTable.getSelectedRows();
             RegCenterTableModel model = (RegCenterTableModel) regCenterTable.getModel();
