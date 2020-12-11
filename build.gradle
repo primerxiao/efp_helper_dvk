@@ -39,9 +39,9 @@ intellij {
     //插件名称
     pluginName = 'EfpHelper'
     //基于idea的版本 跟localPath互斥
-    version = 'IU-2020.3'
+    //version = 'IU-2019.3'
     //idea的本地路径
-    //localPath = IDEA_ROOT_PATH_2020_3
+    localPath = IDEA_ROOT_PATH_2020_3
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
     downloadSources = false

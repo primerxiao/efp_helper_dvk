@@ -1,5 +1,6 @@
 package com.efp.plugins.settings;
 
+import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,7 @@ import javax.swing.*;
 
 /**
  * 插件配置
+ * @author 肖均辉
  */
 public class EfpSettingsConfigurable implements Configurable {
 

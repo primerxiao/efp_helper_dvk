@@ -10,20 +10,20 @@ import java.util.stream.Collectors;
 
 /**
  * 插件配置面板
+ * @author 肖均辉
  */
 public class EfpSettingsComponent {
-    private JPanel myPanel;
+    private JPanel jPanel;
     private JCheckBox providerCheckBox;
     private JCheckBox comsumerCheckBox;
-    private JPanel regCenterPanel;
     private JTable regCenterTable;
-    private JButton addRegCenterButton;
-    private JButton delRegCenterButton;
+    private JButton addRegCenter;
+    private JButton delRegCenter;
 
     EfpSettingsComponent(){
         super();
-        addRegCenterButton.addActionListener(e -> new RegCenterAddPanel(true, regCenterTable).show());
-        delRegCenterButton.addActionListener(e -> {
+        addRegCenter.addActionListener(e -> new RegCenterAddPanel(true, regCenterTable).show());
+        delRegCenter.addActionListener(e -> {
             //获取表格选中数据
             int[] selectedRows = regCenterTable.getSelectedRows();
             RegCenterTableModel model = (RegCenterTableModel) regCenterTable.getModel();
@@ -38,7 +38,7 @@ public class EfpSettingsComponent {
     }
 
     public JComponent getPanel() {
-        return myPanel;
+        return jPanel;
     }
 
     public void reset() {
@@ -77,4 +77,5 @@ public class EfpSettingsComponent {
         instance.regCenters = model.getRegCenters();
         instance.loadState(instance);
     }
+
 }
