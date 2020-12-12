@@ -25,7 +25,7 @@
         update ${tableName}
         <trim prefix="set" suffixOverrides=",">
             <#list classFields as field>
-                <if test="${field.fieldName?uncap_first}!=null and ${field.fieldName?uncap_first}!=''">${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}},</if>
+                <if test="${field.fieldName?uncap_first}!=null">${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}},</if>
             </#list>
         </trim>
         where <#list classFields as field><#if field.primaryKey><#if field_index!=0> and </#if>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}</#if> </#list>

@@ -55,6 +55,14 @@ public class EfpSettingsComponent {
         if (Objects.isNull(state)) {
             return true;
         }
+        //dubbo配置
+        if (!state.comsumerCheckBox == comsumerCheckBox.isSelected()) {
+            return true;
+        }
+        if (state.providerCheckBox == providerCheckBox.isSelected()) {
+            return true;
+        }
+        //注册中心配置
         List<RegCenter> stateRegCenters = state.regCenters;
         RegCenterTableModel model = (RegCenterTableModel) regCenterTable.getModel();
         List<RegCenter> regCenters = model.getRegCenters();
@@ -63,7 +71,7 @@ public class EfpSettingsComponent {
             return true;
         }
         //如果表格的数据在缓存中没有 则变化
-        if (regCenters.stream().filter(regCenter -> !stateRegCenters.contains(regCenter)).collect(Collectors.toList()).size() > 0) {
+        if (regCenters.stream().filter(regCenter -> !stateRegCenters.contains(regCenter)).count() > 0) {
             return true;
         }
         return false;
