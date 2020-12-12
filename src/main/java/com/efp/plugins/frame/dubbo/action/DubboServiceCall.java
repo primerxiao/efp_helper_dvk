@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.tasks.Task;
 import com.intellij.util.IncorrectOperationException;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.net.telnet.TelnetClient;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,7 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
             String qualifiedName = Objects.requireNonNull(psiClass).getQualifiedName();
             //获取注册中心的持久化配置
             EfpSettingsState state = EfpSettingsState.getInstance().getState();
+            assert state != null;
             if (state.regCenters.isEmpty()) {
                 throw new Exception("注册中心数据为空，请先配置注册中心");
             }
@@ -79,12 +82,7 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                         //提供者的ip和port集合
                         ArrayList<String> providerIpPorts = new ArrayList<>();
                         providers.forEach(s -> {
-                            try {
-                                providerIpPorts.add(URLDecoder.decode(s, "utf-8").split("//")[1].split("/")[0]);
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                                Messages.showErrorDialog(e.getMessage(), "错误信息");
-                            }
+                            providerIpPorts.add(URLDecoder.decode(s, StandardCharsets.UTF_8).split("//")[1].split("/")[0]);
                         });
                         //弹出提供者列表进行选择调用
                         JBPopupFactory.getInstance()
