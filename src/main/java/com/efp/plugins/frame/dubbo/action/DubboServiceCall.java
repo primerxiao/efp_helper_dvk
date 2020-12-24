@@ -5,9 +5,14 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -93,7 +98,13 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                                 .setItemChosenCallback((value) -> {
                                     try {
                                         //todo:区分本地调用和远程调用
-                                        callDubboService(value, editor, finalPsiMethod1);
+                                        new Task.Backgroundable(project, "Calling dubbo service...") {
+                                            @Override
+                                            public void run(@NotNull ProgressIndicator progressIndicator) {
+                                                callDubboService(value, editor, finalPsiMethod1);
+                                            }
+                                        }.queue();
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         Messages.showErrorDialog(e.getMessage(), "错误信息");
@@ -146,21 +157,6 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                 e.printStackTrace();
             }
         }
-    }
-    private String getDefaultParam(PsiMethod psiMethod) {
-        List<Object> paramList = new ArrayList<>();
-        for (PsiParameter psiParameter : psiMethod.getParameterList().getParameters()) {
-            SupportType supportType = SupportType.touch(psiParameter);
-            Object value = supportType.getValue(psiParameter);
-            if(value instanceof Map){
-                if(!((Map) value).containsKey("class")){
-                    ((Map) value).put("class", psiParameter.getType().getCanonicalText());
-                }
-            }
-            paramList.add(value);
-        }
-        String defaultText = JSON.toJSONString(paramList, SerializerFeature.PrettyFormat);
-        return defaultText.replace("\t", "    ");
     }
 
     @Override
