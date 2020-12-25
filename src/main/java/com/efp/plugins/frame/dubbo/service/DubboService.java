@@ -5,12 +5,15 @@ import com.alibaba.dubbo.config.ReferenceConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
 
-@Service
-public class DubboServiceImpl {
+/**
+ * @author 肖均辉
+ */
+public class DubboService {
+
+    public static DubboService instance = new DubboService();
 
     private final Supplier<ApplicationConfig> supplier=ApplicationConfig::new;
 
@@ -47,4 +50,7 @@ public class DubboServiceImpl {
     }
 
 
+    public static DubboService getInstance() {
+        return instance;
+    }
 }

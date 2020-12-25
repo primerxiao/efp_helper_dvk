@@ -1,25 +1,19 @@
 package com.efp.plugins.frame.dubbo.ui;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.util.JsonUtils;
-import com.efp.plugins.frame.dubbo.service.DubboServiceImpl;
+import com.efp.plugins.frame.dubbo.service.DubboService;
 import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.*;
-import com.sun.tools.doclets.formats.html.PackageUseWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.util.Objects;
 
-@Component
 public class DubboGenericCallUi extends DialogWrapper {
     private JPanel root;
     private JTextField registerAddr;
@@ -33,8 +27,7 @@ public class DubboGenericCallUi extends DialogWrapper {
 
     private final PsiMethod psiMethod;
 
-    @Autowired
-    private DubboServiceImpl dubboService;
+    private final DubboService dubboService = DubboService.getInstance();
 
     /**
      * 构造函数
