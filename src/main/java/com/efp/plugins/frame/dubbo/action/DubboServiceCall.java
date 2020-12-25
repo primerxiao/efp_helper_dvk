@@ -81,7 +81,7 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                         ArrayList<String> providerIpPorts = new ArrayList<>();
                         providers.forEach(s -> {
                             try {
-                                providerIpPorts.add(URLDecoder.decode(s, StandardCharsets.UTF_8.toString()).split("//")[1].split("/")[0]);
+                                providerIpPorts.add(URLDecoder.decode(s, String.valueOf(StandardCharsets.UTF_8)).split("//")[1].split("/")[0]);
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }

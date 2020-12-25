@@ -23,15 +23,20 @@ repositories {
 
 dependencies {
     //模板
-    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
+    compile 'org.freemarker:freemarker:2.3.28'
     // https://mvnrepository.com/artifact/com.101tec/zkclient
-    compile group: 'com.101tec', name: 'zkclient', version: '0.11'
+    compile 'com.101tec:zkclient:0.11'
     // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
-    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
+    compile 'org.quartz-scheduler:quartz:2.3.2'
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
-    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.74'
+    compile 'com.alibaba:fastjson:1.2.74'
     //test
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'junit:junit:4.12'
+    // dubbo
+    compile('com.alibaba:dubbo:2.5.3') {
+        exclude group: 'spring:org.springframework'
+    }
+
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -39,12 +44,12 @@ intellij {
     //插件名称
     pluginName = 'EfpHelper'
     //基于idea的版本 跟localPath互斥
-    //version = 'IU-2019.3'
+    version = 'IU-2020.3'
     //idea的本地路径
-    localPath = IDEA_ROOT_PATH_2020_3
+    //localPath = IDEA_ROOT_PATH_2019_3\
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
-    downloadSources = false
+    downloadSources = true
     //localSourcesPath = LOCAL_SOURCES_PATH
     //加载的插件
     plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']
