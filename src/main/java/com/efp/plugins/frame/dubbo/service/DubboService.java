@@ -4,8 +4,15 @@ import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ReferenceConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.rpc.service.GenericService;
+import com.efp.common.util.JsonUtils;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiType;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
@@ -15,12 +22,13 @@ public class DubboService {
 
     public static DubboService instance = new DubboService();
 
-    private final Supplier<ApplicationConfig> supplier=ApplicationConfig::new;
+    private final Supplier<ApplicationConfig> supplier = ApplicationConfig::new;
 
     private final String applicationName = "TestApi";
 
     /**
      * dubbo泛化调用
+     *
      * @param dubboCallParam 参数
      * @return 调用响应结果
      */
@@ -49,6 +57,19 @@ public class DubboService {
                 dubboCallParam.getInvokeMethodParam());
     }
 
+    private String[] getParamName(PsiMethod psiMethod) {
+        ArrayList<String> types = new ArrayList<>();
+        PsiParameterList parameterList = psiMethod.getParameterList();
+        if (parameterList.isEmpty()) {
+            return types.toArray(new String[0]);
+        }
+        PsiParameter[] parameters = parameterList.getParameters();
+        if (parameters.length <= 0) {
+            return types.toArray(new String[0]);
+        }
+        Arrays.stream(parameters).forEach(p -> types.add(p.getName()));
+        return types.toArray(new String[types.size()]);
+    }
 
     public static DubboService getInstance() {
         return instance;
