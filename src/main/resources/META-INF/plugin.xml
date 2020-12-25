@@ -75,6 +75,12 @@
     <!--拓展点配置-->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <intentionAction>
+            <!--dubbo服务调用-->
+            <className>com.efp.plugins.frame.dubbo.action.DubboGenericCall</className>
+            <category>Java/Other</category>
+            <descriptionDirectoryName>/intentionDescriptions/DubboGenericCall</descriptionDirectoryName>
+        </intentionAction>
         <!--内联动作配置-->
         <intentionAction>
             <!--dubbo服务调用-->
