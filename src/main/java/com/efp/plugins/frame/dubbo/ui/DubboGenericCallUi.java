@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Map;
 import java.util.Objects;
 
 public class DubboGenericCallUi extends DialogWrapper {
@@ -45,13 +46,13 @@ public class DubboGenericCallUi extends DialogWrapper {
         registerAddr.setText(getRegisterAddr());
         group.setText(PluginContants.DubboConfig.DEFAULT_DUBBO_GROUP);
         version.setText(PluginContants.DubboConfig.DEFAULT_DUBBO_VERSION);
-        param.setText(getParamText(psiMethod));
+        param.setText(getParamValueText(psiMethod));
         setOKButtonText("发起请求");
         setCancelButtonText("关闭");
         init();
     }
 
-    private String getParamText(PsiMethod psiMethod) {
+    private String getParamValueText(PsiMethod psiMethod) {
         PsiParameterList parameterList = psiMethod.getParameterList();
         if (parameterList.isEmpty()) {
             JsonUtils.prettyformat("{}");
@@ -62,10 +63,37 @@ public class DubboGenericCallUi extends DialogWrapper {
         }
         for (PsiParameter parameter : parameters) {
             String name = parameter.getName();
+            System.out.println(name);
             PsiType type = parameter.getType();
+            System.out.println(type.toString());
+            System.out.println(type.getCanonicalText());
+            System.out.println("");
         }
         return JsonUtils.prettyformat("{}");
     }
+
+//    i
+//    int
+//
+//    integer
+//    java.lang.Integer
+//
+//    string
+//    java.lang.String
+//
+//    doubleParam
+//    java.lang.Double
+//
+//    bigDecimal
+//    java.math.BigDecimal
+//
+//    map
+//    java.util.Map<java.lang.String,java.lang.String>
+//
+//    accloan
+//    com.irdstudio.basic.framework.core.bean.SedSynAccLoanVO
+
+
 
     private String getRegisterAddr() {
         //获取注册中心的持久化配置
