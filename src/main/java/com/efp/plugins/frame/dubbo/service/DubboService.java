@@ -59,20 +59,6 @@ public class DubboService {
                 dubboCallParam.getInvokeMethodParam());
     }
 
-    private String[] getParamName(PsiMethod psiMethod) {
-        ArrayList<String> types = new ArrayList<>();
-        PsiParameterList parameterList = psiMethod.getParameterList();
-        if (parameterList.isEmpty()) {
-            return types.toArray(new String[0]);
-        }
-        PsiParameter[] parameters = parameterList.getParameters();
-        if (parameters.length <= 0) {
-            return types.toArray(new String[0]);
-        }
-        Arrays.stream(parameters).forEach(p -> types.add(p.getName()));
-        return types.toArray(new String[types.size()]);
-    }
-
     public List<DubboMethodParam> getDubboMethodParams(PsiMethod psiMethod) {
         ArrayList<DubboMethodParam> result = new ArrayList<>();
         PsiParameterList parameterList = psiMethod.getParameterList();

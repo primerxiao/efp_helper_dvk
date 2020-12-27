@@ -1,6 +1,8 @@
 package com.efp.plugins.frame.dubbo.ui;
 
+import com.alibaba.fastjson.JSONObject;
 import com.efp.common.constant.PluginContants;
+import com.efp.common.notifier.NotificationHelper;
 import com.efp.common.util.JsonUtils;
 import com.efp.plugins.frame.dubbo.bean.DubboMethodParam;
 import com.efp.plugins.frame.dubbo.bean.DubboParamTableModel;
@@ -105,30 +107,49 @@ public class DubboGenericCallUi extends DialogWrapper {
         super.doOKAction();
         ProgressManager
                 .getInstance()
-                .run(new Task.Backgroundable(project, "DeepCode: Analyse Files...") {
+                .run(new Task.Backgroundable(project, "Dubbo: remote calling...") {
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
+                        indicator.setFraction(0.1);
                         DubboParamTableModel model = (DubboParamTableModel) paramTable.getModel();
                         List<DubboMethodParam> dubboMethodParams = model.getDubboMethodParams();
                         String[] types = new String[dubboMethodParams.size()];
-                        Object[] values = new String[dubboMethodParams.size()];
+                        Object[] values = new Object[dubboMethodParams.size()];
                         for (int i = 0; i < dubboMethodParams.size(); i++) {
                             types[i] = dubboMethodParams.get(i).getType();
                             values[i] = dubboMethodParams.get(i).getValue();
                         }
-                        DubboCallParam dubboCallParam = DubboCallParam
-                                .Builder
-                                .aDubboCallParam()
-                                .withRegistryAddress(registerAddr.getText())
-                                .withReferenceGeneric(true)
-                                .withInvokeMethod(method.getText())
-                                .withInvokeMethodParamType(types)
-                                .withInvokeMethodParam(values)
-                                .withReferenceGroup(group.getText())
-                                .withReferenceInterface(interfaceClass.getText())
-                                .withReferenceVersion(version.getText())
-                                .build();
-                        dubboService.remoteCall(dubboCallParam);
+                        indicator.setFraction(0.3);
+                        try {
+                            DubboCallParam dubboCallParam = DubboCallParam
+                                    .Builder
+                                    .aDubboCallParam()
+                                    .withRegistryAddress(registerAddr.getText())
+                                    .withReferenceGeneric(true)
+                                    .withInvokeMethod(method.getText())
+                                    .withInvokeMethodParamType(types)
+                                    .withInvokeMethodParam(values)
+                                    .withReferenceGroup(group.getText())
+                                    .withReferenceInterface(interfaceClass.getText())
+                                    .withReferenceVersion(version.getText())
+                                    .build();
+                            indicator.setFraction(0.5);
+                            Object callResult = dubboService.remoteCall(dubboCallParam);
+                            NotificationHelper.getInstance().notifyInfo(StringUtils.join(
+                                    "调用接口",
+                                    interfaceClass.getText(),
+                                    ":", method.getText(),
+                                    "返回结果:\n", JSONObject.toJSONString(callResult)), project);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            NotificationHelper.getInstance().notifyError(StringUtils.join(
+                                    "调用接口",
+                                    interfaceClass.getText(),
+                                    ":", method.getText(),
+                                    "发生异常:\n",
+                                    exception.getLocalizedMessage()), project);
+                        }
+                        indicator.setFraction(1.0);
                     }
                 });
     }
