@@ -2,9 +2,14 @@ package com.efp.plugins.frame.dubbo.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.util.JsonUtils;
+import com.efp.plugins.frame.dubbo.bean.DubboMethodParam;
 import com.efp.plugins.frame.dubbo.bean.DubboParamTableModel;
+import com.efp.plugins.frame.dubbo.service.DubboCallParam;
 import com.efp.plugins.frame.dubbo.service.DubboService;
 import com.efp.plugins.settings.EfpSettingsState;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.*;
@@ -13,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class DubboGenericCallUi extends DialogWrapper {
@@ -31,6 +38,8 @@ public class DubboGenericCallUi extends DialogWrapper {
 
     private final DubboService dubboService = DubboService.getInstance();
 
+    private final Project project;
+
     /**
      * 构造函数
      *
@@ -40,6 +49,7 @@ public class DubboGenericCallUi extends DialogWrapper {
      */
     public DubboGenericCallUi(@Nullable Project project, @NotNull PsiClass psiClass, @NotNull PsiMethod psiMethod) {
         super(project);
+        this.project = project;
         this.psiClass = psiClass;
         this.psiMethod = psiMethod;
         interfaceClass.setText(psiClass.getQualifiedName());
@@ -93,5 +103,33 @@ public class DubboGenericCallUi extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
+        ProgressManager
+                .getInstance()
+                .run(new Task.Backgroundable(project, "DeepCode: Analyse Files...") {
+                    @Override
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        DubboParamTableModel model = (DubboParamTableModel) paramTable.getModel();
+                        List<DubboMethodParam> dubboMethodParams = model.getDubboMethodParams();
+                        String[] types = new String[dubboMethodParams.size()];
+                        Object[] values = new String[dubboMethodParams.size()];
+                        for (int i = 0; i < dubboMethodParams.size(); i++) {
+                            types[i] = dubboMethodParams.get(i).getType();
+                            values[i] = dubboMethodParams.get(i).getValue();
+                        }
+                        DubboCallParam dubboCallParam = DubboCallParam
+                                .Builder
+                                .aDubboCallParam()
+                                .withRegistryAddress(registerAddr.getText())
+                                .withReferenceGeneric(true)
+                                .withInvokeMethod(method.getText())
+                                .withInvokeMethodParamType(types)
+                                .withInvokeMethodParam(values)
+                                .withReferenceGroup(group.getText())
+                                .withReferenceInterface(interfaceClass.getText())
+                                .withReferenceVersion(version.getText())
+                                .build();
+                        dubboService.remoteCall(dubboCallParam);
+                    }
+                });
     }
 }

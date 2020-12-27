@@ -24,7 +24,7 @@ public class EfpSettingsState implements PersistentStateComponent<EfpSettingsSta
     /**
      * dubbo注册中心地址
      */
-    public String dubboRegistryAddress = "127.0.0.1:2181";
+    public String dubboRegistryAddress = "zookeeper://127.0.0.1:2181";
 
     public List<RegCenter> regCenters = new ArrayList<>();
 
