@@ -16,8 +16,6 @@ public class DubboCallParam {
     public String[] invokeMethodParamType;
     public Object[] invokeMethodParam;
 
-
-
     public DubboCallParam(String applicationName, String registryAddress, String referenceInterface, String referenceVersion, boolean referenceGeneric, String referenceGroup, String invokeMethod, String[] invokeMethodParamType, Object[] invokeMethodParam) {
         this.applicationName = applicationName;
         this.registryAddress = registryAddress;
@@ -100,5 +98,74 @@ public class DubboCallParam {
 
     public void setInvokeMethodParam(Object[] invokeMethodParam) {
         this.invokeMethodParam = invokeMethodParam;
+    }
+
+
+    public static final class Builder {
+        public String applicationName;
+        public String registryAddress;
+        public String referenceInterface;
+        public String referenceVersion;
+        public boolean referenceGeneric;
+        public String referenceGroup;
+        public String invokeMethod;
+        public String[] invokeMethodParamType;
+        public Object[] invokeMethodParam;
+
+        private Builder() {
+        }
+
+        public static Builder aDubboCallParam() {
+            return new Builder();
+        }
+
+        public Builder withApplicationName(String applicationName) {
+            this.applicationName = applicationName;
+            return this;
+        }
+
+        public Builder withRegistryAddress(String registryAddress) {
+            this.registryAddress = registryAddress;
+            return this;
+        }
+
+        public Builder withReferenceInterface(String referenceInterface) {
+            this.referenceInterface = referenceInterface;
+            return this;
+        }
+
+        public Builder withReferenceVersion(String referenceVersion) {
+            this.referenceVersion = referenceVersion;
+            return this;
+        }
+
+        public Builder withReferenceGeneric(boolean referenceGeneric) {
+            this.referenceGeneric = referenceGeneric;
+            return this;
+        }
+
+        public Builder withReferenceGroup(String referenceGroup) {
+            this.referenceGroup = referenceGroup;
+            return this;
+        }
+
+        public Builder withInvokeMethod(String invokeMethod) {
+            this.invokeMethod = invokeMethod;
+            return this;
+        }
+
+        public Builder withInvokeMethodParamType(String[] invokeMethodParamType) {
+            this.invokeMethodParamType = invokeMethodParamType;
+            return this;
+        }
+
+        public Builder withInvokeMethodParam(Object[] invokeMethodParam) {
+            this.invokeMethodParam = invokeMethodParam;
+            return this;
+        }
+
+        public DubboCallParam build() {
+            return new DubboCallParam(applicationName, registryAddress, referenceInterface, referenceVersion, referenceGeneric, referenceGroup, invokeMethod, invokeMethodParamType, invokeMethodParam);
+        }
     }
 }

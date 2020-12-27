@@ -5,6 +5,7 @@ import com.alibaba.dubbo.config.ReferenceConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.rpc.service.GenericService;
 import com.efp.common.util.JsonUtils;
+import com.efp.plugins.frame.dubbo.bean.DubboMethodParam;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -69,6 +71,24 @@ public class DubboService {
         }
         Arrays.stream(parameters).forEach(p -> types.add(p.getName()));
         return types.toArray(new String[types.size()]);
+    }
+
+    public List<DubboMethodParam> getDubboMethodParams(PsiMethod psiMethod) {
+        ArrayList<DubboMethodParam> result = new ArrayList<>();
+        PsiParameterList parameterList = psiMethod.getParameterList();
+        if (!parameterList.isEmpty() && parameterList.getParameters().length > 0) {
+            PsiParameter[] parameters = parameterList.getParameters();
+            for (int i = 0; i < parameters.length; i++) {
+                result.add(DubboMethodParam
+                        .DubboMethodParamBuilder
+                        .aDubboMethodParam()
+                        .withIndex(i + "")
+                        .withType(parameters[i].getType().getCanonicalText())
+                        .withValue("{}")
+                        .build());
+            }
+        }
+        return result;
     }
 
     public static DubboService getInstance() {

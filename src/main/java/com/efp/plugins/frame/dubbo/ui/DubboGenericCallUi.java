@@ -2,6 +2,7 @@ package com.efp.plugins.frame.dubbo.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.util.JsonUtils;
+import com.efp.plugins.frame.dubbo.bean.DubboParamTableModel;
 import com.efp.plugins.frame.dubbo.service.DubboService;
 import com.efp.plugins.settings.EfpSettingsState;
 import com.intellij.openapi.project.Project;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class DubboGenericCallUi extends DialogWrapper {
@@ -22,7 +23,7 @@ public class DubboGenericCallUi extends DialogWrapper {
     private JTextField method;
     private JTextField group;
     private JTextField version;
-    private JTextArea param;
+    private JTable paramTable;
 
     private final PsiClass psiClass;
 
@@ -46,30 +47,11 @@ public class DubboGenericCallUi extends DialogWrapper {
         registerAddr.setText(getRegisterAddr());
         group.setText(PluginContants.DubboConfig.DEFAULT_DUBBO_GROUP);
         version.setText(PluginContants.DubboConfig.DEFAULT_DUBBO_VERSION);
-        param.setText(getParamValueText(psiMethod));
         setOKButtonText("发起请求");
         setCancelButtonText("关闭");
+        paramTable.setModel(new DubboParamTableModel(dubboService.getDubboMethodParams(psiMethod)));
+        paramTable.setEnabled(true);
         init();
-    }
-
-    private String getParamValueText(PsiMethod psiMethod) {
-        PsiParameterList parameterList = psiMethod.getParameterList();
-        if (parameterList.isEmpty()) {
-            JsonUtils.prettyformat("{}");
-        }
-        PsiParameter[] parameters = parameterList.getParameters();
-        if (parameters.length <= 0) {
-            JsonUtils.prettyformat("{}");
-        }
-        for (PsiParameter parameter : parameters) {
-            String name = parameter.getName();
-            System.out.println(name);
-            PsiType type = parameter.getType();
-            System.out.println(type.toString());
-            System.out.println(type.getCanonicalText());
-            System.out.println("");
-        }
-        return JsonUtils.prettyformat("{}");
     }
 
 //    i
@@ -94,7 +76,6 @@ public class DubboGenericCallUi extends DialogWrapper {
 //    com.irdstudio.basic.framework.core.bean.SedSynAccLoanVO
 
 
-
     private String getRegisterAddr() {
         //获取注册中心的持久化配置
         EfpSettingsState state = EfpSettingsState.getInstance().getState();
@@ -105,8 +86,7 @@ public class DubboGenericCallUi extends DialogWrapper {
     }
 
     @Override
-    protected @Nullable
-    JComponent createCenterPanel() {
+    protected @Nullable JComponent createCenterPanel() {
         return root;
     }
 
