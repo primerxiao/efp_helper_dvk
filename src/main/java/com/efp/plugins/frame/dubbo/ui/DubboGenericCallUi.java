@@ -3,7 +3,6 @@ package com.efp.plugins.frame.dubbo.ui;
 import com.alibaba.fastjson.JSONObject;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.notifier.NotificationHelper;
-import com.efp.common.util.JsonUtils;
 import com.efp.plugins.frame.dubbo.bean.DubboMethodParam;
 import com.efp.plugins.frame.dubbo.bean.DubboParamTableModel;
 import com.efp.plugins.frame.dubbo.service.DubboCallParam;
@@ -14,25 +13,27 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
+import com.intellij.ui.components.JBTextField;
+import com.intellij.ui.table.JBTable;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DubboGenericCallUi extends DialogWrapper {
     private JPanel root;
-    private JTextField registerAddr;
-    private JTextField interfaceClass;
-    private JTextField method;
-    private JTextField group;
-    private JTextField version;
-    private JTable paramTable;
+    private JBTextField registerAddr;
+    private JBTextField interfaceClass;
+    private JBTextField method;
+    private JBTextField group;
+    private JBTextField version;
+    private JBTable paramTable;
+    private JBTextField id;
 
     private final PsiClass psiClass;
 
@@ -98,7 +99,8 @@ public class DubboGenericCallUi extends DialogWrapper {
     }
 
     @Override
-    protected @Nullable JComponent createCenterPanel() {
+    protected @Nullable
+    JComponent createCenterPanel() {
         return root;
     }
 
@@ -107,21 +109,25 @@ public class DubboGenericCallUi extends DialogWrapper {
         super.doOKAction();
         ProgressManager
                 .getInstance()
-                .run(new Task.Backgroundable(project, "Dubbo: remote calling...") {
+                .run(new Task.Backgroundable(project, "Dubbo: Remote Calling...", true) {
+                    @Override
+                    public void onCancel() {
+                        super.onCancel();
+                    }
+
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        indicator.setFraction(0.1);
-                        DubboParamTableModel model = (DubboParamTableModel) paramTable.getModel();
-                        List<DubboMethodParam> dubboMethodParams = model.getDubboMethodParams();
-                        String[] types = new String[dubboMethodParams.size()];
-                        Object[] values = new Object[dubboMethodParams.size()];
-                        for (int i = 0; i < dubboMethodParams.size(); i++) {
-                            types[i] = dubboMethodParams.get(i).getType();
-                            values[i] = dubboMethodParams.get(i).getValue();
-                        }
-                        indicator.setFraction(0.3);
                         try {
-                            DubboCallParam dubboCallParam = DubboCallParam
+                            indicator.setIndeterminate(false);
+                            indicator.setFraction(0.1);
+                            //获取参数
+                            DubboParamTableModel model = (DubboParamTableModel) paramTable.getModel();
+                            List<DubboMethodParam> dubboMethodParams = model.getDubboMethodParams();
+                            //设置调用参数和值
+                            String[] types = dubboMethodParams.stream().map(DubboMethodParam::getType).toArray(String[]::new);
+                            Object[] values = dubboMethodParams.stream().map(DubboMethodParam::getValue).toArray(Object[]::new);
+                            indicator.setFraction(0.3);
+                            Object callResult = dubboService.remoteCall2(DubboCallParam
                                     .Builder
                                     .aDubboCallParam()
                                     .withRegistryAddress(registerAddr.getText())
@@ -132,15 +138,14 @@ public class DubboGenericCallUi extends DialogWrapper {
                                     .withReferenceGroup(group.getText())
                                     .withReferenceInterface(interfaceClass.getText())
                                     .withReferenceVersion(version.getText())
-                                    .build();
-                            indicator.setFraction(0.5);
-                            Object callResult = dubboService.remoteCall(dubboCallParam);
+                                    .withId(id.getText())
+                                    .build());
                             NotificationHelper.getInstance().notifyInfo(StringUtils.join(
                                     "调用接口",
                                     interfaceClass.getText(),
                                     ":", method.getText(),
                                     "返回结果:\n", JSONObject.toJSONString(callResult)), project);
-                        } catch (Exception exception) {
+                        } catch (Throwable exception) {
                             exception.printStackTrace();
                             NotificationHelper.getInstance().notifyError(StringUtils.join(
                                     "调用接口",
@@ -148,8 +153,9 @@ public class DubboGenericCallUi extends DialogWrapper {
                                     ":", method.getText(),
                                     "发生异常:\n",
                                     exception.getLocalizedMessage()), project);
+                        } finally {
+                            indicator.setFraction(1.0);
                         }
-                        indicator.setFraction(1.0);
                     }
                 });
     }

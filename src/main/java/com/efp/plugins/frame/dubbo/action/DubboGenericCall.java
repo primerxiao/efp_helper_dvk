@@ -52,7 +52,6 @@ public class DubboGenericCall extends PsiElementBaseIntentionAction {
             }
             //打开界面
             new DubboGenericCallUi(editor.getProject(), psiClass, psiMethod).show();
-
         } catch (Exception e) {
             e.printStackTrace();
             Messages.showErrorDialog(e.getMessage(), "错误信息");

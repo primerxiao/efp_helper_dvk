@@ -93,7 +93,7 @@ public class DubboServiceCall extends PsiElementBaseIntentionAction {
                                 .setItemChosenCallback((value) -> {
                                     try {
                                         //todo:区分本地调用和远程调用
-                                        new Task.Backgroundable(project, "Calling dubbo service...") {
+                                        new Task.Backgroundable(project, "Calling Dubbo Service...") {
                                             @Override
                                             public void run(@NotNull ProgressIndicator progressIndicator) {
                                                 callDubboService(value, editor, finalPsiMethod1);

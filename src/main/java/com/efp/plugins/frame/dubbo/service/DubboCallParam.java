@@ -15,8 +15,9 @@ public class DubboCallParam {
     public String invokeMethod;
     public String[] invokeMethodParamType;
     public Object[] invokeMethodParam;
+    public String id;
 
-    public DubboCallParam(String applicationName, String registryAddress, String referenceInterface, String referenceVersion, boolean referenceGeneric, String referenceGroup, String invokeMethod, String[] invokeMethodParamType, Object[] invokeMethodParam) {
+    public DubboCallParam(String applicationName, String registryAddress, String referenceInterface, String referenceVersion, boolean referenceGeneric, String referenceGroup, String invokeMethod, String[] invokeMethodParamType, Object[] invokeMethodParam, String id) {
         this.applicationName = applicationName;
         this.registryAddress = registryAddress;
         this.referenceInterface = referenceInterface;
@@ -26,6 +27,7 @@ public class DubboCallParam {
         this.invokeMethod = invokeMethod;
         this.invokeMethodParamType = invokeMethodParamType;
         this.invokeMethodParam = invokeMethodParam;
+        this.id = id;
     }
 
     public String getApplicationName() {
@@ -100,6 +102,13 @@ public class DubboCallParam {
         this.invokeMethodParam = invokeMethodParam;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public static final class Builder {
         public String applicationName;
@@ -111,6 +120,7 @@ public class DubboCallParam {
         public String invokeMethod;
         public String[] invokeMethodParamType;
         public Object[] invokeMethodParam;
+        public String id;
 
         private Builder() {
         }
@@ -164,8 +174,13 @@ public class DubboCallParam {
             return this;
         }
 
+        public Builder withId(String id) {
+            this.id = id;
+            return this;
+        }
+
         public DubboCallParam build() {
-            return new DubboCallParam(applicationName, registryAddress, referenceInterface, referenceVersion, referenceGeneric, referenceGroup, invokeMethod, invokeMethodParamType, invokeMethodParam);
+            return new DubboCallParam(applicationName, registryAddress, referenceInterface, referenceVersion, referenceGeneric, referenceGroup, invokeMethod, invokeMethodParamType, invokeMethodParam, id);
         }
     }
 }

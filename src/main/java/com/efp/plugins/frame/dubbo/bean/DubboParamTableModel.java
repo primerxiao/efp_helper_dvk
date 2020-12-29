@@ -1,5 +1,7 @@
 package com.efp.plugins.frame.dubbo.bean;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ public class DubboParamTableModel extends AbstractTableModel {
 
     private List<DubboMethodParam> dubboMethodParams = new ArrayList();
 
-    private String[] columnNames = {"序号", "参数类型", "参数值"};
+    private String[] columnNames = {"参数类型", "参数值"};
 
     public DubboParamTableModel(List<DubboMethodParam> dubboMethodParams) {
         this.dubboMethodParams = dubboMethodParams;
@@ -37,13 +39,18 @@ public class DubboParamTableModel extends AbstractTableModel {
         DubboMethodParam dubboMethodParam = dubboMethodParams.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return dubboMethodParam.getIndex();
-            case 1:
                 return dubboMethodParam.getType();
-            case 2:
+            case 1:
                 return dubboMethodParam.getValue();
             default:
                 return null;
+        }
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (columnIndex == 1) {
+            dubboMethodParams.get(rowIndex).setValue((String) aValue);
         }
     }
 
@@ -66,5 +73,17 @@ public class DubboParamTableModel extends AbstractTableModel {
 
     public void setColumnNames(String[] columnNames) {
         this.columnNames = columnNames;
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex == 1;
+    }
+
+    @Override
+    public void addTableModelListener(TableModelListener l) {
+        super.addTableModelListener(e -> {
+
+        });
     }
 }
