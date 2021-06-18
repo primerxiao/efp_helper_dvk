@@ -4,7 +4,6 @@ import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
 import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasTable;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.JBIterable;
 
@@ -30,26 +29,10 @@ public class GenerateInfo {
      * 数据源
      */
     private JBIterable<? extends DasColumn> dasColumns;
-
     /**
      * 项目
      */
     private Project project;
-
-    /**
-     * serviceModule
-     */
-    private Module serviceModule;
-
-    /**
-     * implModule
-     */
-    private Module implModule;
-
-    /**
-     * apiModule
-     */
-    private Module apiModule;
 
     /**
      * 当前选择的字段数组
@@ -57,9 +40,24 @@ public class GenerateInfo {
     private List<DasColumn> selectDasColumns;
 
     /**
-     * 创建的包、类等信息
+     * 当前适用module
      */
-    private GenerateJava generateJava;
+    private Module currentModule;
+
+    /**
+     * 当前文件名
+     */
+    private String fileName;
+
+    /**
+     * 当前文件路径
+     */
+
+    private String filePath;
+    /**
+     * 当前包路径
+     */
+    private String packagepath;
 
     public DasDataSource getDasDataSource() {
         return dasDataSource;
@@ -101,43 +99,43 @@ public class GenerateInfo {
         this.project = project;
     }
 
-    public Module getServiceModule() {
-        return serviceModule;
-    }
-
-    public void setServiceModule(Module serviceModule) {
-        this.serviceModule = serviceModule;
-    }
-
-    public Module getImplModule() {
-        return implModule;
-    }
-
-    public void setImplModule(Module implModule) {
-        this.implModule = implModule;
-    }
-
-    public GenerateJava getGenerateJava() {
-        return generateJava;
-    }
-
-    public void setGenerateJava(GenerateJava generateJava) {
-        this.generateJava = generateJava;
-    }
-
-    public Module getApiModule() {
-        return apiModule;
-    }
-
-    public void setApiModule(Module apiModule) {
-        this.apiModule = apiModule;
-    }
-
     public List<DasColumn> getSelectDasColumns() {
         return selectDasColumns;
     }
 
     public void setSelectDasColumns(List<DasColumn> selectDasColumns) {
         this.selectDasColumns = selectDasColumns;
+    }
+
+    public Module getCurrentModule() {
+        return currentModule;
+    }
+
+    public void setCurrentModule(Module currentModule) {
+        this.currentModule = currentModule;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getPackagepath() {
+        return packagepath;
+    }
+
+    public void setPackagepath(String packagepath) {
+        this.packagepath = packagepath;
     }
 }

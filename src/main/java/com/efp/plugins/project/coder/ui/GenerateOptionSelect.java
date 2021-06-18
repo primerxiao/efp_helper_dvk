@@ -102,20 +102,20 @@ public class GenerateOptionSelect extends DialogWrapper {
 
     private void generateSelectService() {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.SERVICE);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("service file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getVoClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ")  throws Exception;", aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getFileName() + "> " + generateInfo.getFileName() + "(" + generateInfo.getFileName() + " " + StringUtils.initCap(generateInfo.getFileName()) + ")  throws Exception;", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
 
     private void generateSelectServiceImpl() throws Exception {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceImplFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("serviceImpl file not found");
         }
@@ -132,13 +132,13 @@ public class GenerateOptionSelect extends DialogWrapper {
 
     private void generateSelectDao() throws Exception{
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getDaoFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("dao file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getDomainClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getDomainClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getDomainClassName()) + ");", aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getFileName() + "> " + generateInfo.getFileName() + "(" +generateInfo.getFileName() + " " + StringUtils.initCap(generateInfo.getFileName()) + ");", aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
@@ -146,7 +146,7 @@ public class GenerateOptionSelect extends DialogWrapper {
     private final void generateSelectMapper() throws Exception {
         //获取mapper insert or update mapper
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getMapperFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }

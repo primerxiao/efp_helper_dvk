@@ -17,35 +17,37 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Objects;
 
-public class DomainGenerator extends Generator {
+public class DoGenerator extends Generator {
 
-    public DomainGenerator(Boolean isOverWrite, GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
+    public DoGenerator(Boolean isOverWrite, GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
         super(isOverWrite, generateInfo, tpFileName);
     }
 
     @Override
     public VirtualFile generate() throws IOException, TemplateException {
-        final String[] simapleGenerateInfo = getSimapleGenerateInfo();
         VirtualFile virtualFile = null;
         String packageName = null;
         //查找文件看是否存在
         PsiFile[] filesByName = FilenameIndex.getFilesByName(
                 generateInfo.getProject(),
-                simapleGenerateInfo[1],
-                ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+                generateInfo.getFileName(),
+                Objects.requireNonNull(
+                        ModuleManager.getInstance(generateInfo.getProject()).
+                                findModuleByName(generateInfo.getCurrentModule().getName())).getModuleScope()
         );
         if (filesByName != null && filesByName.length > 0) {
             virtualFile = filesByName[0].getVirtualFile();
             packageName = ((PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile))
                     .getPackageStatement().getPackageName();
         } else {
-            File packagePath = new File(simapleGenerateInfo[2]);
+            File packagePath = new File(generateInfo.getFilePath());
             if (!packagePath.exists()) {
                 FileUtils.forceMkdir(packagePath);
             }
             virtualFile = VfsUtil.findFile(packagePath.toPath(), true)
-                    .createChildData(generateInfo.getProject(), simapleGenerateInfo[1]);
+                    .createChildData(generateInfo.getProject(), generateInfo.getFileName());
         }
         virtualFile.setBinaryContent(getSw().toString().getBytes(Charset.forName("utf-8")));
         //重新设置包名
@@ -54,8 +56,8 @@ public class DomainGenerator extends Generator {
             PsiJavaFile psiFile = (PsiJavaFile) (
                     FilenameIndex.getFilesByName(
                             generateInfo.getProject(),
-                            simapleGenerateInfo[1],
-                            ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+                            generateInfo.getFileName(),
+                            ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getCurrentModule().getName()).getModuleScope()
                     )
             )[0];
             psiFile.setPackageName(packageName);

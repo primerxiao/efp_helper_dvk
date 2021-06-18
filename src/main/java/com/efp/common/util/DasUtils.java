@@ -215,73 +215,7 @@ public class DasUtils {
         generateInfo.setDasTable(dasTable);
         generateInfo.setDasColumns(DasUtil.getColumns(dasTable));
         generateInfo.setProject(e.getProject());
-        generateInfo.setImplModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.IMPL));
-        generateInfo.setServiceModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.SERVICE));
-        generateInfo.setApiModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.API));
-        generateInfo.setGenerateJava(getGenerateJava(generateInfo));
         return generateInfo;
-    }
-
-    /**
-     * 根据有关代码生成的信息封装对象获取java相关的封装对象
-     *
-     * @param generateInfo 建造信息
-     * @return GenerateJava
-     */
-    public static GenerateJava getGenerateJava(GenerateInfo generateInfo) {
-        GenerateJava generateJava = new GenerateJava();
-        final String[] implModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getImplModule());
-        final String[] serviceModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getServiceModule());
-
-        //判断路径是否存在
-        //base
-        generateJava.setBaseClassName(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, generateInfo.getDasTable().getName()));
-        //domain
-        generateJava.setDomainClassName(generateJava.getBaseClassName());
-        generateJava.setDomainPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.domain");
-        //generateJava.setDomainPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-        generateJava.setDomainPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-        generateJava.setDomainFileName(generateJava.getBaseClassName() + ".java");
-        //vo
-        generateJava.setVoClassName(generateJava.getBaseClassName() + "VO");
-        generateJava.setVoPackageName("com.irdstudio." + serviceModuleNameArr[0] + "." + serviceModuleNameArr[1] + ".service.vo");
-        //generateJava.setVoPackagePath(generateInfo.getServiceModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + serviceModuleNameArr[1] + "/service/vo/");
-        generateJava.setVoPackagePath(FilenameUtils.getFullPath(generateInfo.getServiceModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + serviceModuleNameArr[1] + "/service/vo/");
-        generateJava.setVoFileName(generateJava.getBaseClassName() + "VO.java");
-        //dao
-        generateJava.setDaoClassName(generateJava.getBaseClassName() + "Dao");
-        generateJava.setDaoPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.dao");
-        //generateJava.setDaoPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/dao/");
-        generateJava.setDaoPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/dao/");
-        generateJava.setDaoFileName(generateJava.getBaseClassName() + "Dao.java");
-        //service
-        generateJava.setServiceClassName(generateJava.getBaseClassName() + "Service");
-        generateJava.setServicePackageName("com.irdstudio." + serviceModuleNameArr[0] + "." + serviceModuleNameArr[1] + ".service.facade");
-        //generateJava.setServicePackagePath(generateInfo.getServiceModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/facade/");
-        generateJava.setServicePackagePath(FilenameUtils.getFullPath(generateInfo.getServiceModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/facade/");
-        generateJava.setServiceFileName(generateJava.getBaseClassName() + "Service.java");
-        //serviceImpl
-        generateJava.setServiceImplClassName(generateJava.getBaseClassName() + "ServiceImpl");
-        generateJava.setServiceImplPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.impl");
-        //generateJava.setServiceImplPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/impl/");
-        generateJava.setServiceImplPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/impl/");
-        generateJava.setServiceImplFileName(generateJava.getBaseClassName() + "ServiceImpl.java");
-        //mapper
-        //generateJava.setMapperPath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/resources/mybatis/mapper/");
-        generateJava.setMapperPath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/resources/mybatis/mapper/");
-        generateJava.setMapperFileNameWithoutExt(generateJava.getBaseClassName() + "Mapper");
-        generateJava.setMapperFileName(generateJava.getBaseClassName() + "Mapper.xml");
-        //controller
-        if (generateInfo.getApiModule() != null) {
-            //api有可能为空
-            final String[] apiModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getApiModule());
-            generateJava.setControllerClassName(generateJava.getBaseClassName() + "Controller");
-            generateJava.setControllerPathName("com.irdstudio." + apiModuleNameArr[0] + "." + apiModuleNameArr[1] + ".api.rest");
-            //generateJava.setControllerPackagePath(generateInfo.getApiModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
-            generateJava.setControllerPackagePath(FilenameUtils.getFullPath(generateInfo.getApiModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
-            generateJava.setControllerFileName(generateJava.getBaseClassName() + "Controller.java");
-        }
-        return generateJava;
     }
 
 }

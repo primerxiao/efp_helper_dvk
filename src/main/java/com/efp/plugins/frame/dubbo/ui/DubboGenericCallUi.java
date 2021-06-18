@@ -136,6 +136,7 @@ public class DubboGenericCallUi extends DialogWrapper {
                                     .withInvokeMethodParamType(types)
                                     .withInvokeMethodParam(values)
                                     .withReferenceGroup(group.getText())
+
                                     .withReferenceInterface(interfaceClass.getText())
                                     .withReferenceVersion(version.getText())
                                     .withId(id.getText())

@@ -1,5 +1,6 @@
 package com.efp.plugins.project.coder.ui;
 
+import com.alibaba.fastjson.JSON;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DubboXmlConfigUtils;
@@ -35,6 +36,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import freemarker.template.TemplateException;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,20 +49,26 @@ import java.util.Objects;
 
 public class GenerateOption extends DialogWrapper {
     private JPanel jpanel;
-    private JCheckBox serviceImpl;
-    private JCheckBox mapper;
-    private JCheckBox domain;
-    private JCheckBox service;
-    private JCheckBox controller;
-    private JCheckBox dao;
-    private JCheckBox vo;
-    private JCheckBox isOverWrite;
-    private JCheckBox dubboConfig;
-    private JCheckBox openGenerateFile;
+    private JCheckBox repositoryCheckBox;
+    private JCheckBox mapperCheckBox;
+    private JCheckBox facadeCheckBox;
+    private JCheckBox controllerCheckBox;
+    private JCheckBox openGenerateFileCheckBox;
+    private JCheckBox doCheckBox;
+    private JCheckBox inputCheckBox;
+    private JCheckBox outputCheckBox;
+    private JCheckBox poCheckBox;
+    private JCheckBox producerCheckBox;
+    private JCheckBox consumerCheckBox;
+    private JCheckBox daoCheckBox;
 
     private AnActionEvent e;
+
     private GenerateInfo generateInfo;
+
     private List<VirtualFile> vfs = new ArrayList<>();
+
+    private String generate_checkbox_cache = "generate_checkbox_cache";;
 
     public GenerateOption(boolean canBeParent, AnActionEvent e, GenerateInfo generateInfo) {
         super(canBeParent);
@@ -68,24 +77,22 @@ public class GenerateOption extends DialogWrapper {
         init();
         setTitle(PluginContants.GENERATOR_UI_TITLE);
         getCache(generateInfo);
-        if (generateInfo.getApiModule() == null) {
-            controller.setSelected(false);
-            controller.disable();
-        }
     }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        serviceImpl = new JCheckBox();
-        mapper = new JCheckBox();
-        domain = new JCheckBox();
-        service = new JCheckBox();
-        controller = new JCheckBox();
-        dao = new JCheckBox();
-        vo = new JCheckBox();
-        isOverWrite = new JCheckBox();
-        dubboConfig = new JCheckBox();
-        openGenerateFile = new JCheckBox();
+        repositoryCheckBox = new JCheckBox();
+        mapperCheckBox = new JCheckBox();
+        facadeCheckBox = new JCheckBox();
+        controllerCheckBox = new JCheckBox();
+        openGenerateFileCheckBox = new JCheckBox();
+        doCheckBox = new JCheckBox();
+        inputCheckBox = new JCheckBox();
+        outputCheckBox = new JCheckBox();
+        poCheckBox = new JCheckBox();
+        producerCheckBox = new JCheckBox();
+        consumerCheckBox = new JCheckBox();
+        daoCheckBox = new JCheckBox();
     }
 
     @Nullable
@@ -96,73 +103,78 @@ public class GenerateOption extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        boolean[] strings = new boolean[]{
-                serviceImpl.isSelected(),
-                mapper.isSelected(),
-                domain.isSelected(),
-                service.isSelected(),
-                controller.isSelected(),
-                dao.isSelected(),
-                vo.isSelected(),
-                isOverWrite.isSelected(),
-                dubboConfig.isSelected()
-        };
         setCache();
         super.doOKAction();
         vfs.clear();
         startGenerate(e, generateInfo);
     }
 
+    /**
+     * 开始创建
+     * @param e 事件
+     * @param generateInfo 生成信息
+     */
     private void startGenerate(AnActionEvent e, final GenerateInfo generateInfo) {
         ProgressManager.getInstance().run(new Task.Backgroundable(generateInfo.getProject(), "生成文件") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.checkCanceled();
                 WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
-                    try {
-                        VirtualFile domainFile = null;
-                        if (domain.isSelected()) {
-                            domainFile = new DomainGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.DOMAIN).generate();
-                        }
-                        VirtualFile voFile = null;
-                        if (vo.isSelected()) {
-                            voFile = new VoGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.VO).generate();
-                        }
-                        VirtualFile daoFile = null;
-                        if (dao.isSelected()) {
-                            daoFile = new DaoGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.DAO).generate();
-                        }
-                        VirtualFile serviceFile = null;
-                        if (service.isSelected()) {
-                            serviceFile = new ServiceGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.SERVICE).generate();
-                        }
-                        VirtualFile serviceImplFile = null;
-                        if (serviceImpl.isSelected()) {
-                            serviceImplFile = new ServiceImplGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.SERVICEIMPL).generate();
-                        }
-                        VirtualFile mapperFile = null;
-                        if (mapper.isSelected()) {
-                            mapperFile = new MapperGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.MAPPER).generate();
-                        }
-                        if (dubboConfig.isSelected() && !Objects.isNull(serviceFile)) {
-                            generateDubboConfig(e, generateInfo, serviceFile);
-                        }
-                        //Controller
-                        VirtualFile controllerFile = null;
-                        if (controller.isSelected()&&!Objects.isNull(generateInfo.getApiModule())) {
-                            controllerFile = new ControllerGenerator(isOverWrite.isSelected(), generateInfo, TemplateFileNameEnum.CONTROLLER).generate();
-                        }
-                        addVfs(domainFile, voFile, daoFile, serviceFile, serviceImplFile, mapperFile, controllerFile);
-                        doOptimize(e.getProject());
-                        //保存文档
-                        FileDocumentManagerImpl.getInstance().saveAllDocuments();
-                        Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
-                                "所有文件生成完成", NotificationType.INFORMATION));
-                    } catch (IOException | TemplateException e) {
-                        String message = CompilerBundle.message("message.tect.package.file.io.error", e.toString());
-                        Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
-                                message, NotificationType.ERROR));
+                    VirtualFile repositoryFile = null;
+                    if (repositoryCheckBox.isSelected()) {
+/*                         generateJava.setDomainClassName(generateJava.getBaseClassName());
+                        generateJava.setDomainPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.domain");
+                        //generateJava.setDomainPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
+                        generateJava.setDomainPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
+                        generateJava.setDomainFileName(generateJava.getBaseClassName() + ".java");
+*/
                     }
+                    VirtualFile mapperFile = null;
+                    if (mapperCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile facadeFile = null;
+                    if (facadeCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile controllerFile = null;
+                    if (controllerCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile openGenerateFileFile = null;
+                    if (openGenerateFileCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile doFile = null;
+                    if (doCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile inputFile = null;
+                    if (inputCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile outputFile = null;
+                    if (outputCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile poFile = null;
+                    if (poCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile producerFile = null;
+                    if (producerCheckBox.isSelected()) {
+
+                    }
+                    VirtualFile consumerFile = null;
+                    if (consumerCheckBox.isSelected()) {
+
+                    }
+                    addVfs(repositoryFile, mapperFile, facadeFile, controllerFile, openGenerateFileFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
+                    doOptimize(e.getProject());
+                    //保存文档
+                    FileDocumentManagerImpl.getInstance().saveAllDocuments();
+                    Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                            "所有文件生成完成", NotificationType.INFORMATION));
                 });
             }
         });
@@ -180,13 +192,13 @@ public class GenerateOption extends DialogWrapper {
         }
     }
 
-    private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, VirtualFile service) {
+/*    private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, VirtualFile service) {
         PsiFile file = PsiManager.getInstance(generateInfo.getProject()).findFile(service);
         if (!Objects.isNull(file)) {
             DubboXmlConfigUtils.consumerXmlConfigSet(e, generateInfo.getServiceModule(), ((PsiJavaFile) file).getClasses()[0]);
             DubboXmlConfigUtils.poviderXmlConfigSet(e, generateInfo.getImplModule(), ((PsiJavaFile) file).getClasses()[0]);
         }
-    }
+    }*/
 
     private boolean checkPrimaryKey(DasColumn dasColumn) {
         DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
@@ -223,7 +235,7 @@ public class GenerateOption extends DialogWrapper {
                             JavaCodeStyleManager.getInstance(project).optimizeImports(javaFile);
                             JavaCodeStyleManager.getInstance(project).shortenClassReferences(javaFile);
                         }
-                        if (openGenerateFile.isSelected()) {
+                        if (openGenerateFileCheckBox.isSelected()) {
                             file.navigate(true);
                         }
                     } catch (Exception e) {
@@ -236,28 +248,41 @@ public class GenerateOption extends DialogWrapper {
     }
 
     private void getCache(GenerateInfo generateInfo) {
-        serviceImpl.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("serviceImpl_efp_helper"));
-        mapper.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("mapper_efp_helper"));
-        domain.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("domain_efp_helper"));
-        service.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("servic1e_efp_helper"));
-        controller.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("controller_efp_helper"));
-        dao.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dao_efp_helper"));
-        vo.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("vo_efp_helper"));
-        isOverWrite.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("isOverWrite_efp_helper"));
-        dubboConfig.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("dubboConfig_efp_helper"));
-        openGenerateFile.setSelected(PropertiesComponent.getInstance(generateInfo.getProject()).getBoolean("openGenerateFile_efp_helper"));
+        String value = PropertiesComponent.getInstance(generateInfo.getProject()).getValue(generate_checkbox_cache);
+        if (StringUtils.isEmpty(value)) {
+            return;
+        }
+        boolean[] parse = (boolean[]) JSON.parse(value);
+        repositoryCheckBox.setSelected(parse[0]);
+        mapperCheckBox.setSelected(parse[1]);
+        facadeCheckBox.setSelected(parse[2]);
+        controllerCheckBox.setSelected(parse[3]);
+        openGenerateFileCheckBox.setSelected(parse[4]);
+        doCheckBox.setSelected(parse[5]);
+        inputCheckBox.setSelected(parse[6]);
+        outputCheckBox.setSelected(parse[7]);
+        poCheckBox.setSelected(parse[8]);
+        producerCheckBox.setSelected(parse[9]);
+        consumerCheckBox.setSelected(parse[10]);
+        daoCheckBox.setSelected(parse[11]);
     }
 
     private void setCache() {
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("serviceImpl_efp_helper", serviceImpl.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("mapper_efp_helper", mapper.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("domain_efp_helper", domain.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("servic1e_efp_helper", service.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("controller_efp_helper", controller.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dao_efp_helper", dao.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("vo_efp_helper", vo.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("isOverWrite_efp_helper", isOverWrite.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("dubboConfig_efp_helper", dubboConfig.isSelected());
-        PropertiesComponent.getInstance(generateInfo.getProject()).setValue("openGenerateFile_efp_helper", openGenerateFile.isSelected());
+        boolean[] booleans = {
+                repositoryCheckBox.isSelected(),
+                mapperCheckBox.isSelected(),
+                facadeCheckBox.isSelected(),
+                controllerCheckBox.isSelected(),
+                openGenerateFileCheckBox.isSelected(),
+                doCheckBox.isSelected(),
+                inputCheckBox.isSelected(),
+                outputCheckBox.isSelected(),
+                poCheckBox.isSelected(),
+                producerCheckBox.isSelected(),
+                consumerCheckBox.isSelected(),
+                daoCheckBox.isSelected()
+        };
+        String o = JSON.toJSONString(booleans);
+        PropertiesComponent.getInstance(generateInfo.getProject()).setValue(generate_checkbox_cache, o);
     }
 }

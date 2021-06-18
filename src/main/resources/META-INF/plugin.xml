@@ -70,6 +70,15 @@
         <action id="DecompilerAction" class="com.efp.plugins.general.decompiler.action.DecompilerAction" text="Decompiler" description="反编译工具">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+
+
+
+        <!--test-->
+        <action id="efp-plugin-test"
+                class="com.efp.plugins.general.test.TestAction"
+                text="test">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
     </actions>
 
     <!--拓展点配置-->

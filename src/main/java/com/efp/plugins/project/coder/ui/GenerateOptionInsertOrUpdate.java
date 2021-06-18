@@ -101,20 +101,20 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
 
     private void generateInsertOrUpdateService() {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.SERVICE);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("service file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getGenerateJava().getVoClassName()+"> list);",aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getFileName()+"> list);",aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
 
     private void generateInsertOrUpdateServiceImpl() throws Exception {
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceImplFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("serviceImpl file not found");
         }
@@ -132,13 +132,13 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
 
     private void generateInsertOrUpdateDao() throws Exception{
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getDaoFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("dao file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getGenerateJava().getDomainClassName()+"> list);",aClass);
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("int insertOrUpdate(List<"+generateInfo.getFileName()+"> list);",aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
@@ -146,13 +146,13 @@ public class GenerateOptionInsertOrUpdate extends DialogWrapper {
     private final void generateInsertOrUpdateMapper() throws Exception {
         //获取mapper insert or update mapper
         final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getMapperFileName(), module.getModuleScope());
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), module.getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         StringWriter sw = new StringWriter();
         Template template = Generator.freemarker.getTemplate("insert_or_update_mapper.ftl");
-        template.process(Generator.covertToMapperInfo(generateInfo),sw);
+        template.process(generateInfo,sw);
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(e.getProject()).createTagFromText(sw.toString().replaceAll("\r\n","\n"), XMLLanguage.INSTANCE);
         mapperFile.getRootTag().addSubTag(tagFromText,false);

@@ -31,15 +31,15 @@ public class MapperGenerator extends Generator {
         //根据模板生成数据
         StringWriter sw = getSw();
         //判断包是否存在
-        File packagePath = new File(generateInfo.getGenerateJava().getMapperPath());
+        File packagePath = new File(generateInfo.getFilePath());
         if (!packagePath.exists()) {
             FileUtils.forceMkdir(packagePath);
         }
         VirtualFile packageDir = VfsUtil.findFile(packagePath.toPath(), true);
 
-        VirtualFile virtualFile = packageDir.findChild(generateInfo.getGenerateJava().getMapperFileName());
+        VirtualFile virtualFile = packageDir.findChild(generateInfo.getFileName());
         if (Objects.isNull(virtualFile)) {
-            virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getGenerateJava().getMapperFileName());
+            virtualFile = packageDir.createChildData(generateInfo.getProject(), generateInfo.getFileName());
         } else {
             if (!isOverWrite) {
                 //不覆盖 那么就替换更新

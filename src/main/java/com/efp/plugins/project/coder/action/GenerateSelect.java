@@ -39,7 +39,6 @@ public class GenerateSelect extends AnAction {
         if (StringUtils.isEmpty(currentMethodName)) {
             return;
         }
-        generateInfo.getGenerateJava().setCurrentMethodName(currentMethodName);
         final GenerateOptionSelect generateOptionSelect = new GenerateOptionSelect(true, e, generateInfo);
         generateOptionSelect.show();
     }
