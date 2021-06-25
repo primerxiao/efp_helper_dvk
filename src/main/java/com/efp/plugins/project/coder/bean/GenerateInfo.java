@@ -59,6 +59,15 @@ public class GenerateInfo {
      */
     private String packagepath;
 
+    /**
+     * 导入的包
+     */
+    private List<String> imports;
+
+    public void main(String[] args) {
+
+    }
+
     public DasDataSource getDasDataSource() {
         return dasDataSource;
     }
@@ -137,5 +146,13 @@ public class GenerateInfo {
 
     public void setPackagepath(String packagepath) {
         this.packagepath = packagepath;
+    }
+
+    public List<String> getImports() {
+        return imports;
+    }
+
+    public void setImports(List<String> imports) {
+        this.imports = imports;
     }
 }
