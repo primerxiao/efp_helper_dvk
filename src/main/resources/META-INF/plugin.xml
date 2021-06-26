@@ -21,22 +21,22 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
         <!--dabatase插件配置-->
-        <group id="efp_database_plugin" text="Efp Database Plugin" popup="true">
+        <group id="efp_database_plugin" text="FDB开发助手" popup="true">
             <add-to-group group-id="DatabaseViewPopupMenu" anchor="last"/>
         </group>
-        <!--生成curd代码-->
-        <action id="efp-plugin-code-helper" description="Generate crud code" text="Generate Crud Code"
+        <!--基本代码生成-->
+        <action id="efp-plugin-code-helper" description="根据选择的表生成相关的代码（基于DDD结构）" text="基于选择表生成基本代码"
                 class="com.efp.plugins.project.coder.action.CodeHelperAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
         <!--生成insertOrUpdate代码-->
-        <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"
-                text="Generate InsertOrUpdate Method Code"
-                class="com.efp.plugins.project.coder.action.GenerateInsertOrUpdate">
-            <add-to-group anchor="last" group-id="efp_database_plugin"/>
-        </action>
-        <!--生成查询函数-->
-        <action id="efp-plugin-Generate-Select" description="Generate select method code"
+<!--        <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"-->
+<!--                text="Generate InsertOrUpdate Method Code"-->
+<!--                class="com.efp.plugins.project.coder.action.GenerateInsertOrUpdate">-->
+<!--            <add-to-group anchor="last" group-id="efp_database_plugin"/>-->
+<!--        </action>-->
+        <!--根据选择字段生成查询函数-->
+        <action id="efp-plugin-Generate-Select" description="基于选择字段生成查询函数"
                 text="Generate Select Method Code"
                 class="com.efp.plugins.project.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>

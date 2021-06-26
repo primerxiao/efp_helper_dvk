@@ -1,7 +1,7 @@
 package ${generateInfo.packageName};
 
-<#list imports as import>
-import ${generateInfo.import};
+<#list generateInfo.imports as import>
+import ${import};
 </#list>
 
 /**
@@ -15,7 +15,7 @@ public interface ${generateInfo.className} {
     * @param  ${generateInfo.basicClassName?uncap_first}PO 需要新增的信息
     * @return int
     */
-    int insertSingle(${generateInfo.basicClassName}PO crdtApplInfoInput);
+    int insertSingle(${generateInfo.basicClassName}PO ${generateInfo.basicClassName?uncap_first}PO);
 
     /**
     * 根据主键删除信息

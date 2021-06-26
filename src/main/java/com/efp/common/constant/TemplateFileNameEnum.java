@@ -10,8 +10,13 @@ public enum TemplateFileNameEnum {
     FACADE("facade.ftl"),
     FACADEIMPL("facadeImpl.ftl"),
     REPOSITORY("repository.ftl"),
-    APPLICATION("application.ftl");
+    REPOSITORYIMP("repositoryImpl.ftl"),;
+
+    /**
+     * 模板文件名称
+     */
     private String fileName;
+
     TemplateFileNameEnum(String fileName) {
         this.fileName = fileName;
     }

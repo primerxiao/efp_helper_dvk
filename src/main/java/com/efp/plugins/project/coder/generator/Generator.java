@@ -5,6 +5,7 @@ import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DasUtils;
 import com.efp.common.util.SystemUtils;
 import com.efp.plugins.project.coder.bean.*;
+import com.efp.plugins.project.coder.template.method.SimpleBaseModuleNameMethod;
 import com.efp.plugins.project.coder.util.GenUtils;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.DasColumn;
@@ -59,6 +60,7 @@ public abstract class Generator {
         HashMap<String, Object> root = new HashMap<>();
 
         root.put("genUtils", new GenUtils());
+        root.put("simpleBaseModuleNameMethod", new SimpleBaseModuleNameMethod());
         root.put("generateInfo", generateInfo);
 
         Template template = freemarker.getTemplate(tpFileName.getFileName());

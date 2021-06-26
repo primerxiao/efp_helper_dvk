@@ -7,7 +7,7 @@ package com.efp.common.constant;
  */
 public class PluginContants {
 
-    public static final String GENERATOR_UI_TITLE = "Efp plugin";
+    public static final String GENERATOR_UI_TITLE = "FDB开发助手";
 
     public static class DubboConfig {
         public static final String DEFAULT_DUBBO_REGISTER = "zookeeper://10.139.4.171:2181";

@@ -73,6 +73,7 @@ public class GenerateOption extends DialogWrapper {
     private JCheckBox daoCheckBox;
     private JCheckBox isOverideCheckBox;
     private JCheckBox extendBaseInfoCheckBox;
+    private JCheckBox repositoryImplCheckBox;
 
     private AnActionEvent e;
 
@@ -107,6 +108,8 @@ public class GenerateOption extends DialogWrapper {
         consumerCheckBox = new JCheckBox();
         daoCheckBox = new JCheckBox();
         isOverideCheckBox = new JCheckBox();
+        extendBaseInfoCheckBox = new JCheckBox();
+        repositoryImplCheckBox = new JCheckBox();
     }
 
     @Nullable
@@ -143,15 +146,45 @@ public class GenerateOption extends DialogWrapper {
                             daoFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DAO).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成dao文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
                         }
                     }
                     VirtualFile repositoryFile = null;
                     if (repositoryCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.REPOSITORY);
+                            repositoryFile = new RepositoryGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.REPOSITORY).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成repository文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
+                        }
+                    }
+                    VirtualFile repositoryImplFile = null;
+                    if (repositoryImplCheckBox.isSelected()) {
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.REPOSITORYIMP);
+                            repositoryImplFile = new RepositoryGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.REPOSITORYIMP).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成repositoryImpl文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
+                        }
                     }
                     VirtualFile mapperFile = null;
                     if (mapperCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.MAPPER);
+                            mapperFile = new MapperGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.MAPPER).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成mapper-xml文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
+                        }
                     }
                     VirtualFile facadeFile = null;
                     if (facadeCheckBox.isSelected()) {
@@ -159,10 +192,6 @@ public class GenerateOption extends DialogWrapper {
                     }
                     VirtualFile controllerFile = null;
                     if (controllerCheckBox.isSelected()) {
-
-                    }
-                    VirtualFile openGenerateFileFile = null;
-                    if (openGenerateFileCheckBox.isSelected()) {
 
                     }
                     VirtualFile doFile = null;
@@ -173,6 +202,8 @@ public class GenerateOption extends DialogWrapper {
                             doFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DO).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成do文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
                         }
                     }
                     VirtualFile inputFile = null;
@@ -183,6 +214,8 @@ public class GenerateOption extends DialogWrapper {
                             inputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.INPUT).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成input文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
                         }
                     }
                     VirtualFile outputFile = null;
@@ -193,6 +226,8 @@ public class GenerateOption extends DialogWrapper {
                             outputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.OUTPUT).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成output文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
                         }
                     }
                     VirtualFile poFile = null;
@@ -213,7 +248,7 @@ public class GenerateOption extends DialogWrapper {
                     if (consumerCheckBox.isSelected()) {
                         generateDubboConfig(e, generateInfo, false);
                     }
-                    addVfs(daoFile,repositoryFile, mapperFile, facadeFile, controllerFile, openGenerateFileFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
+                    addVfs(daoFile, repositoryFile, repositoryImplFile, mapperFile, facadeFile, controllerFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
                     doOptimize(e.getProject());
                     //保存文档
                     FileDocumentManagerImpl.getInstance().saveAllDocuments();
@@ -257,28 +292,11 @@ public class GenerateOption extends DialogWrapper {
             if (provider) {
                 DubboXmlConfigUtils.poviderXmlConfigSet(e, startMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
             } else {
-                DubboXmlConfigUtils.consumerXmlConfigSet(e, serviceMoudle, ((PsiJavaFile) file).getClasses()[0],generateInfo.getBaseMoudleName());
+                DubboXmlConfigUtils.consumerXmlConfigSet(e, serviceMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
             }
         }
     }
 
-    private boolean checkPrimaryKey(DasColumn dasColumn) {
-        DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
-        if (Objects.isNull(primaryKey)) {
-            return false;
-        }
-        MultiRef<? extends DasTypedObject> columnsRef = primaryKey.getColumnsRef();
-        if (Objects.isNull(columnsRef)) {
-            return false;
-        }
-        Iterable<String> names = columnsRef.names();
-        for (String name : names) {
-            if (name.equalsIgnoreCase(dasColumn.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void doOptimize(Project project) {
         ApplicationManager.getApplication().runWriteAction(() -> WriteCommandAction.runWriteCommandAction(project, "格式化文件", null, () -> {
@@ -327,6 +345,7 @@ public class GenerateOption extends DialogWrapper {
             daoCheckBox.setSelected(booleans.get(11));
             isOverideCheckBox.setSelected(booleans.get(12));
             extendBaseInfoCheckBox.setSelected(booleans.get(13));
+            repositoryImplCheckBox.setSelected(booleans.get(14));
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -347,7 +366,8 @@ public class GenerateOption extends DialogWrapper {
                 consumerCheckBox.isSelected(),
                 daoCheckBox.isSelected(),
                 isOverideCheckBox.isSelected(),
-                extendBaseInfoCheckBox.isSelected()
+                extendBaseInfoCheckBox.isSelected(),
+                repositoryImplCheckBox.isSelected(),
         };
         String o = JSON.toJSONString(booleans);
         PropertiesComponent.getInstance(generateInfo.getProject()).setValue(generate_checkbox_cache, o);

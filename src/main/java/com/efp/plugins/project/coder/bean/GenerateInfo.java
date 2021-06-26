@@ -85,6 +85,11 @@ public class GenerateInfo {
      */
     private List<ClassField> classFields;
 
+    /**
+     * 主键字段信息
+     */
+    private List<ClassField> pkClassFields;
+
     @Override
     public String toString() {
         return "GenerateInfo{" +
@@ -222,4 +227,13 @@ public class GenerateInfo {
     public void setBasicClassName(String basicClassName) {
         this.basicClassName = basicClassName;
     }
+
+    public List<ClassField> getPkClassFields() {
+        return pkClassFields;
+    }
+
+    public void setPkClassFields(List<ClassField> pkClassFields) {
+        this.pkClassFields = pkClassFields;
+    }
 }
+
