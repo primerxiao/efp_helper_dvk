@@ -35,10 +35,12 @@ public class YearSpinnerModel extends SpinnerNumberModel {
 
     }
 
+    @Override
     public Object getValue() {
         return new Integer(this.calendar.get(1));
     }
 
+    @Override
     public void setValue(Object value) {
         Number newVal = (Number) value;
         Number oldVal = (Number) this.getValue();

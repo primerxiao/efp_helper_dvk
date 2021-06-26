@@ -42,7 +42,7 @@ public class DaoGenerator extends Generator {
             packageName = ((PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile))
                     .getPackageStatement().getPackageName();
         } else {
-            File packagePath = new File(generateInfo.getFilePath());
+            File packagePath = new File(generateInfo.getPackagePath());
             if (!packagePath.exists()) {
                 FileUtils.forceMkdir(packagePath);
             }

@@ -18,32 +18,29 @@ public class DubboXmlConfigUtils {
     /**
      * 消费者配置
      *
-     * @param e 事件对象
-     * @param serviceModule service模块
+     * @param e            事件对象
+     * @param facaModule   service模块
      * @param serviceClass service类
      */
-    public static void consumerXmlConfigSet(@NotNull AnActionEvent e, Module serviceModule, PsiClass serviceClass) {
-        if (!Objects.isNull(serviceModule)) {
-            String[] split = serviceModule.getName().split("\\.");
-            String consumerXmlFileName = "dubbo-consumer-" + split[0] + "-" + split[1] + ".xml";
-            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), consumerXmlFileName, serviceModule.getModuleScope());
+    public static void consumerXmlConfigSet(@NotNull AnActionEvent e, Module facaModule, PsiClass serviceClass, String baseMoudleName) {
+        if (!Objects.isNull(facaModule)) {
+            String consumerXmlFileName = "sofa-consumer-" + baseMoudleName + ".xml";
+            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), consumerXmlFileName, facaModule.getModuleScope());
             if (consumerXmlFileArr.length > 0) {
                 XmlFile consumerXmlFile = (XmlFile) consumerXmlFileArr[0];
                 XmlTag rootTag = consumerXmlFile.getRootTag();
                 //判断是否已经存在id
                 String idValue = StringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
-                if (!checkTagId(rootTag, idValue)) {
+                if (!checkTagExist(rootTag, idValue, "id")) {
+                    //<sofa:reference  interface="com.fdb.a.smcpi.facade.CrdtApplInfoService" id="crdtApplInfoService" unique-id="1.0.0"  ><sofa:binding.bolt/>
+                    //</sofa:reference>
                     //生成配置
-                    XmlTag xmlTag = XmlElementFactory.getInstance(e.getProject()).createTagFromText("<dubbo:reference/>", XMLLanguage.INSTANCE);
-                    //final XmlTag xmlTag = rootTag.createChildTag("dubbo:reference", rootTag.getNamespace(), null, false);
-                    xmlTag.setAttribute("id", StringUtils.initCap(serviceClass.getName()));
+                    final XmlTag xmlTag = rootTag.createChildTag("sofa:reference", rootTag.getNamespace(), null, false);
                     xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
-                    xmlTag.setAttribute("version", "1.0.0");
-                    //rootTag.add(xmlTag);
+                    xmlTag.setAttribute("id", idValue);
+                    xmlTag.setAttribute("unique-id", "1.0.0");
                     rootTag.addSubTag(xmlTag, false);
-                    //生成注释
-                    //addNoinspectionComment(e.getProject(), xmlTag);
                     consumerXmlFile.navigate(true);
                 }
 
@@ -55,30 +52,31 @@ public class DubboXmlConfigUtils {
      * 生产者配置
      *
      * @param e
-     * @param implModule
+     * @param startModule
      * @param serviceClass
      */
-    public static void poviderXmlConfigSet(@NotNull AnActionEvent e, Module implModule, PsiClass serviceClass) {
-        if (!Objects.isNull(implModule)) {
-            String[] split = implModule.getName().split("\\.");
-            String providerXmlFileName = "dubbo-provider-" + split[0] + "-" + split[1] + ".xml";
-            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), providerXmlFileName, implModule.getModuleScope());
+    public static void poviderXmlConfigSet(@NotNull AnActionEvent e, Module startModule, PsiClass serviceClass, String baseMoudleName) {
+        if (!Objects.isNull(startModule)) {
+            String providerXmlFileName = "sofa-provider-" + baseMoudleName + ".xml";
+            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), providerXmlFileName, startModule.getModuleScope());
             if (providerXmlFileArr.length > 0) {
                 XmlFile providerXmlFile = (XmlFile) providerXmlFileArr[0];
                 XmlTag rootTag = providerXmlFile.getRootTag();
                 //判断是否已经存在id
-                String idValue = StringUtils.initCap(serviceClass.getName()) + "Provider";
+                String refValue = StringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
-                if (!checkTagId(rootTag, idValue)) {
+                if (!checkTagExist(rootTag, refValue, "ref")) {
+/*                      <!-- 授信申请信息服务 -->
+                        <sofa:service interface="com.fdb.a.smcpi.facade.CrdtApplInfoService" ref="crdtApplInfoService" unique-id="1.0.0">
+                            <sofa:binding.bolt/>
+                        </sofa:service>*/
                     //生成配置
-                    final XmlTag xmlTag = rootTag.createChildTag("dubbo:service", rootTag.getNamespace(), null, false);
-                    xmlTag.setAttribute("id", idValue);
+                    final XmlTag xmlTag = rootTag.createChildTag("sofa:service", rootTag.getNamespace(), null, false);
                     xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
-                    xmlTag.setAttribute("ref", StringUtils.initCap(serviceClass.getName()));
-                    xmlTag.setAttribute("version", "1.0.0");
-                    xmlTag.setAttribute("retries", "0");
-                    xmlTag.setAttribute("cluster", "failover");
-                    xmlTag.setAttribute("timeout", "150000");
+                    xmlTag.setAttribute("ref", refValue);
+                    xmlTag.setAttribute("unique", "1.0.0");
+                    XmlTag sofaBindingBolt = xmlTag.createChildTag("sofa:binding.bolt", xmlTag.getNamespace(), null, false);
+                    xmlTag.add(sofaBindingBolt);
                     rootTag.add(xmlTag);
                     providerXmlFile.navigate(true);
                 }
@@ -88,20 +86,19 @@ public class DubboXmlConfigUtils {
     }
 
     /**
-     * 判断rootTag标签下的所有子标签是否含有id位idValue的标签
-     *
-     * @param rootTag 根标签
-     * @param idValue id值
+     * @param rootTag
+     * @param attrValue
+     * @param attrName
      * @return
      */
-    private static boolean checkTagId(XmlTag rootTag, String idValue) {
+    private static boolean checkTagExist(XmlTag rootTag, String attrValue, String attrName) {
         XmlTag[] subTags = rootTag.getSubTags();
         for (XmlTag subTag : subTags) {
-            final XmlAttribute id = subTag.getAttribute("id");
+            final XmlAttribute id = subTag.getAttribute(attrName);
             if (Objects.isNull(id)) {
                 continue;
             }
-            if (idValue.equals(id.getValue())) {
+            if (attrValue.equals(id.getValue())) {
                 return true;
             }
         }

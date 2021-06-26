@@ -2,6 +2,7 @@ package com.efp.common.util;
 
 import com.efp.common.data.EfpCovert;
 import com.efp.common.data.EfpModuleType;
+import com.efp.plugins.project.coder.bean.ClassField;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.bean.GenerateJava;
 import com.google.common.base.CaseFormat;
@@ -11,14 +12,18 @@ import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.util.containers.JBIterable;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DasUtils {
     /**
@@ -213,9 +218,39 @@ public class DasUtils {
         generateInfo.setDasDataSource(dataSource);
         generateInfo.setDasNamespace(namespace);
         generateInfo.setDasTable(dasTable);
-        generateInfo.setDasColumns(DasUtil.getColumns(dasTable));
+
+        JBIterable<? extends DasColumn> columns = DasUtil.getColumns(dasTable);
+        List<? extends DasColumn> dasColumns = columns.toList();
+        generateInfo.setDasColumns(dasColumns);
         generateInfo.setProject(e.getProject());
         return generateInfo;
+    }
+
+    public static List<ClassField> getClassFields(GenerateInfo generateInfo) {
+        List<? extends DasColumn> dasColumns = generateInfo.getDasColumns();
+        return dasColumns.stream().map(dasColumn ->
+                new ClassField(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dasColumn.getName()),
+                        dasColumn.getComment(), DasUtils.getJavaTypeClass(dasColumn),
+                        dasColumn.getName(),
+                        DasUtils.checkPrimaryKey(dasColumn))
+        ).collect(Collectors.toList());
+    }
+
+
+    public static List<String> getImports(List<ClassField> classFields) {
+        ArrayList<String> imports = new ArrayList<>();
+        for (ClassField classField : classFields) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(classField.getJavaTypeClass().getSimpleName())) {
+                continue;
+            }
+            if (!classField.getJavaTypeClass().isPrimitive() && !classField.getJavaTypeClass().getName().startsWith("java.lang")) {
+                if (imports.contains(classField.getJavaTypeClass().getName())) {
+                    continue;
+                }
+                imports.add(classField.getJavaTypeClass().getName());
+            }
+        }
+        return imports;
     }
 
 }

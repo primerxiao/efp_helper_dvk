@@ -6,6 +6,8 @@ import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DubboXmlConfigUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.*;
+import com.efp.plugins.project.coder.util.GenUtils;
+import com.intellij.codeInsight.FileModificationService;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasTableKey;
 import com.intellij.database.model.DasTypedObject;
@@ -13,14 +15,18 @@ import com.intellij.database.model.MultiRef;
 import com.intellij.database.util.DasUtil;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.lang.properties.IProperty;
+import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.compiler.CompilerBundle;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -28,6 +34,7 @@ import com.intellij.openapi.project.DumbAwareRunnable;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -35,6 +42,7 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.util.IncorrectOperationException;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,8 +50,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,6 +71,8 @@ public class GenerateOption extends DialogWrapper {
     private JCheckBox producerCheckBox;
     private JCheckBox consumerCheckBox;
     private JCheckBox daoCheckBox;
+    private JCheckBox isOverideCheckBox;
+    private JCheckBox extendBaseInfoCheckBox;
 
     private AnActionEvent e;
 
@@ -68,7 +80,8 @@ public class GenerateOption extends DialogWrapper {
 
     private List<VirtualFile> vfs = new ArrayList<>();
 
-    private String generate_checkbox_cache = "generate_checkbox_cache";;
+    private String generate_checkbox_cache = "generate_checkbox_cache";
+    ;
 
     public GenerateOption(boolean canBeParent, AnActionEvent e, GenerateInfo generateInfo) {
         super(canBeParent);
@@ -93,6 +106,7 @@ public class GenerateOption extends DialogWrapper {
         producerCheckBox = new JCheckBox();
         consumerCheckBox = new JCheckBox();
         daoCheckBox = new JCheckBox();
+        isOverideCheckBox = new JCheckBox();
     }
 
     @Nullable
@@ -111,7 +125,8 @@ public class GenerateOption extends DialogWrapper {
 
     /**
      * 开始创建
-     * @param e 事件
+     *
+     * @param e            事件
      * @param generateInfo 生成信息
      */
     private void startGenerate(AnActionEvent e, final GenerateInfo generateInfo) {
@@ -120,14 +135,19 @@ public class GenerateOption extends DialogWrapper {
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.checkCanceled();
                 WriteCommandAction.runWriteCommandAction(e.getProject(), () -> {
+                    VirtualFile daoFile = null;
+                    if (daoCheckBox.isSelected()) {
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.DAO);
+                            daoFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DAO).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
                     VirtualFile repositoryFile = null;
                     if (repositoryCheckBox.isSelected()) {
-/*                         generateJava.setDomainClassName(generateJava.getBaseClassName());
-                        generateJava.setDomainPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.domain");
-                        //generateJava.setDomainPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-                        generateJava.setDomainPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-                        generateJava.setDomainFileName(generateJava.getBaseClassName() + ".java");
-*/
+
                     }
                     VirtualFile mapperFile = null;
                     if (mapperCheckBox.isSelected()) {
@@ -147,29 +167,53 @@ public class GenerateOption extends DialogWrapper {
                     }
                     VirtualFile doFile = null;
                     if (doCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.DO);
+                            doFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DO).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                     VirtualFile inputFile = null;
                     if (inputCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.INPUT);
+                            inputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.INPUT).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                     VirtualFile outputFile = null;
                     if (outputCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.OUTPUT);
+                            outputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.OUTPUT).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                     VirtualFile poFile = null;
                     if (poCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.PO);
+                            poFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.PO).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                     VirtualFile producerFile = null;
                     if (producerCheckBox.isSelected()) {
-
+                        generateDubboConfig(e, generateInfo, true);
                     }
                     VirtualFile consumerFile = null;
                     if (consumerCheckBox.isSelected()) {
-
+                        generateDubboConfig(e, generateInfo, false);
                     }
-                    addVfs(repositoryFile, mapperFile, facadeFile, controllerFile, openGenerateFileFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
+                    addVfs(daoFile,repositoryFile, mapperFile, facadeFile, controllerFile, openGenerateFileFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
                     doOptimize(e.getProject());
                     //保存文档
                     FileDocumentManagerImpl.getInstance().saveAllDocuments();
@@ -192,13 +236,31 @@ public class GenerateOption extends DialogWrapper {
         }
     }
 
-/*    private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, VirtualFile service) {
-        PsiFile file = PsiManager.getInstance(generateInfo.getProject()).findFile(service);
-        if (!Objects.isNull(file)) {
-            DubboXmlConfigUtils.consumerXmlConfigSet(e, generateInfo.getServiceModule(), ((PsiJavaFile) file).getClasses()[0]);
-            DubboXmlConfigUtils.poviderXmlConfigSet(e, generateInfo.getImplModule(), ((PsiJavaFile) file).getClasses()[0]);
+    private void generateDubboConfig(@NotNull AnActionEvent e, GenerateInfo generateInfo, boolean provider) {
+        //获取service类名
+        Module serviceMoudle = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
+        Module startMoudle = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-start");
+        String serviceClassFilePath = FilenameUtils.getFullPath(serviceMoudle.getModuleFilePath())
+                + "src/main/java/com/fdb/a/"
+                + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
+                + "/facade/";
+        String serviceClassName =
+                com.efp.common.util.StringUtils.upperFirstChar(com.efp.common.util.StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java";
+
+        VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(new File(serviceClassFilePath + serviceClassName), true);
+        if (fileByIoFile == null) {
+            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                    "找不到接口类:" + serviceClassName, NotificationType.ERROR));
         }
-    }*/
+        PsiFile file = PsiManager.getInstance(generateInfo.getProject()).findFile(fileByIoFile);
+        if (!Objects.isNull(file)) {
+            if (provider) {
+                DubboXmlConfigUtils.poviderXmlConfigSet(e, startMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
+            } else {
+                DubboXmlConfigUtils.consumerXmlConfigSet(e, serviceMoudle, ((PsiJavaFile) file).getClasses()[0],generateInfo.getBaseMoudleName());
+            }
+        }
+    }
 
     private boolean checkPrimaryKey(DasColumn dasColumn) {
         DasTableKey primaryKey = DasUtil.getPrimaryKey(dasColumn.getTable());
@@ -219,32 +281,29 @@ public class GenerateOption extends DialogWrapper {
     }
 
     private void doOptimize(Project project) {
-        DumbService.getInstance(project).runWhenSmart((DumbAwareRunnable) () -> new WriteCommandAction(project) {
-            @Override
-            protected void run(@NotNull Result result) {
-                PsiDocumentManager.getInstance(project).commitAllDocuments();
-                for (VirtualFile virtualFile : vfs) {
-                    try {
-                        PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
-                        if (Objects.isNull(file)) {
-                            continue;
-                        }
-                        if (file.getFileType() instanceof JavaFileType) {
-                            CodeStyleManager.getInstance(project).reformat(file);
-                            PsiJavaFile javaFile = (PsiJavaFile) file;
-                            JavaCodeStyleManager.getInstance(project).optimizeImports(javaFile);
-                            JavaCodeStyleManager.getInstance(project).shortenClassReferences(javaFile);
-                        }
-                        if (openGenerateFileCheckBox.isSelected()) {
-                            file.navigate(true);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        ApplicationManager.getApplication().runWriteAction(() -> WriteCommandAction.runWriteCommandAction(project, "格式化文件", null, () -> {
+            PsiDocumentManager.getInstance(project).commitAllDocuments();
+            for (VirtualFile virtualFile : vfs) {
+                try {
+                    PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+                    if (Objects.isNull(file)) {
+                        continue;
                     }
+                    if (file.getFileType() instanceof JavaFileType) {
+                        CodeStyleManager.getInstance(project).reformat(file);
+                        PsiJavaFile javaFile = (PsiJavaFile) file;
+                        JavaCodeStyleManager.getInstance(project).optimizeImports(javaFile);
+                        JavaCodeStyleManager.getInstance(project).shortenClassReferences(javaFile);
+                    }
+                    if (openGenerateFileCheckBox.isSelected()) {
+                        file.navigate(true);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                vfs.clear();
             }
-        }.execute());
+            vfs.clear();
+        }));
     }
 
     private void getCache(GenerateInfo generateInfo) {
@@ -252,19 +311,25 @@ public class GenerateOption extends DialogWrapper {
         if (StringUtils.isEmpty(value)) {
             return;
         }
-        boolean[] parse = (boolean[]) JSON.parse(value);
-        repositoryCheckBox.setSelected(parse[0]);
-        mapperCheckBox.setSelected(parse[1]);
-        facadeCheckBox.setSelected(parse[2]);
-        controllerCheckBox.setSelected(parse[3]);
-        openGenerateFileCheckBox.setSelected(parse[4]);
-        doCheckBox.setSelected(parse[5]);
-        inputCheckBox.setSelected(parse[6]);
-        outputCheckBox.setSelected(parse[7]);
-        poCheckBox.setSelected(parse[8]);
-        producerCheckBox.setSelected(parse[9]);
-        consumerCheckBox.setSelected(parse[10]);
-        daoCheckBox.setSelected(parse[11]);
+        List<Boolean> booleans = JSON.parseArray(value, boolean.class);
+        try {
+            repositoryCheckBox.setSelected(booleans.get(0));
+            mapperCheckBox.setSelected(booleans.get(1));
+            facadeCheckBox.setSelected(booleans.get(2));
+            controllerCheckBox.setSelected(booleans.get(3));
+            openGenerateFileCheckBox.setSelected(booleans.get(4));
+            doCheckBox.setSelected(booleans.get(5));
+            inputCheckBox.setSelected(booleans.get(6));
+            outputCheckBox.setSelected(booleans.get(7));
+            poCheckBox.setSelected(booleans.get(8));
+            producerCheckBox.setSelected(booleans.get(9));
+            consumerCheckBox.setSelected(booleans.get(10));
+            daoCheckBox.setSelected(booleans.get(11));
+            isOverideCheckBox.setSelected(booleans.get(12));
+            extendBaseInfoCheckBox.setSelected(booleans.get(13));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void setCache() {
@@ -280,7 +345,9 @@ public class GenerateOption extends DialogWrapper {
                 poCheckBox.isSelected(),
                 producerCheckBox.isSelected(),
                 consumerCheckBox.isSelected(),
-                daoCheckBox.isSelected()
+                daoCheckBox.isSelected(),
+                isOverideCheckBox.isSelected(),
+                extendBaseInfoCheckBox.isSelected()
         };
         String o = JSON.toJSONString(booleans);
         PropertiesComponent.getInstance(generateInfo.getProject()).setValue(generate_checkbox_cache, o);

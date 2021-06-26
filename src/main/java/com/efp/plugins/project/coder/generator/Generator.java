@@ -5,6 +5,7 @@ import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DasUtils;
 import com.efp.common.util.SystemUtils;
 import com.efp.plugins.project.coder.bean.*;
+import com.efp.plugins.project.coder.util.GenUtils;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.DasColumn;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,7 +18,9 @@ import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Generator {
@@ -50,20 +53,16 @@ public abstract class Generator {
         this.tpFileName = tpFileName;
     }
 
-    public static List<ClassField> coverToClassFieldInfos(GenerateInfo generateInfo) {
-        List<? extends DasColumn> dasColumns = generateInfo.getDasColumns().toList();
-        return dasColumns.stream().map(dasColumn ->
-                new ClassField(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dasColumn.getName()),
-                        dasColumn.getComment(), DasUtils.getJavaTypeClass(dasColumn),
-                        dasColumn.getName(),
-                        DasUtils.checkPrimaryKey(dasColumn))
-        ).collect(Collectors.toList());
-    }
-
     public StringWriter getSw() throws IOException, TemplateException {
         StringWriter sw = new StringWriter();
+
+        HashMap<String, Object> root = new HashMap<>();
+
+        root.put("genUtils", new GenUtils());
+        root.put("generateInfo", generateInfo);
+
         Template template = freemarker.getTemplate(tpFileName.getFileName());
-        template.process(generateInfo, sw);
+        template.process(root, sw);
         return sw;
     }
 

@@ -31,7 +31,7 @@ public class MapperGenerator extends Generator {
         //根据模板生成数据
         StringWriter sw = getSw();
         //判断包是否存在
-        File packagePath = new File(generateInfo.getFilePath());
+        File packagePath = new File(generateInfo.getPackagePath());
         if (!packagePath.exists()) {
             FileUtils.forceMkdir(packagePath);
         }

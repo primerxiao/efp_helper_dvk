@@ -4,6 +4,7 @@ import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasDataSource;
 import com.intellij.database.model.DasNamespace;
 import com.intellij.database.model.DasTable;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.containers.JBIterable;
 
@@ -13,6 +14,10 @@ import java.util.List;
  * 选择的信息
  */
 public class GenerateInfo {
+    /**
+     * 基础模块名称  如a-smcrp
+     */
+    private String baseMoudleName;
     /**
      * 数据源
      */
@@ -28,7 +33,7 @@ public class GenerateInfo {
     /**
      * 数据源
      */
-    private JBIterable<? extends DasColumn> dasColumns;
+    private List<? extends DasColumn> dasColumns;
     /**
      * 项目
      */
@@ -50,22 +55,59 @@ public class GenerateInfo {
     private String fileName;
 
     /**
-     * 当前文件路径
+     * 当前类名
      */
+    private String className;
 
-    private String filePath;
     /**
-     * 当前包路径
+     * 当前基础类名
+     * 不带Dao、Service等后缀的基础类名
      */
-    private String packagepath;
+    private String basicClassName;
+
+    /**
+     * 当前包名 如：com.fdb.a.smcpi.domain.entity
+     */
+    private String packageName;
+
+    /**
+     * 当前包路径 如：
+     */
+    private String packagePath;
 
     /**
      * 导入的包
      */
     private List<String> imports;
 
-    public void main(String[] args) {
+    /**
+     * 类字段信息
+     */
+    private List<ClassField> classFields;
 
+    @Override
+    public String toString() {
+        return "GenerateInfo{" +
+                "baseMoudleName='" + baseMoudleName + '\'' +
+                ", dasDataSource=" + dasDataSource +
+                ", dasNamespace=" + dasNamespace +
+                ", dasTable=" + dasTable +
+                ", dasColumns=" + dasColumns +
+                ", project=" + project +
+                ", selectDasColumns=" + selectDasColumns +
+                ", currentModule=" + currentModule +
+                ", fileName='" + fileName + '\'' +
+                ", packagepath='" + packagePath + '\'' +
+                ", imports=" + imports +
+                '}';
+    }
+
+    public String getBaseMoudleName() {
+        return baseMoudleName;
+    }
+
+    public void setBaseMoudleName(String baseMoudleName) {
+        this.baseMoudleName = baseMoudleName;
     }
 
     public DasDataSource getDasDataSource() {
@@ -92,11 +134,11 @@ public class GenerateInfo {
         this.dasTable = dasTable;
     }
 
-    public JBIterable<? extends DasColumn> getDasColumns() {
+    public List<? extends DasColumn> getDasColumns() {
         return dasColumns;
     }
 
-    public void setDasColumns(JBIterable<? extends DasColumn> dasColumns) {
+    public void setDasColumns(List<? extends DasColumn> dasColumns) {
         this.dasColumns = dasColumns;
     }
 
@@ -132,20 +174,13 @@ public class GenerateInfo {
         this.fileName = fileName;
     }
 
-    public String getFilePath() {
-        return filePath;
+
+    public String getPackagePath() {
+        return packagePath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getPackagepath() {
-        return packagepath;
-    }
-
-    public void setPackagepath(String packagepath) {
-        this.packagepath = packagepath;
+    public void setPackagePath(String packagePath) {
+        this.packagePath = packagePath;
     }
 
     public List<String> getImports() {
@@ -154,5 +189,37 @@ public class GenerateInfo {
 
     public void setImports(List<String> imports) {
         this.imports = imports;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public List<ClassField> getClassFields() {
+        return classFields;
+    }
+
+    public void setClassFields(List<ClassField> classFields) {
+        this.classFields = classFields;
+    }
+
+    public String getBasicClassName() {
+        return basicClassName;
+    }
+
+    public void setBasicClassName(String basicClassName) {
+        this.basicClassName = basicClassName;
     }
 }

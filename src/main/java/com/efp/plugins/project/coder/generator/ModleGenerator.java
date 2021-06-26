@@ -19,9 +19,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
-public class DoGenerator extends Generator {
+/**
+ * input output do vo 的模型生成器
+ */
+public class ModleGenerator extends Generator {
 
-    public DoGenerator(Boolean isOverWrite, GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
+    public ModleGenerator(Boolean isOverWrite, GenerateInfo generateInfo, TemplateFileNameEnum tpFileName) {
+        //设置参数
         super(isOverWrite, generateInfo, tpFileName);
     }
 
@@ -42,7 +46,7 @@ public class DoGenerator extends Generator {
             packageName = ((PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile))
                     .getPackageStatement().getPackageName();
         } else {
-            File packagePath = new File(generateInfo.getFilePath());
+            File packagePath = new File(generateInfo.getPackagePath());
             if (!packagePath.exists()) {
                 FileUtils.forceMkdir(packagePath);
             }
