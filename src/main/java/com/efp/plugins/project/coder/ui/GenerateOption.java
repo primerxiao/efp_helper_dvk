@@ -74,6 +74,7 @@ public class GenerateOption extends DialogWrapper {
     private JCheckBox isOverideCheckBox;
     private JCheckBox extendBaseInfoCheckBox;
     private JCheckBox repositoryImplCheckBox;
+    private JCheckBox facadeImplCheckBox;
 
     private AnActionEvent e;
 
@@ -110,6 +111,7 @@ public class GenerateOption extends DialogWrapper {
         isOverideCheckBox = new JCheckBox();
         extendBaseInfoCheckBox = new JCheckBox();
         repositoryImplCheckBox = new JCheckBox();
+        facadeImplCheckBox = new JCheckBox();
     }
 
     @Nullable
@@ -188,7 +190,27 @@ public class GenerateOption extends DialogWrapper {
                     }
                     VirtualFile facadeFile = null;
                     if (facadeCheckBox.isSelected()) {
-
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.FACADE);
+                            facadeFile = new FacadeGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.FACADE).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成facade文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
+                        }
+                    }
+                    VirtualFile facadeImplFile = null;
+                    if (facadeImplCheckBox.isSelected()) {
+                        try {
+                            //设置数据
+                            new GenUtils().setValue(generateInfo, TemplateFileNameEnum.FACADEIMPL);
+                            facadeImplFile = new FacadeGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.FACADEIMPL).generate();
+                        } catch (IOException | TemplateException ioException) {
+                            ioException.printStackTrace();
+                            Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                                    "生成facadeImpl文件失败，信息为：" + ioException.getMessage(), NotificationType.ERROR));
+                        }
                     }
                     VirtualFile controllerFile = null;
                     if (controllerCheckBox.isSelected()) {
@@ -248,7 +270,7 @@ public class GenerateOption extends DialogWrapper {
                     if (consumerCheckBox.isSelected()) {
                         generateDubboConfig(e, generateInfo, false);
                     }
-                    addVfs(daoFile, repositoryFile, repositoryImplFile, mapperFile, facadeFile, controllerFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
+                    addVfs(daoFile, repositoryFile, repositoryImplFile, mapperFile, facadeFile, facadeImplFile, controllerFile, doFile, inputFile, outputFile, poFile, producerFile, consumerFile);
                     doOptimize(e.getProject());
                     //保存文档
                     FileDocumentManagerImpl.getInstance().saveAllDocuments();
@@ -346,6 +368,7 @@ public class GenerateOption extends DialogWrapper {
             isOverideCheckBox.setSelected(booleans.get(12));
             extendBaseInfoCheckBox.setSelected(booleans.get(13));
             repositoryImplCheckBox.setSelected(booleans.get(14));
+            facadeImplCheckBox.setSelected(booleans.get(15));
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -368,6 +391,7 @@ public class GenerateOption extends DialogWrapper {
                 isOverideCheckBox.isSelected(),
                 extendBaseInfoCheckBox.isSelected(),
                 repositoryImplCheckBox.isSelected(),
+                facadeImplCheckBox.isSelected()
         };
         String o = JSON.toJSONString(booleans);
         PropertiesComponent.getInstance(generateInfo.getProject()).setValue(generate_checkbox_cache, o);

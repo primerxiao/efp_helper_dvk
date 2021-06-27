@@ -37,7 +37,7 @@
 <!--        </action>-->
         <!--根据选择字段生成查询函数-->
         <action id="efp-plugin-Generate-Select" description="基于选择字段生成查询函数"
-                text="Generate Select Method Code"
+                text="基于选择字段生成查询函数"
                 class="com.efp.plugins.project.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>

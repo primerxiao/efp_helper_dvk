@@ -83,6 +83,12 @@ public class GenUtils {
             case REPOSITORYIMP:
                 repositoryImplParamPackage(generateInfo);
                 break;
+            case FACADE:
+                facadeParamPackage(generateInfo);
+                break;
+            case FACADEIMPL:
+                facadeImplParamPackage(generateInfo);
+                break;
             default:
 
         }
@@ -256,5 +262,49 @@ public class GenUtils {
         //设置文件名
         generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl.java");
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl");
+    }
+
+    private void facadeParamPackage(GenerateInfo generateInfo) {
+        //a-smcpi-facade
+        //com.fdb.a.smcpi.facade
+        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
+        //设置当前模块
+        generateInfo.setCurrentModule(moduleByName);
+        //设置包路径
+        generateInfo.setPackagePath(
+                FilenameUtils.getFullPath(moduleByName.getModuleFilePath())
+                        + "src/main/java/com/fdb/a/"
+                        + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
+                        + "/facade/");
+        //设置包名
+        generateInfo.setPackageName(
+                "com.fdb.a."
+                        + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
+                        + ".facade");
+        //设置文件名
+        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java");
+        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service");
+    }
+
+    private void facadeImplParamPackage(GenerateInfo generateInfo) {
+        //a-smcpi-application
+        //com.fdb.a.smcpi.application.service.impl
+        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-application");
+        //设置当前模块
+        generateInfo.setCurrentModule(moduleByName);
+        //设置包路径
+        generateInfo.setPackagePath(
+                FilenameUtils.getFullPath(moduleByName.getModuleFilePath())
+                        + "src/main/java/com/fdb/a/"
+                        + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
+                        + "/application/service/impl/");
+        //设置包名
+        generateInfo.setPackageName(
+                "com.fdb.a."
+                        + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
+                        + ".application.service.impl");
+        //设置文件名
+        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl.java");
+        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl");
     }
 }
