@@ -1,6 +1,10 @@
 package com.efp.common.util;
 
+import com.efp.common.constant.PluginContants;
 import com.intellij.lang.xml.XMLLanguage;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -14,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class DubboXmlConfigUtils {
+public class SofaXmlConfigUtils {
     /**
      * 消费者配置
      *
@@ -23,9 +27,15 @@ public class DubboXmlConfigUtils {
      * @param serviceClass service类
      */
     public static void consumerXmlConfigSet(@NotNull AnActionEvent e, Module facaModule, PsiClass serviceClass, String baseMoudleName) {
+        consumerXmlConfigSet(e.getProject(), facaModule,
+                serviceClass,
+                baseMoudleName);
+    }
+
+    public static void consumerXmlConfigSet(@NotNull Project project, Module facaModule, PsiClass serviceClass, String baseMoudleName) {
         if (!Objects.isNull(facaModule)) {
             String consumerXmlFileName = "sofa-consumer-" + baseMoudleName + ".xml";
-            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), consumerXmlFileName, facaModule.getModuleScope());
+            PsiFile[] consumerXmlFileArr = FilenameIndex.getFilesByName(project, consumerXmlFileName, facaModule.getModuleScope());
             if (consumerXmlFileArr.length > 0) {
                 XmlFile consumerXmlFile = (XmlFile) consumerXmlFileArr[0];
                 XmlTag rootTag = consumerXmlFile.getRootTag();
@@ -33,17 +43,21 @@ public class DubboXmlConfigUtils {
                 String idValue = StringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
                 if (!checkTagExist(rootTag, idValue, "id")) {
-                    //<sofa:reference  interface="com.fdb.a.smcpi.facade.CrdtApplInfoService" id="crdtApplInfoService" unique-id="1.0.0"  ><sofa:binding.bolt/>
-                    //</sofa:reference>
                     //生成配置
                     final XmlTag xmlTag = rootTag.createChildTag("sofa:reference", rootTag.getNamespace(), null, false);
                     xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
                     xmlTag.setAttribute("id", idValue);
                     xmlTag.setAttribute("unique-id", "1.0.0");
+                    XmlTag sofaBindingBolt = xmlTag.createChildTag("sofa:binding.bolt", xmlTag.getNamespace(), null, false);
+                    xmlTag.add(sofaBindingBolt);
                     rootTag.addSubTag(xmlTag, false);
                     consumerXmlFile.navigate(true);
+                    Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                            "生成配置到sofa-consumer-xml文件中成功", NotificationType.INFORMATION));
+                }else {
+                    Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                            "生成配置到sofa-consumer-xml文件中失败，已经存在该配置信息", NotificationType.ERROR));
                 }
-
             }
         }
     }
@@ -56,9 +70,13 @@ public class DubboXmlConfigUtils {
      * @param serviceClass
      */
     public static void poviderXmlConfigSet(@NotNull AnActionEvent e, Module startModule, PsiClass serviceClass, String baseMoudleName) {
+        poviderXmlConfigSet(e.getProject(), startModule, serviceClass, baseMoudleName);
+    }
+
+    public static void poviderXmlConfigSet(Project project, Module startModule, PsiClass serviceClass, String baseMoudleName) {
         if (!Objects.isNull(startModule)) {
             String providerXmlFileName = "sofa-provider-" + baseMoudleName + ".xml";
-            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(e.getProject(), providerXmlFileName, startModule.getModuleScope());
+            PsiFile[] providerXmlFileArr = FilenameIndex.getFilesByName(project, providerXmlFileName, startModule.getModuleScope());
             if (providerXmlFileArr.length > 0) {
                 XmlFile providerXmlFile = (XmlFile) providerXmlFileArr[0];
                 XmlTag rootTag = providerXmlFile.getRootTag();
@@ -66,10 +84,6 @@ public class DubboXmlConfigUtils {
                 String refValue = StringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
                 if (!checkTagExist(rootTag, refValue, "ref")) {
-/*                      <!-- 授信申请信息服务 -->
-                        <sofa:service interface="com.fdb.a.smcpi.facade.CrdtApplInfoService" ref="crdtApplInfoService" unique-id="1.0.0">
-                            <sofa:binding.bolt/>
-                        </sofa:service>*/
                     //生成配置
                     final XmlTag xmlTag = rootTag.createChildTag("sofa:service", rootTag.getNamespace(), null, false);
                     xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
@@ -79,8 +93,12 @@ public class DubboXmlConfigUtils {
                     xmlTag.add(sofaBindingBolt);
                     rootTag.add(xmlTag);
                     providerXmlFile.navigate(true);
+                    Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                            "生成配置到sofa-provider-xml文件中成功", NotificationType.INFORMATION));
+                } else {
+                    Notifications.Bus.notify(new Notification(PluginContants.GENERATOR_UI_TITLE, PluginContants.GENERATOR_UI_TITLE,
+                            "生成配置到sofa-provider-xml文件中失败，已经存在该配置信息", NotificationType.ERROR));
                 }
-
             }
         }
     }

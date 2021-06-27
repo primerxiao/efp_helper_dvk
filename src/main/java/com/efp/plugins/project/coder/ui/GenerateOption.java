@@ -3,26 +3,17 @@ package com.efp.plugins.project.coder.ui;
 import com.alibaba.fastjson.JSON;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
-import com.efp.common.util.DubboXmlConfigUtils;
+import com.efp.common.util.SofaXmlConfigUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.*;
 import com.efp.plugins.project.coder.util.GenUtils;
-import com.intellij.codeInsight.FileModificationService;
-import com.intellij.database.model.DasColumn;
-import com.intellij.database.model.DasTableKey;
-import com.intellij.database.model.DasTypedObject;
-import com.intellij.database.model.MultiRef;
-import com.intellij.database.util.DasUtil;
 import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.properties.IProperty;
-import com.intellij.lang.properties.psi.PropertiesFile;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.module.Module;
@@ -30,8 +21,6 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAwareRunnable;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -42,7 +31,6 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.util.IncorrectOperationException;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -53,7 +41,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,7 +59,6 @@ public class GenerateOption extends DialogWrapper {
     private JCheckBox consumerCheckBox;
     private JCheckBox daoCheckBox;
     private JCheckBox isOverideCheckBox;
-    private JCheckBox extendBaseInfoCheckBox;
     private JCheckBox repositoryImplCheckBox;
     private JCheckBox facadeImplCheckBox;
 
@@ -109,7 +95,6 @@ public class GenerateOption extends DialogWrapper {
         consumerCheckBox = new JCheckBox();
         daoCheckBox = new JCheckBox();
         isOverideCheckBox = new JCheckBox();
-        extendBaseInfoCheckBox = new JCheckBox();
         repositoryImplCheckBox = new JCheckBox();
         facadeImplCheckBox = new JCheckBox();
     }
@@ -312,9 +297,9 @@ public class GenerateOption extends DialogWrapper {
         PsiFile file = PsiManager.getInstance(generateInfo.getProject()).findFile(fileByIoFile);
         if (!Objects.isNull(file)) {
             if (provider) {
-                DubboXmlConfigUtils.poviderXmlConfigSet(e, startMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
+                SofaXmlConfigUtils.poviderXmlConfigSet(e, startMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
             } else {
-                DubboXmlConfigUtils.consumerXmlConfigSet(e, serviceMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
+                SofaXmlConfigUtils.consumerXmlConfigSet(e, serviceMoudle, ((PsiJavaFile) file).getClasses()[0], generateInfo.getBaseMoudleName());
             }
         }
     }
@@ -366,9 +351,8 @@ public class GenerateOption extends DialogWrapper {
             consumerCheckBox.setSelected(booleans.get(10));
             daoCheckBox.setSelected(booleans.get(11));
             isOverideCheckBox.setSelected(booleans.get(12));
-            extendBaseInfoCheckBox.setSelected(booleans.get(13));
-            repositoryImplCheckBox.setSelected(booleans.get(14));
-            facadeImplCheckBox.setSelected(booleans.get(15));
+            repositoryImplCheckBox.setSelected(booleans.get(13));
+            facadeImplCheckBox.setSelected(booleans.get(14));
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -389,7 +373,6 @@ public class GenerateOption extends DialogWrapper {
                 consumerCheckBox.isSelected(),
                 daoCheckBox.isSelected(),
                 isOverideCheckBox.isSelected(),
-                extendBaseInfoCheckBox.isSelected(),
                 repositoryImplCheckBox.isSelected(),
                 facadeImplCheckBox.isSelected()
         };

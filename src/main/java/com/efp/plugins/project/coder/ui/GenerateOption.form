@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.efp.plugins.project.coder.ui.GenerateOption">
-  <grid id="27dc6" binding="jpanel" layout-manager="GridLayoutManager" row-count="17" column-count="12" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="jpanel" layout-manager="GridLayoutManager" row-count="16" column-count="12" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="736" height="583"/>
@@ -60,7 +60,7 @@
       </component>
       <vspacer id="dcf75">
         <constraints>
-          <grid row="16" column="0" row-span="1" col-span="11" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+          <grid row="15" column="0" row-span="1" col-span="11" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
             <preferred-size width="177" height="14"/>
           </grid>
         </constraints>
@@ -72,7 +72,7 @@
       </hspacer>
       <component id="c85c2" class="javax.swing.JCheckBox" binding="openGenerateFileCheckBox" custom-create="true">
         <constraints>
-          <grid row="15" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="14" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="生成后打开文件"/>
@@ -126,14 +126,6 @@
           <text value="消费者配置"/>
         </properties>
       </component>
-      <component id="881b5" class="javax.swing.JCheckBox" binding="extendBaseInfoCheckBox">
-        <constraints>
-          <grid row="13" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="是否继承BaseInfo"/>
-        </properties>
-      </component>
       <component id="207d3" class="javax.swing.JCheckBox" binding="poCheckBox" default-binding="true">
         <constraints>
           <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -152,7 +144,7 @@
       </component>
       <component id="f215f" class="javax.swing.JCheckBox" binding="isOverideCheckBox">
         <constraints>
-          <grid row="14" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="13" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="是否允许覆盖"/>

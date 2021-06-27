@@ -31,8 +31,7 @@ public class CodeHelperAction extends AnAction {
             return;
         }
         //弹出基础module选择
-        List<String> baseModuleNames = Arrays.asList("a-smcbi", "a-smcbs", "a-smcfc", "a-smcia", "a-smcii", "a-smcpi", "a-smcqc", "a-smcrc", "a-smcrp", "a-smcti");
-        IPopupChooserBuilder<String> stringIPopupChooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(baseModuleNames).setItemChosenCallback(b -> {
+        IPopupChooserBuilder<String> stringIPopupChooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(PluginContants.chooseModuleNames).setItemChosenCallback(b -> {
             final GenerateInfo generateInfo = DasUtils.getGenerateInfo(e, (DasTable) psiElement);
             generateInfo.setBaseMoudleName(b);
             //打开界面

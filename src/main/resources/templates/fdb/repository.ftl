@@ -14,26 +14,26 @@ public interface ${generateInfo.className} {
     * @param  ${generateInfo.basicClassName?uncap_first}DO
     * @return
     */
-    int insertSingle(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO) throws Exception;
+    int insertSingle(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
 
     /**
     * 根据主键删除信息
     * @param ${generateInfo.basicClassName?uncap_first}DO
     * @return
     */
-    int deleteByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO) throws Exception;
+    int deleteByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
 
     /**
     * 根据主键更新信息
     * @param ${generateInfo.basicClassName?uncap_first}DO
     * @return
     */
-    int updateByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO) throws Exception;
+    int updateByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
 
     /**
     * 根据主键查询详情
     * @param ${generateInfo.basicClassName?uncap_first}DO
     * @return
     */
-    ${baseClassName}VO queryByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO) throws Exception;
+    ${generateInfo.baseClassName}DO queryByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
 }

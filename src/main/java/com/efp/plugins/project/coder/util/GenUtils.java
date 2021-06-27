@@ -46,7 +46,7 @@ public class GenUtils {
      * @param generateInfo 信息
      * @param aDo
      */
-    public void setValue(GenerateInfo generateInfo, TemplateFileNameEnum aDo) {
+    public static void setValue(GenerateInfo generateInfo, TemplateFileNameEnum aDo) {
         //通用信息处理
         //基础类名
         generateInfo.setBasicClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())));
@@ -94,7 +94,7 @@ public class GenUtils {
         }
     }
 
-    private void doParamPackage(GenerateInfo generateInfo) {
+    private static void doParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-domain
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-domain");
         //设置当前模块
@@ -115,7 +115,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "DO");
     }
 
-    private void poParamPackage(GenerateInfo generateInfo) {
+    private static void poParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-infrastructure
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
         //设置当前模块
@@ -136,7 +136,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "PO");
     }
 
-    private void inputParamPackage(GenerateInfo generateInfo) {
+    private static void inputParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-facade
         //com.fdb.a.smcpi.facade.dto
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
@@ -158,7 +158,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Input");
     }
 
-    private void outputParamPackage(GenerateInfo generateInfo) {
+    private static void outputParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-facade
         //com.fdb.a.smcpi.facade.dto
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
@@ -180,7 +180,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Output");
     }
 
-    private void daoParamPackage(GenerateInfo generateInfo) {
+    private static void daoParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-infrastructure
         //com.fdb.a.smcpi.infra.persistence.mapper
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
@@ -202,7 +202,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
     }
 
-    private void mapperParamPackage(GenerateInfo generateInfo) {
+    private static void mapperParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-infrastructure
         //com.fdb.a.smcpi.infra.persistence.mapper
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
@@ -220,7 +220,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
     }
 
-    private void repositoryParamPackage(GenerateInfo generateInfo) {
+    private static void repositoryParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-infracl
         //com.fdb.a.smcpi.acl.repository
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infracl");
@@ -242,7 +242,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Repository");
     }
 
-    private void repositoryImplParamPackage(GenerateInfo generateInfo) {
+    private static void repositoryImplParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-infrastructure
         //com.fdb.a.smcpi.infra.repository.impl
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
@@ -264,7 +264,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl");
     }
 
-    private void facadeParamPackage(GenerateInfo generateInfo) {
+    private static void facadeParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-facade
         //com.fdb.a.smcpi.facade
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
@@ -286,7 +286,7 @@ public class GenUtils {
         generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service");
     }
 
-    private void facadeImplParamPackage(GenerateInfo generateInfo) {
+    private static void facadeImplParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-application
         //com.fdb.a.smcpi.application.service.impl
         Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-application");

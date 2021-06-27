@@ -41,6 +41,12 @@
                 class="com.efp.plugins.project.coder.action.GenerateSelect">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
+        <!--根据选择字段反向补充代码-->
+        <action id="efp-plugin-Generate-By-New-Column" description="基于选择字段反向补充代码"
+                text="基于选择字段反向补充代码"
+                class="com.efp.plugins.project.coder.action.GenerateByNewAddColumnAction">
+            <add-to-group anchor="last" group-id="efp_database_plugin"/>
+        </action>
         <!--标签导出-->
         <action id="efp-plugin-ExportBookMarkAction"
                 class="com.efp.plugins.general.bookmark.action.ExportBookMarkAction"
@@ -85,7 +91,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <intentionAction>
-            <!--dubbo服务调用-->
+            <!--sofa服务调用-->
             <className>com.efp.plugins.frame.dubbo.action.DubboGenericCall</className>
             <category>Java/Other</category>
             <descriptionDirectoryName>/intentionDescriptions/DubboGenericCall</descriptionDirectoryName>
@@ -98,8 +104,8 @@
             <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
-            <!--dubbo配置添加-->
-            <className>com.efp.plugins.frame.dubbo.action.DubboConfigCall</className>
+            <!--sofa生成者和消费者配置添加-->
+            <className>com.efp.plugins.frame.dubbo.action.SofaConfigCall</className>
             <category>Java/Other</category>
         </intentionAction>
         <!--Setting方面相关的配置-->
