@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.primer.efp_plugin</id>
-    <name>EfpHelper</name>
+    <name>FdbHelper</name>
     <vendor>EfpDever</vendor>
     <description>IDEA plug-in for highly customized Efp projects.Provide configuration generation, code generation and
         other functions, greatly improve the development efficiency
@@ -76,9 +76,6 @@
         <action id="DecompilerAction" class="com.efp.plugins.general.decompiler.action.DecompilerAction" text="Decompiler" description="反编译工具">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
-
-
-
         <!--test-->
         <action id="efp-plugin-test"
                 class="com.efp.plugins.general.test.TestAction"

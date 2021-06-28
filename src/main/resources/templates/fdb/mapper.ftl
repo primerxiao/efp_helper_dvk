@@ -45,7 +45,7 @@
             <#list generateInfo.pkClassFields as field>${field.dasColumnName}=<#noparse>#{</#noparse>${field.fieldName?uncap_first}}<#sep> and </#sep></#list>
     </update>
 
-    <select id="queryByPk" resultMap="${generateInfo.baseClassName?uncap_first}List" parameterType="com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.po.${generateInfo.basicClassName}PO">
+    <select id="queryByPk" resultMap="${generateInfo.basicClassName?uncap_first}List" parameterType="com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.po.${generateInfo.basicClassName}PO">
         select
         <include refid="Base_Column_List"/>
         from ${generateInfo.dasTable.name}

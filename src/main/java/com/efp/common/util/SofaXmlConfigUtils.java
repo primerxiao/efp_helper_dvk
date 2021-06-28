@@ -88,7 +88,7 @@ public class SofaXmlConfigUtils {
                     final XmlTag xmlTag = rootTag.createChildTag("sofa:service", rootTag.getNamespace(), null, false);
                     xmlTag.setAttribute("interface", serviceClass.getQualifiedName());
                     xmlTag.setAttribute("ref", refValue);
-                    xmlTag.setAttribute("unique", "1.0.0");
+                    xmlTag.setAttribute("unique-id", "1.0.0");
                     XmlTag sofaBindingBolt = xmlTag.createChildTag("sofa:binding.bolt", xmlTag.getNamespace(), null, false);
                     xmlTag.add(sofaBindingBolt);
                     rootTag.add(xmlTag);

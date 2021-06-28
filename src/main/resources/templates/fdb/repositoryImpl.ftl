@@ -3,6 +3,9 @@ package ${generateInfo.packageName};
 <#list generateInfo.imports as import>
 import ${import};
 </#list>
+import org.sel4j.Logger;
+import org.sel4j.LoggerFactory;
+
 
 /**
 * ${generateInfo.dasTable.comment!''}
@@ -74,7 +77,7 @@ public class ${generateInfo.className}  extends FrameworkServiceImpl implements 
         logger.debug("当前查询参数信息为:" + in${generateInfo.basicClassName}DO);
         try {
             ${generateInfo.basicClassName}PO queryRsl${generateInfo.basicClassName}PO = ${generateInfo.basicClassName?uncap_first}Mapper.queryByPk(mapperFacade.map(in${generateInfo.basicClassName}DO, ${generateInfo.basicClassName}PO.class));
-            if (Objects.nonNull(queryRslCrdtApplInfoPO)) {
+            if (Objects.nonNull(queryRsl${generateInfo.basicClassName}PO)) {
                 logger.debug("当前查询结果为:" + queryRsl${generateInfo.basicClassName}PO.toString());
                 return mapperFacade.map(queryRsl${generateInfo.basicClassName}PO, ${generateInfo.basicClassName}DO.class);
             }

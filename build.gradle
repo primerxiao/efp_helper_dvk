@@ -44,7 +44,7 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     //插件名称
-    pluginName = 'EfpHelper'
+    pluginName = 'FDB代码助手'
     //基于idea的版本 跟localPath互斥
     version = 'IU-2020.3'
     //idea的本地路径
