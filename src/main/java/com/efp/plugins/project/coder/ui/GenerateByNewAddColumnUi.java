@@ -148,13 +148,14 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
                     "             * " + selectDasColumn.getComment() + "\n" +
                     "             */\n";
             //字段
-            PsiField fieldFromText = PsiElementFactory.getInstance(project).createField(fieldNameUnCat, PsiPrimitiveType.CHAR);
+            String fieldTxt = "private "+DasUtils.getJavaTypeClass(selectDasColumn).getSimpleName()+" "+fieldNameUnCat+";";
+            PsiField fieldFromText = PsiElementFactory.getInstance(project).createFieldFromText(fieldTxt, aClass);
             PsiComment fileCommentFromText = PsiElementFactory.getInstance(project).createDocCommentFromText(fieldCommentTxt, fieldFromText);
             //getter setter
-            String getterMethodTxt = "public String get" + fieldNameUpper + "() {\n" +
+            String getterMethodTxt = "public "+DasUtils.getJavaTypeClass(selectDasColumn).getSimpleName()+" get" + fieldNameUpper + "() {\n" +
                     "   return " + fieldNameUnCat + ";\n" +
                     "}";
-            String setterMethodTxt = "public void set" + fieldNameUpper + "(String " + fieldNameUnCat + ") {\n" +
+            String setterMethodTxt = "public void set" + fieldNameUpper + "("+DasUtils.getJavaTypeClass(selectDasColumn).getSimpleName()+" " + fieldNameUnCat + ") {\n" +
                     "   this.cardNo = " + fieldNameUnCat + ";\n" +
                     "}";
             PsiMethod getterMethod = PsiElementFactory.getInstance(project).createMethodFromText(getterMethodTxt, aClass);
