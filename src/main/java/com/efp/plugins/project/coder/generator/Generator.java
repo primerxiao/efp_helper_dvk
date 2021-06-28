@@ -59,7 +59,6 @@ public abstract class Generator {
 
         HashMap<String, Object> root = new HashMap<>();
 
-        root.put("genUtils", new GenUtils());
         root.put("simpleBaseModuleNameMethod", new SimpleBaseModuleNameMethod());
         root.put("generateInfo", generateInfo);
 

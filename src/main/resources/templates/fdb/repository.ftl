@@ -35,5 +35,5 @@ public interface ${generateInfo.className} {
     * @param ${generateInfo.basicClassName?uncap_first}DO
     * @return
     */
-    ${generateInfo.baseClassName}DO queryByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
+    ${generateInfo.basicClassName}DO queryByPk(${generateInfo.basicClassName}DO ${generateInfo.basicClassName?uncap_first}DO);
 }
