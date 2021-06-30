@@ -58,37 +58,19 @@ intellij {
 }
 
 patchPluginXml {
-    version = '1.0.6'
+    version = '1.0.1'
     changeNotes = """
 <div>
-  <p>1.0.6(xiaojunhui)</p> 
-  <ul> 
-    <li>提供生成标签的导出导入功能</li> 
-  </ul>
-  <p>1.0.5(xiaojunhui)</p> 
-  <ul> 
-    <li>提供生成insertOrUpdate的功能</li> 
-  </ul>
-  <p>1.0.4(xiaojunhui)</p> 
-  <ul> 
-    <li>优化代码生成功能：支持内容覆盖，支持联合主键</li> 
-  </ul>
-  <p>1.0.3(caoxin)</p> 
-  <ul> 
-    <li>在dubbo服务类中函数直接发起dubbo调用</li> 
-  </ul>
-  <p>1.0.2(xiaojunhui)</p> 
-  <ul> 
-    <li>在数据库视图中右键相应表直接生成项目代码以及配置</li> 
-  </ul>
   <p>1.0.1(xiaojunhui)</p> 
   <ul> 
-    <li>1、生成dubbo配置整合为一个动作同时生成</li> 
-    <li>3、支持的idea版本前置到2018</li> 
+    <li>修正生成代码缺包/导包错误问题</li> 
   </ul>
   <p>1.0.0 </p>
   <ul> 
-    <li>初始化插件：提供生成根据类生成消费者、生产者中的xml配置</li> 
+    <li>初始化插件：提供基于选择表生成增删查改功能</li> 
+    <li>初始化插件：提供基于选择字段生成查询函数</li> 
+    <li>初始化插件：提供基于选择字段反向添加代码到领域模型以及mapper.xml文件</li> 
+    <li>初始化插件：提供基于interface添加sofa生产者/消费者配置到配置文件</li> 
   </ul>
 </div>
        """

@@ -1,8 +1,10 @@
 package ${generateInfo.packageName};
-
+<#assign x = "${generateInfo.baseMoudleName}">
 <#list generateInfo.imports as import>
 import ${import};
 </#list>
+import com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.po.${generateInfo.basicClassName}PO;
+
 
 /**
 * ${generateInfo.dasTable.comment!''}

@@ -1,6 +1,6 @@
 package ${generateInfo.packageName};
 
-import ${generateInfo.packageName}.dto.IsrvRspInfoOutput;
+import com.fdb.smcts.core.vo.IsrvRspInfoOutput;
 import ${generateInfo.packageName}.dto.${generateInfo.basicClassName}Input;
 import ${generateInfo.packageName}.dto.${generateInfo.basicClassName}Output;
 

@@ -1,11 +1,10 @@
 package ${generateInfo.packageName};
-<#assign x = "${generateInfo.baseMoudleName}">
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.acl.repository.${generateInfo.basicClassName}Repository;
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.domain.entity.${generateInfo.basicClassName}DO;
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.facade.${generateInfo.basicClassName}Service;
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.facade.dto.IsrvRspInfoOutput;
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.facade.dto.${generateInfo.basicClassName}Input;
-import com.fdb.a.${simpleBaseModuleNameMethod(x)}.facade.dto.${generateInfo.basicClassName}Output;
+import com.fdb.a.${simpleBaseModuleNameMethod(generateInfo.baseMoudleName)}.acl.repository.${generateInfo.basicClassName}Repository;
+import com.fdb.a.${simpleBaseModuleNameMethod(generateInfo.baseMoudleName)}.domain.entity.${generateInfo.basicClassName}DO;
+import com.fdb.a.${simpleBaseModuleNameMethod(generateInfo.baseMoudleName)}.facade.${generateInfo.basicClassName}Service;
+import com.fdb.smcts.core.vo.IsrvRspInfoOutput;
+import com.fdb.a.${simpleBaseModuleNameMethod(generateInfo.baseMoudleName)}.facade.dto.${generateInfo.basicClassName}Input;
+import com.fdb.a.${simpleBaseModuleNameMethod(generateInfo.baseMoudleName)}.facade.dto.${generateInfo.basicClassName}Output;
 import com.fdb.smcts.core.base.FrameworkServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.LoggerFactory;

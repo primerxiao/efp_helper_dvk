@@ -3,6 +3,7 @@ package ${packageName};
 <#list imports as import>
 import ${import};
 </#list>
+import com.fdb.a.smcpi.infra.persistence.po.CrdtApplInfoPO;
 
 /**
  * DAO Interface: ${comment!''}

@@ -1,8 +1,7 @@
 package ${generateInfo.packageName};
 
-<#list generateInfo.imports as import>
-import ${import};
-</#list>
+<#assign x = "${generateInfo.baseMoudleName}">
+import com.fdb.a.${simpleBaseModuleNameMethod(x)}.domain.entity.${generateInfo.basicClassName}DO;
 
 /**
 * ${generateInfo.dasTable.comment!''}

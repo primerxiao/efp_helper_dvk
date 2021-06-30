@@ -17,7 +17,7 @@
     <idea-version since-build="183.0"/>
     <actions><!--AllIcons.Actions.Back-->
         <!--toolmenu配置-->
-        <group id="efp_helper_dvk_tools_menu" text="Efp Helper" popup="true">
+        <group id="efp_helper_dvk_tools_menu" text="Fdb Helper" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
         <!--dabatase插件配置-->

@@ -4,8 +4,7 @@
 <#assign x = "${generateInfo.baseMoudleName}">
 <mapper namespace="com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.mapper.${generateInfo.basicClassName}Mapper">
 
-    <resultMap type="com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.po.${generateInfo.basicClassName}PO"
-               id="${generateInfo.basicClassName?uncap_first}List">
+    <resultMap type="com.fdb.a.${simpleBaseModuleNameMethod(x)}.infra.persistence.po.${generateInfo.basicClassName}PO" id="${generateInfo.basicClassName?uncap_first}List">
         <#list generateInfo.classFields as field>
             <result property="${field.fieldName?uncap_first}" column="${field.dasColumnName}"/>
         </#list>
