@@ -10,7 +10,7 @@ tasks.withType(JavaCompile) {
 
 group 'com.efp.plugins'
 
-version '1.0.6'
+version '1.0.1'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -25,26 +25,20 @@ repositories {
 dependencies {
     //模板
     compile 'org.freemarker:freemarker:2.3.28'
-    // https://mvnrepository.com/artifact/com.101tec/zkclient
-    compile 'com.101tec:zkclient:0.11'
-    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
     compile 'org.quartz-scheduler:quartz:2.3.2'
-    // https://mvnrepository.com/artifact/com.alibaba/fastjson
     compile 'com.alibaba:fastjson:1.2.74'
     //test
     testCompile 'junit:junit:4.12'
-    // dubbo
-    compile('com.alibaba:dubbo:2.5.3') {
-        exclude group: 'spring:org.springframework'
+    compile ('com.alipay.sofa:sofa-rpc-all:5.7.8'){
+        exclude group:"com.alipay.sofa",module:"hessian"
+        exclude group:"com.alipay.sofa.lookout",module:"lookout-api"
     }
-    compile 'org.javassist:javassist:3.21.0-GA'
-
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     //插件名称
-    pluginName = 'FDB代码助手'
+    pluginName = 'FdbHelper'
     //基于idea的版本 跟localPath互斥
     version = 'IU-2020.3'
     //idea的本地路径

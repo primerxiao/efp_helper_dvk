@@ -52,8 +52,6 @@ public class GenerateByNewAddColumnAction extends AnAction {
         });
         stringIPopupChooserBuilder.setAdText("选择存储代码的应用");
         stringIPopupChooserBuilder.createPopup().showCenteredInCurrentWindow(e.getProject());
-
-
     }
 
 }

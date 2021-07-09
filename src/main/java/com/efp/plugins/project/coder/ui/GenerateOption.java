@@ -128,8 +128,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile daoFile = null;
                     if (daoCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.DAO);
                             daoFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DAO).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -140,8 +138,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile repositoryFile = null;
                     if (repositoryCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.REPOSITORY);
                             repositoryFile = new RepositoryGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.REPOSITORY).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -152,8 +148,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile repositoryImplFile = null;
                     if (repositoryImplCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.REPOSITORYIMP);
                             repositoryImplFile = new RepositoryGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.REPOSITORYIMP).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -164,8 +158,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile mapperFile = null;
                     if (mapperCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.MAPPER);
                             mapperFile = new MapperGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.MAPPER).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -176,8 +168,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile facadeFile = null;
                     if (facadeCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.FACADE);
                             facadeFile = new FacadeGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.FACADE).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -188,8 +178,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile facadeImplFile = null;
                     if (facadeImplCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.FACADEIMPL);
                             facadeImplFile = new FacadeGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.FACADEIMPL).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -204,8 +192,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile doFile = null;
                     if (doCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.DO);
                             doFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.DO).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -216,8 +202,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile inputFile = null;
                     if (inputCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.INPUT);
                             inputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.INPUT).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -228,8 +212,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile outputFile = null;
                     if (outputCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.OUTPUT);
                             outputFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.OUTPUT).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();
@@ -240,8 +222,6 @@ public class GenerateOption extends DialogWrapper {
                     VirtualFile poFile = null;
                     if (poCheckBox.isSelected()) {
                         try {
-                            //设置数据
-                            GenUtils.setValue(generateInfo, TemplateFileNameEnum.PO);
                             poFile = new ModleGenerator(isOverideCheckBox.isSelected(), generateInfo, TemplateFileNameEnum.PO).generate();
                         } catch (IOException | TemplateException ioException) {
                             ioException.printStackTrace();

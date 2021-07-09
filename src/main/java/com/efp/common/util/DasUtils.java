@@ -1,10 +1,7 @@
 package com.efp.common.util;
 
-import com.efp.common.data.EfpCovert;
-import com.efp.common.data.EfpModuleType;
 import com.efp.plugins.project.coder.bean.ClassField;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
-import com.efp.plugins.project.coder.bean.GenerateJava;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
@@ -13,7 +10,6 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.containers.JBIterable;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;

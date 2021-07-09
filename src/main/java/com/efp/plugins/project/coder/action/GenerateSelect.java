@@ -30,7 +30,6 @@ public class GenerateSelect extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        //DasUtils.refreshDas(e);
         EditorUtils.closeAllEditor(e);
         //获取数据库配置
         final PsiElement[] psiElementArr = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
@@ -51,7 +50,7 @@ public class GenerateSelect extends AnAction {
 
         final String currentMethodName = Messages.showInputDialog(
                 e.getProject(),
-                "请输出函数名称",
+                "请输入函数名称",
                 PluginContants.GENERATOR_UI_TITLE,
                 null,
                 initMethodName,

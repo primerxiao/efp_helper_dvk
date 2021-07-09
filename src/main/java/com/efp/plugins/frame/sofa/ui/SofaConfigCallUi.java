@@ -1,4 +1,4 @@
-    package com.efp.plugins.frame.dubbo.ui;
+    package com.efp.plugins.frame.sofa.ui;
 
     import com.efp.common.constant.PluginContants;
     import com.efp.common.util.SofaXmlConfigUtils;

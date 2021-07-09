@@ -1,6 +1,5 @@
-package com.efp.plugins.frame.dubbo.bean;
+package com.efp.plugins.frame.sofa.bean;
 
-import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

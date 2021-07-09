@@ -210,7 +210,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateMapperResultMap() throws IOException {
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
-        if (filesByName == null || filesByName.length <= 0) {
+        if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         String resultMapperTxt = "<resultMap type=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getCurrentModule().getName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\"" +

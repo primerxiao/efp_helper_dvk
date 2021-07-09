@@ -1,4 +1,4 @@
-package com.efp.plugins.frame.dubbo.bean;
+package com.efp.plugins.frame.sofa.bean;
 
 /**
  * @author 肖均辉

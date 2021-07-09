@@ -52,6 +52,8 @@ public abstract class Generator {
         this.isOverWrite = isOverWrite;
         this.generateInfo = generateInfo;
         this.tpFileName = tpFileName;
+        //设置参数
+        GenUtils.setValue(generateInfo,tpFileName);
     }
 
     public StringWriter getSw() throws IOException, TemplateException {

@@ -2,14 +2,11 @@ package com.efp.plugins.project.coder.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
-import com.efp.common.data.EfpCovert;
-import com.efp.common.data.EfpModuleType;
 import com.efp.common.util.StringUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.Generator;
 import com.efp.plugins.project.coder.template.method.SimpleBaseModuleNameMethod;
 import com.efp.plugins.project.coder.util.GenUtils;
-import com.intellij.lang.java.JavaLanguage;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -17,7 +14,6 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -34,7 +30,6 @@ import javax.swing.*;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class GenerateOptionSelect extends DialogWrapper {
 

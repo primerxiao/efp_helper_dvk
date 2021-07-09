@@ -20,26 +20,6 @@ public class GenUtils {
         return split[1];
     }
 
-    private String getJavaTypeByDasColumn(DasColumn dasColumn) {
-        return DasUtils.getJavaTypeClass(dasColumn).getSimpleName();
-    }
-
-    private String getColumnListStr(List<ClassField> classFieldList, String linkChar) {
-        if (classFieldList == null || classFieldList.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < classFieldList.size(); i++) {
-            if (i == classFieldList.size() - 1) {
-                sb.append(classFieldList.get(i).getDasColumnName());
-                continue;
-            }
-            sb.append(classFieldList.get(i).getDasColumnName()).append(linkChar);
-
-        }
-        return sb.toString();
-    }
-
     /**
      * 设置部分信息
      *

@@ -1,10 +1,8 @@
 <idea-plugin>
     <id>com.primer.efp_plugin</id>
     <name>FdbHelper</name>
-    <vendor>EfpDever</vendor>
-    <description>IDEA plug-in for highly customized Efp projects.Provide configuration generation, code generation and
-        other functions, greatly improve the development efficiency
-    </description>
+    <vendor>FdbDever</vendor>
+    <description>基于富滇银行智慧信贷项目组而创建的开发负责插件，插件涵括如下内容：代码生成、配置生成、json格式化、标签导出导入、cron表达式生成、sofa泛化调用（未完成）</description>
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
@@ -26,16 +24,9 @@
         </group>
         <!--基本代码生成-->
         <action id="efp-plugin-code-helper" description="根据选择的表生成相关的代码（基于DDD结构）" text="基于选择表生成基本代码"
-                class="com.efp.plugins.project.coder.action.CodeHelperAction">
+                class="com.efp.plugins.project.coder.action.BaseCRUDGenAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
-        <!--生成insertOrUpdate代码-->
-<!--        <action id="efp-plugin-Generate-InsertOrUpdate" description="Generate insertOrUpdate method code"-->
-<!--                text="Generate InsertOrUpdate Method Code"-->
-<!--                class="com.efp.plugins.project.coder.action.GenerateInsertOrUpdate">-->
-<!--            <add-to-group anchor="last" group-id="efp_database_plugin"/>-->
-<!--        </action>-->
-        <!--根据选择字段生成查询函数-->
         <action id="efp-plugin-Generate-Select" description="基于选择字段生成查询函数"
                 text="基于选择字段生成查询函数"
                 class="com.efp.plugins.project.coder.action.GenerateSelect">
@@ -69,49 +60,31 @@
                 class="com.efp.plugins.general.cron.action.CronAction" text="CronBuilder">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
-       <!--正则表达式-->
-        <action id="AnyRule" class="com.efp.plugins.general.regex.action.AnyRuleFindAction" text="Regex" description="正则表达式">
+        <!--正则表达式-->
+        <action id="AnyRule" class="com.efp.plugins.general.regex.action.AnyRuleFindAction" text="Regex"
+                description="正则表达式">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
-        <action id="DecompilerAction" class="com.efp.plugins.general.decompiler.action.DecompilerAction" text="Decompiler" description="反编译工具">
-            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
-        </action>
-        <!--test-->
-        <action id="efp-plugin-test"
-                class="com.efp.plugins.general.test.TestAction"
-                text="test">
+        <action id="DecompilerAction" class="com.efp.plugins.general.decompiler.action.DecompilerAction"
+                text="Decompiler" description="反编译工具">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
     </actions>
 
     <!--拓展点配置-->
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <intentionAction>
-            <!--sofa服务调用-->
-            <className>com.efp.plugins.frame.dubbo.action.DubboGenericCall</className>
-            <category>Java/Other</category>
-            <descriptionDirectoryName>/intentionDescriptions/DubboGenericCall</descriptionDirectoryName>
-        </intentionAction>
         <!--内联动作配置-->
         <intentionAction>
-            <!--dubbo服务调用-->
-            <className>com.efp.plugins.frame.dubbo.action.DubboServiceCall</className>
+            <!--sofa服务调用-->
+            <className>com.efp.plugins.frame.sofa.action.SofaServiceCall</className>
             <category>Java/Other</category>
             <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>
         </intentionAction>
         <intentionAction>
             <!--sofa生成者和消费者配置添加-->
-            <className>com.efp.plugins.frame.dubbo.action.SofaConfigCall</className>
+            <className>com.efp.plugins.frame.sofa.action.SofaConfigCall</className>
             <category>Java/Other</category>
         </intentionAction>
-        <!--Setting方面相关的配置-->
-        <applicationConfigurable groupId="Other Settings" id="efp.intellij.plugin.base"
-                                 displayName="Efp Plugin Settings"
-                                 instance="com.efp.plugins.settings.EfpSettingsConfigurable">
-        </applicationConfigurable>
-        <!--插件持久化配置-->
-        <applicationService serviceImplementation="com.efp.plugins.settings.EfpSettingsState"/>
         <!--相关service配置-->
         <projectService
                 serviceImplementation="com.efp.plugins.general.regex.service.RuleDataService"/>
