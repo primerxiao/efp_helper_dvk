@@ -69,6 +69,12 @@
                 text="Decompiler" description="反编译工具">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+        <!--数据字典导出-->
+        <action id="efp-plugin-DBDictExportAction"
+                class="com.efp.plugins.general.db.action.DBDictExportAction"
+                text="Export DBDict To File">
+            <add-to-group group-id="DatabaseView.Tools"/>
+        </action>
     </actions>
 
     <!--拓展点配置-->

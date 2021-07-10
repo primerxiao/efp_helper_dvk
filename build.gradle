@@ -33,6 +33,7 @@ dependencies {
         exclude group:"com.alipay.sofa",module:"hessian"
         exclude group:"com.alipay.sofa.lookout",module:"lookout-api"
     }
+    compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -52,9 +53,13 @@ intellij {
 }
 
 patchPluginXml {
-    version = '1.0.1'
+    version = '1.0.2'
     changeNotes = """
 <div>
+  <p>1.0.2(xiaojunhui)</p> 
+  <ul> 
+    <li>提供导出数据库字典为excel文档的能力</li> 
+  </ul>
   <p>1.0.1(xiaojunhui)</p> 
   <ul> 
     <li>修正生成代码缺包/导包错误问题</li> 
