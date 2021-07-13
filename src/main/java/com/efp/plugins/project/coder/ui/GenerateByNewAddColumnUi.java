@@ -300,7 +300,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
             aClass.addAfter(fieldFromText, psiField);
             PsiMethod preSetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals("set" + StringUtils.upperFirstChar(psiField.getName()))).findFirst().orElse(null);
             aClass.addAfter(getterMethod, preSetterMethod);
-            aClass.addAfter(setterMethod, getterMethod);
+            PsiMethod curGetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals(getterMethod.getName())).findFirst().orElse(null);
+            aClass.addAfter(setterMethod, curGetterMethod);
             return;
         }
         aClass.add(fieldFromText);
