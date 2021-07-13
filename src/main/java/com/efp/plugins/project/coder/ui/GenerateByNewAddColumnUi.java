@@ -50,6 +50,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
     private JCheckBox mapperBaseColumnListCheckBox;
     private JCheckBox mapperInsertSingleCheckBox;
     private JCheckBox mapperUpdateByPKCheckBox;
+    private JTextField insertSingleAliasName;
+    private JTextField updateByPKAliasName;
 
     private final GenerateInfo generateInfo;
 
@@ -133,11 +135,15 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
     }
 
     private void generateMapperUpdateByPk() throws IOException {
+        String xmlIdValue = "updateByPk";
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(insertSingleAliasName.getText())) {
+            xmlIdValue = insertSingleAliasName.getText();
+        }
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
-        String resultMapperTxt = "<update id=\"updateByPk\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n" +
+        String resultMapperTxt = "<update id=\"" + xmlIdValue + "\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n" +
                 "        update\n" +
                 "            " + generateInfo.getDasTable().getName() + "\n" +
                 "        <trim prefix=\"set\" suffixOverrides=\",\">\n"
@@ -158,7 +164,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
         for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
-            if ("updateByPk".equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
+            if (xmlIdValue.equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -169,11 +175,15 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
 
     private void generateMapperInsertSingle() throws IOException {
+        String xmlIdValue = "insertSingle";
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(insertSingleAliasName.getText())) {
+            xmlIdValue = insertSingleAliasName.getText();
+        }
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
-        String resultMapperTxt = "<insert id=\"insertSingle\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n"
+        String resultMapperTxt = "<insert id=\"" + xmlIdValue + "\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n"
                 + "insert into " + generateInfo.getDasTable().getName() + "("
                 + generateInfo.getClassFields().stream().map(ClassField::getDasColumnName).collect(Collectors.joining(","))
                 + ") \nvalues ("
@@ -185,7 +195,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
         for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
-            if ("insertSingle".equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
+            if (xmlIdValue.equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -269,31 +279,33 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
             PsiMethod getterMethod = PsiElementFactory.getInstance(project).createMethodFromText(getterMethodTxt, aClass);
             PsiMethod setterMethod = PsiElementFactory.getInstance(project).createMethodFromText(setterMethodTxt, aClass);
 
-            PsiField preField = getPreField(aClass, generateInfo, selectDasColumn);
-            if (Objects.isNull(preField)) {
-                aClass.addBefore(fieldFromText, aClass.getFields()[0]);
-            }else {
-                aClass.addAfter(fieldFromText, preField);
-            }
-            aClass.add(getterMethod);
-            aClass.add(setterMethod);
+            addField(aClass, generateInfo, selectDasColumn, fieldFromText, getterMethod, setterMethod);
         }
         psiFile.navigate(true);
     }
 
-    private PsiField getPreField(PsiClass aClass, GenerateInfo generateInfo, DasColumn selectDasColumn) {
+    private void addField(PsiClass aClass, GenerateInfo generateInfo, DasColumn selectDasColumn, PsiField fieldFromText, PsiMethod getterMethod, PsiMethod setterMethod) {
         //判断当前字段位置 如果是首位则需要添加到后一位前面 如果非首位则添加到上一位后面
         List<String> columnNames = generateInfo.getDasColumns().stream().map(DasNamed::getName).collect(Collectors.toList());
         int i = columnNames.indexOf(selectDasColumn.getName());
         if (i == 0) {
-            return null;
+            aClass.addBefore(fieldFromText, aClass.getFields()[0]);
+            aClass.addBefore(getterMethod, aClass.getMethods()[0]);
+            aClass.addAfter(setterMethod, aClass.getMethods()[0]);
+            return;
         }
         PsiField psiField = Arrays.stream(aClass.getFields()).filter(field -> field.getName().equals(StringUtils.underlineToCamel(columnNames.get(i - 1)))).findFirst().orElse(null);
         //如果找不到 获取最后一个吧
         if (!Objects.isNull(psiField)) {
-            return psiField;
+            aClass.addAfter(fieldFromText, psiField);
+            PsiMethod preSetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals("set" + StringUtils.upperFirstChar(psiField.getName()))).findFirst().orElse(null);
+            aClass.addAfter(getterMethod, preSetterMethod);
+            aClass.addAfter(setterMethod, getterMethod);
+            return;
         }
-        return Arrays.stream(aClass.getFields()).skip(aClass.getFields().length - 1).findFirst().orElse(null);
+        aClass.add(fieldFromText);
+        aClass.add(getterMethod);
+        aClass.add(setterMethod);
     }
 
 }
