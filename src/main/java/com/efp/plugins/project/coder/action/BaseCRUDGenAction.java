@@ -15,9 +15,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class BaseCRUDGenAction extends AnAction {
 
     @Override
@@ -31,7 +28,7 @@ public class BaseCRUDGenAction extends AnAction {
             return;
         }
         //弹出基础module选择
-        IPopupChooserBuilder<String> stringIPopupChooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(PluginContants.chooseModuleNames).setItemChosenCallback(b -> {
+        IPopupChooserBuilder<String> stringIPopupChooserBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(PluginContants.CHOOSE_MODULE_NAMES).setItemChosenCallback(b -> {
             final GenerateInfo generateInfo = DasUtils.getGenerateInfo(e, (DasTable) psiElement);
             generateInfo.setBaseMoudleName(b);
             //打开界面

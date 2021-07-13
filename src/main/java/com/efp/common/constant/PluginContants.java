@@ -12,7 +12,7 @@ public class PluginContants {
 
     public static final String GENERATOR_UI_TITLE = "FDB开发助手";
 
-    public static List<String> chooseModuleNames = Arrays.asList("a-smcbi", "a-smcbs", "a-smcfc", "a-smcia", "a-smcii", "a-smcpi", "a-smcqc", "a-smcrc", "a-smcrp", "a-smcti");
+    public static List<String> CHOOSE_MODULE_NAMES = Arrays.asList("a-smcai", "a-smcbi", "a-smcbs", "a-smcfc", "a-smcia", "a-smcii", "a-smcpi", "a-smcqc", "a-smcrc", "a-smcrp", "a-smcti");
 
 
 }
