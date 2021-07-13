@@ -10,6 +10,7 @@ import com.efp.plugins.project.coder.generator.Generator;
 import com.efp.plugins.project.coder.util.GenUtils;
 import com.google.common.base.Strings;
 import com.intellij.database.model.DasColumn;
+import com.intellij.database.model.DasNamed;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -29,8 +30,15 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * @author 86134
+ */
 public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private JPanel jpanel;
@@ -43,9 +51,9 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
     private JCheckBox mapperInsertSingleCheckBox;
     private JCheckBox mapperUpdateByPKCheckBox;
 
-    private GenerateInfo generateInfo;
+    private final GenerateInfo generateInfo;
 
-    private Project project;
+    private final Project project;
 
     public GenerateByNewAddColumnUi(@Nullable Project project, GenerateInfo generateInfo) {
         super(project);
@@ -126,7 +134,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateMapperUpdateByPk() throws IOException {
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
-        if (filesByName == null || filesByName.length <= 0) {
+        if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         String resultMapperTxt = "<update id=\"updateByPk\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n" +
@@ -149,8 +157,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
-        for (XmlTag subTag : mapperFile.getRootTag().getSubTags()) {
-            if ("updateByPk".equals(subTag.getAttribute("id").getValue())) {
+        for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
+            if ("updateByPk".equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -162,7 +170,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateMapperInsertSingle() throws IOException {
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
-        if (filesByName == null || filesByName.length <= 0) {
+        if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         String resultMapperTxt = "<insert id=\"insertSingle\" parameterType=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\">\n"
@@ -176,8 +184,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
-        for (XmlTag subTag : mapperFile.getRootTag().getSubTags()) {
-            if ("insertSingle".equals(subTag.getAttribute("id").getValue())) {
+        for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
+            if ("insertSingle".equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -188,7 +196,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateMapperBaseColumnList() throws IOException {
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
-        if (filesByName == null || filesByName.length <= 0) {
+        if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         String resultMapperTxt = "<sql id=\"Base_Column_List\">\n"
@@ -198,8 +206,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
-        for (XmlTag subTag : mapperFile.getRootTag().getSubTags()) {
-            if ("Base_Column_List".equals(subTag.getAttribute("id").getValue())) {
+        for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
+            if ("Base_Column_List".equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -213,18 +221,18 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         if (filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
-        String resultMapperTxt = "<resultMap type=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getCurrentModule().getName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\"" +
-                "id=\"" + StringUtils.initCap(generateInfo.getBasicClassName()) + "List\">\n";
+        StringBuilder resultMapperTxt = new StringBuilder("<resultMap type=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getCurrentModule().getName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\"" +
+                "id=\"" + StringUtils.initCap(generateInfo.getBasicClassName()) + "List\">\n");
 
         for (ClassField classField : generateInfo.getClassFields()) {
-            resultMapperTxt = resultMapperTxt + "   <result property=\"" + StringUtils.initCap(classField.getFieldName()) + "\" column=\"" + classField.getDasColumnName() + "\"/>\n";
+            resultMapperTxt.append("   <result property=\"").append(StringUtils.initCap(classField.getFieldName())).append("\" column=\"").append(classField.getDasColumnName()).append("\"/>\n");
         }
-        resultMapperTxt = resultMapperTxt + "</resultMap>";
+        resultMapperTxt.append("</resultMap>");
         XmlFile mapperFile = (XmlFile) filesByName[0];
-        XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
+        XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.toString().replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
-        for (XmlTag subTag : mapperFile.getRootTag().getSubTags()) {
-            if ((StringUtils.initCap(generateInfo.getBasicClassName()) + "List").equals(subTag.getAttribute("id").getValue())) {
+        for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
+            if ((StringUtils.initCap(generateInfo.getBasicClassName()) + "List").equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -235,7 +243,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateModle() {
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
-        if (filesByName == null || filesByName.length <= 0) {
+        if (filesByName.length <= 0) {
             throw new RuntimeException(generateInfo.getClassName() + " file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
@@ -260,10 +268,32 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
                     "}";
             PsiMethod getterMethod = PsiElementFactory.getInstance(project).createMethodFromText(getterMethodTxt, aClass);
             PsiMethod setterMethod = PsiElementFactory.getInstance(project).createMethodFromText(setterMethodTxt, aClass);
-            aClass.add(fieldFromText);
+
+            PsiField preField = getPreField(aClass, generateInfo, selectDasColumn);
+            if (Objects.isNull(preField)) {
+                aClass.addBefore(fieldFromText, aClass.getFields()[0]);
+            }else {
+                aClass.addAfter(fieldFromText, preField);
+            }
             aClass.add(getterMethod);
             aClass.add(setterMethod);
         }
         psiFile.navigate(true);
     }
+
+    private PsiField getPreField(PsiClass aClass, GenerateInfo generateInfo, DasColumn selectDasColumn) {
+        //判断当前字段位置 如果是首位则需要添加到后一位前面 如果非首位则添加到上一位后面
+        List<String> columnNames = generateInfo.getDasColumns().stream().map(DasNamed::getName).collect(Collectors.toList());
+        int i = columnNames.indexOf(selectDasColumn.getName());
+        if (i == 0) {
+            return null;
+        }
+        PsiField psiField = Arrays.stream(aClass.getFields()).filter(field -> field.getName().equals(StringUtils.underlineToCamel(columnNames.get(i - 1)))).findFirst().orElse(null);
+        //如果找不到 获取最后一个吧
+        if (!Objects.isNull(psiField)) {
+            return psiField;
+        }
+        return Arrays.stream(aClass.getFields()).skip(aClass.getFields().length - 1).findFirst().orElse(null);
+    }
+
 }
