@@ -80,15 +80,20 @@
     <!--拓展点配置-->
     <extensions defaultExtensionNs="com.intellij">
         <!--内联动作配置-->
-        <intentionAction>
-            <!--sofa服务调用-->
-            <className>com.efp.plugins.frame.sofa.action.SofaServiceCall</className>
-            <category>Java/Other</category>
-            <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>
-        </intentionAction>
+<!--        <intentionAction>-->
+<!--            &lt;!&ndash;sofa服务调用&ndash;&gt;-->
+<!--            <className>com.efp.plugins.frame.sofa.action.SofaServiceCall</className>-->
+<!--            <category>Java/Other</category>-->
+<!--            <descriptionDirectoryName>/intentionDescriptions/DubboServiceCall</descriptionDirectoryName>-->
+<!--        </intentionAction>-->
         <intentionAction>
             <!--sofa生成者和消费者配置添加-->
             <className>com.efp.plugins.frame.sofa.action.SofaConfigCall</className>
+            <category>Java/Other</category>
+        </intentionAction>
+        <intentionAction>
+            <!--set赋值添加注释-->
+            <className>com.efp.plugins.general.comment.action.SetCommentConfigCall</className>
             <category>Java/Other</category>
         </intentionAction>
         <!--相关service配置-->

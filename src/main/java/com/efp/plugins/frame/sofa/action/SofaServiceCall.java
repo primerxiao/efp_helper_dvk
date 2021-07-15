@@ -1,8 +1,6 @@
 package com.efp.plugins.frame.sofa.action;
 
 
-import com.alipay.sofa.rpc.api.GenericService;
-import com.alipay.sofa.rpc.config.ConsumerConfig;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -69,14 +67,14 @@ public class SofaServiceCall extends PsiElementBaseIntentionAction {
         for (PsiParameter parameter : parameterList.getParameters()) {
 
         }
-        // 引用一个服务
-        ConsumerConfig<GenericService> consumerConfig = new ConsumerConfig<GenericService>().setInterfaceId(className)
-                .setGeneric(true).setDirectUrl(sofaUrl);
-        // 拿到代理类
-        GenericService genericService = consumerConfig.refer();
-        // 发起调用 todo:需要处理参数
-        Object resultObj = genericService.$genericInvoke(methodName, new String[]{""},
-                new Object[]{"{}"});
+//        // 引用一个服务
+//        ConsumerConfig<GenericService> consumerConfig = new ConsumerConfig<GenericService>().setInterfaceId(className)
+//                .setGeneric(true).setDirectUrl(sofaUrl);
+//        // 拿到代理类
+//        GenericService genericService = consumerConfig.refer();
+//        // 发起调用 todo:需要处理参数
+//        Object resultObj = genericService.$genericInvoke(methodName, new String[]{""},
+//                new Object[]{"{}"});
     }
 
     @Override

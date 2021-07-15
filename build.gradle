@@ -29,10 +29,6 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.74'
     //test
     testCompile 'junit:junit:4.12'
-    compile ('com.alipay.sofa:sofa-rpc-all:5.7.8'){
-        exclude group:"com.alipay.sofa",module:"hessian"
-        exclude group:"com.alipay.sofa.lookout",module:"lookout-api"
-    }
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
 }
 
@@ -41,9 +37,10 @@ intellij {
     //插件名称
     pluginName = 'FdbHelper'
     //基于idea的版本 跟localPath互斥
-    version = 'IU-2020.3'
+    //version = 'IU-2020.3'
+    //version = 'IU-2021.1'
     //idea的本地路径
-    //localPath = IDEA_ROOT_PATH_2019_3\
+    localPath = IDEA_ROOT_PATH_2021_1
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
     downloadSources = true
@@ -85,7 +82,7 @@ task cleanPackTempFiles(type: Delete) {
 //插件打包-2
 task copyPlugin(type: Copy) {
     dependsOn(cleanPackTempFiles)
-    from "${buildDir}/idea-sandbox/plugins/EfpHelper/"
+    from "${buildDir}/idea-sandbox/plugins/FdbHelper/"
     into "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
 }
 

@@ -136,8 +136,8 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
 
     private void generateMapperUpdateByPk() throws IOException {
         String xmlIdValue = "updateByPk";
-        if (org.apache.commons.lang3.StringUtils.isNotEmpty(insertSingleAliasName.getText())) {
-            xmlIdValue = insertSingleAliasName.getText();
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(updateByPKAliasName.getText())) {
+            xmlIdValue = updateByPKAliasName.getText();
         }
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName.length <= 0) {
