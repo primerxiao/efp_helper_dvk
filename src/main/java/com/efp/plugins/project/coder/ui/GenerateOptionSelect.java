@@ -124,21 +124,10 @@ public class GenerateOptionSelect extends DialogWrapper {
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
         String methodText = "@Override\n" +
-                "        public List<" + generateInfo.getBasicClassName() + "Output> " + methodName + "(" + generateInfo.getBasicClassName() + "Input input) {\n" +
-                "            logger.debug(\"当前查询参数信息为:\" + input);\n" +
-                "            try {\n" +
-                "                List<" + generateInfo.getBasicClassName() + "DO> queryRsl" + generateInfo.getBasicClassName() + "DOs = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Repository." + methodName + "(mapperFacade.map(input, " + generateInfo.getBasicClassName() + "DO.class));\n" +
-                "                if (Objects.nonNull(queryRsl" + generateInfo.getBasicClassName() + "DOs)) {\n" +
-                "                    logger.debug(\"当前查询结果条数为:\" + queryRsl" + generateInfo.getBasicClassName() + "DOs.size());\n" +
-                "                    return mapperFacade.mapAsList(queryRsl" + generateInfo.getBasicClassName() + "DOs, " + generateInfo.getBasicClassName() + "Output.class);\n" +
-                "                }\n" +
-                "                logger.debug(\"当前查询结果为空!\");\n" +
-                "                return null;\n" +
-                "            } catch (Exception e) {\n" +
-                "                logger.error(\"查询数据发生异常!\", e);\n" +
-                "            }\n" +
-                "            return null;\n" +
-                "        }";
+                "    public List<" + generateInfo.getBasicClassName() + "Output> " + methodName + "(" + generateInfo.getBasicClassName() + "Input input) {\n" +
+                "        List<" + generateInfo.getBasicClassName() + "DO> " + StringUtils.initCap(generateInfo.getBasicClassName()) + "DOS = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Repository.queryList(mapperFacade.map(input, " + generateInfo.getBasicClassName() + "DO.class));\n" +
+                "        return mapperFacade.mapAsList(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "DOS, " + generateInfo.getBasicClassName() + "Output.class);\n" +
+                "    }";
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
         aClass.add(method);
         psiFile.navigate(true);
@@ -180,21 +169,12 @@ public class GenerateOptionSelect extends DialogWrapper {
 
 
         String methodText = "@Override\n" +
-                "        public List<" + generateInfo.getBasicClassName() + "DO> " + methodName + "(" + generateInfo.getBasicClassName() + "DO in" + generateInfo.getBasicClassName() + "DO) {\n" +
-                "            logger.debug(\"当前查询参数信息为:\" + in" + generateInfo.getBasicClassName() + "DO);\n" +
-                "            try {\n" +
-                "                List<" + generateInfo.getBasicClassName() + "PO> queryRsl" + generateInfo.getBasicClassName() + "POs = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Mapper." + methodName + "(mapperFacade.map(in" + generateInfo.getBasicClassName() + "DO, " + generateInfo.getBasicClassName() + "PO.class));\n" +
-                "                if (Objects.nonNull(queryRsl" + generateInfo.getBasicClassName() + "POs)) {\n" +
-                "                    logger.debug(\"当前查询结果条数为:\" + queryRsl" + generateInfo.getBasicClassName() + "POs.size());\n" +
-                "                    return mapperFacade.mapAsList(queryRsl" + generateInfo.getBasicClassName() + "POs, " + generateInfo.getBasicClassName() + "DO.class);\n" +
-                "                }\n" +
-                "                logger.debug(\"当前查询结果为空!\");\n" +
-                "                return null;\n" +
-                "            } catch (Exception e) {\n" +
-                "                logger.error(\"查询数据发生异常!\", e);\n" +
-                "            }\n" +
-                "            return null;\n" +
-                "        }";
+                "    public List<" + generateInfo.getBasicClassName() + "DO> " + methodName + "(" + generateInfo.getBasicClassName() + "DO " + StringUtils.initCap(generateInfo.getBasicClassName()) + "DO) {\n" +
+                "        List<" + generateInfo.getBasicClassName() + "PO> " + StringUtils.initCap(generateInfo.getBasicClassName()) + "s = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Mapper.queryList(\n" +
+                "                mapperFacade.map(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "DO, " + generateInfo.getBasicClassName() + "PO.class)\n" +
+                "        );\n" +
+                "        return mapperFacade.mapAsList(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "s, " + generateInfo.getBasicClassName() + "DO.class);\n" +
+                "    }";
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
         aClass.add(method);
         psiFile.navigate(true);

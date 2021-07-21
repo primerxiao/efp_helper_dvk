@@ -114,6 +114,7 @@ public class DBDictExportAction extends AnAction {
                     }
                     workbook.write();
                     workbook.close();
+                    NotifyUtils.notifyInfo("生成数据字典完成");
                 }
 
             } else {
