@@ -1,13 +1,13 @@
 package com.efp.common.util;
 
-import java.util.Locale;
+import com.google.common.base.CaseFormat;
 
 /**
- * Created by Owen on 6/18/16.
+ * @author 86134
  */
 public class StringUtils {
 
-    private static final char UNDERLINE='_';
+    public static final char UNDERLINE='_';
 
     /**
      * 将字符串首位小写
@@ -62,4 +62,19 @@ public class StringUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * 驼峰转下划线
+     * @param camelStr
+     * @return
+     */
+    public static String camelToUnderLine(String camelStr) {
+        return CaseFormat.LOWER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE).convert(camelStr.toLowerCase());
+    }
+
+    public static String package2Path(String packageName) {
+        //com.fdb.a.smcpi.infra.repository.impl
+        return packageName.replaceAll("\\.", "/");
+    }
+
 }

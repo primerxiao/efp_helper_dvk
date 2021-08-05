@@ -96,9 +96,17 @@
             <className>com.efp.plugins.general.comment.action.SetCommentConfigCall</className>
             <category>Java/Other</category>
         </intentionAction>
+        <intentionAction>
+            <!--service impl uitest 生成-->
+            <className>com.efp.plugins.project.uitest.action.ServiceImplUnintTestGenCall</className>
+            <category>Java/Other</category>
+        </intentionAction>
         <!--相关service配置-->
         <projectService
                 serviceImplementation="com.efp.plugins.general.regex.service.RuleDataService"/>
+        <!--单测索引缓存配置-->
+        <projectService
+                serviceImplementation="com.efp.plugins.project.tbtransfor.service.TbTransforCacheService"/>
     </extensions>
 
 </idea-plugin>

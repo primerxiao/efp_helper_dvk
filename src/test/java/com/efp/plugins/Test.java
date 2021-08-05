@@ -24,5 +24,12 @@ public class Test {
         String ip = "127.0.0.10000000000000000";
         System.out.println(RuleUtils.isIp(ip));
     }
+    @org.junit.Test
+    public void package2Path(){
+        String ip = "127.0.0.10000000000000000";
+        System.out.println(com.efp.common.util.StringUtils.package2Path(ip));
+    }
+
+
 
 }
