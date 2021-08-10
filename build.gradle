@@ -50,7 +50,7 @@ intellij {
 }
 
 patchPluginXml {
-    version = '1.0.3'
+    version = '1.0.4'
     changeNotes = """
 <div>
   <p>1.0.3(xiaojunhui)</p> 

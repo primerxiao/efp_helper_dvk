@@ -119,7 +119,7 @@ public class GenUtils {
     private static void inputParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-facade
         //com.fdb.a.smcpi.facade.dto
-        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
+        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
         //设置当前模块
         generateInfo.setCurrentModule(moduleByName);
         //设置包路径

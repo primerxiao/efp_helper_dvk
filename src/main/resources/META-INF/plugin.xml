@@ -69,6 +69,12 @@
                 text="Decompiler" description="反编译工具">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
+        <!--数据库改造-删除-->
+        <action id="DeleteCodeByTableUI"
+                class="com.efp.plugins.project.tbtransfor.action.DeleteCodeByTableAction"
+                text="Temp Delete">
+            <add-to-group group-id="efp_helper_dvk_tools_menu"/>
+        </action>
         <!--数据字典导出-->
         <action id="efp-plugin-DBDictExportAction"
                 class="com.efp.plugins.general.db.action.DBDictExportAction"
