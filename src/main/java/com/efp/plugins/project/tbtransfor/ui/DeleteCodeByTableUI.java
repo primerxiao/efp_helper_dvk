@@ -2,8 +2,12 @@ package com.efp.plugins.project.tbtransfor.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.notifier.NotificationHelper;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.PsiFile;
@@ -11,7 +15,6 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +50,26 @@ public class DeleteCodeByTableUI extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "开始删除相关文件") {
+            @Override
+            public void run(@NotNull ProgressIndicator indicator) {
+                WriteCommandAction.runWriteCommandAction(project, () -> {
+                    indicator.setFraction(0);
+                    try {
+                        NotificationHelper.getInstance().notifyInfo("开始删除文件", project);
+                        deleteFiles(indicator);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        NotificationHelper.getInstance().notifyError(e.getMessage(), project);
+                    } finally {
+                        indicator.setFraction(100);
+                    }
+                });
+            }
+        });
+    }
+
+    private void deleteFiles(@NotNull ProgressIndicator indicator) {
         if (StringUtils.isEmpty((CharSequence) baseModuleComboBox.getSelectedItem())) {
             NotificationHelper.getInstance().notifyError("必须选择一个应用", project);
             return;
@@ -64,6 +87,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
         Module infracl = ModuleManager.getInstance(project).findModuleByName(baseMduleName + "-infracl");
         Module infrastructure = ModuleManager.getInstance(project).findModuleByName(baseMduleName + "-infrastructure");
         //sofa config
+        NotificationHelper.getInstance().notifyInfo("开始删除sofa-provider配置", project);
         if (start != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, "sofa-provider-" + baseMduleName + ".xml", start.getModuleScope());
             if (psiFiles.length > 0) {
@@ -81,7 +105,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
                     if (ref == null) {
                         continue;
                     }
-                    if (("com.fdb.a." + baseMduleName.split("\\.")[1] + ".facade." + baseClassName + "Service").equals(anInterface.getValue())
+                    if (("com.fdb.a." + baseMduleName.split("-")[1] + ".facade." + baseClassName + "Service").equals(anInterface.getValue())
                             && (com.efp.common.util.StringUtils.initCap(baseClassName) + "Service").equals(ref.getValue())
                     ) {
                         subTag.delete();
@@ -89,6 +113,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
                 }
             }
         }
+        NotificationHelper.getInstance().notifyInfo("开始删除sofa-consumer配置", project);
         if (facade != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, "sofa-consumer-" + baseMduleName + ".xml", facade.getModuleScope());
             if (psiFiles.length > 0) {
@@ -112,6 +137,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //do
+        NotificationHelper.getInstance().notifyInfo("开始删除do类", project);
         if (domain != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "DO.java", domain.getModuleScope());
             if (psiFiles.length > 0) {
@@ -120,6 +146,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //po
+        NotificationHelper.getInstance().notifyInfo("开始删除po类", project);
         if (infrastructure != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "PO.java", infrastructure.getModuleScope());
             if (psiFiles.length > 0) {
@@ -128,6 +155,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //input
+        NotificationHelper.getInstance().notifyInfo("开始删除input类", project);
         if (facade != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "Input.java", facade.getModuleScope());
             if (psiFiles.length > 0) {
@@ -136,6 +164,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //output
+        NotificationHelper.getInstance().notifyInfo("开始删除output类", project);
         if (facade != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "Output.java", facade.getModuleScope());
             if (psiFiles.length > 0) {
@@ -144,6 +173,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //service
+        NotificationHelper.getInstance().notifyInfo("开始删除service类", project);
         if (facade != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "Service.java", facade.getModuleScope());
             if (psiFiles.length > 0) {
@@ -152,6 +182,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //serviceImpl
+        NotificationHelper.getInstance().notifyInfo("开始删除serviceImpl类", project);
         if (application != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "ServiceImpl.java", application.getModuleScope());
             if (psiFiles.length > 0) {
@@ -160,6 +191,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //repository
+        NotificationHelper.getInstance().notifyInfo("开始删除repository类", project);
         if (infracl != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "Repository.java", infracl.getModuleScope());
             if (psiFiles.length > 0) {
@@ -168,6 +200,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //reposityryImpl
+        NotificationHelper.getInstance().notifyInfo("开始删除reposityryImpl类", project);
         if (infrastructure != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "RepositoryImpl.java", infrastructure.getModuleScope());
             if (psiFiles.length > 0) {
@@ -176,6 +209,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //dao
+        NotificationHelper.getInstance().notifyInfo("开始删除dao类", project);
         if (infrastructure != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "Mapper.java", infrastructure.getModuleScope());
             if (psiFiles.length > 0) {
@@ -184,6 +218,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             }
         }
         //xml
+        NotificationHelper.getInstance().notifyInfo("开始删除mybatis xml 文件", project);
         if (infrastructure != null) {
             @NotNull PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, baseClassName + "MapperImpl.xml", infrastructure.getModuleScope());
             if (psiFiles.length > 0) {
