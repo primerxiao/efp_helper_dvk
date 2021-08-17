@@ -8,6 +8,7 @@ import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.intellij.database.model.DasColumn;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.List;
@@ -18,6 +19,42 @@ public class GenUtils {
     public static String getNameByBaseMoudleName(String baseModuleName) {
         String[] split = baseModuleName.split("-");
         return split[1];
+    }
+
+    public static Module getModule(Project project, String baseModuleName, TemplateFileNameEnum templateFileNameEnum) {
+        switch (templateFileNameEnum) {
+            case DO:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "domain")
+                );
+            case PO:
+            case DAO:
+            case REPOSITORYIMP:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "infrastructure")
+                );
+            case REPOSITORY:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "infracl")
+                );
+            case INPUT:
+            case OUTPUT:
+            case FACADE:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "facade")
+                );
+            case MAPPER:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "start")
+                );
+            case FACADEIMPL:
+                return ModuleManager.getInstance(project).findModuleByName(
+                        org.apache.commons.lang3.StringUtils.join(baseModuleName, "-", "-application")
+                );
+            default:
+                throw new RuntimeException("查询不到module");
+
+        }
     }
 
     /**
@@ -119,7 +156,7 @@ public class GenUtils {
     private static void inputParamPackage(GenerateInfo generateInfo) {
         //a-smcpi-facade
         //com.fdb.a.smcpi.facade.dto
-        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-infrastructure");
+        Module moduleByName = ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getBaseMoudleName() + "-facade");
         //设置当前模块
         generateInfo.setCurrentModule(moduleByName);
         //设置包路径

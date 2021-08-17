@@ -38,6 +38,11 @@
                 class="com.efp.plugins.project.coder.action.GenerateByNewAddColumnAction">
             <add-to-group anchor="last" group-id="efp_database_plugin"/>
         </action>
+        <!--备注信息重建生成-->
+        <action id="efp-plugin-comment-rewrite-code-helper" description="根据选择的表字段信息反向更新到模型" text="根据选择的表字段信息反向更新到模型"
+                class="com.efp.plugins.project.coder.action.RewriteRemarkAction">
+            <add-to-group anchor="last" group-id="efp_database_plugin"/>
+        </action>
         <!--标签导出-->
         <action id="efp-plugin-ExportBookMarkAction"
                 class="com.efp.plugins.general.bookmark.action.ExportBookMarkAction"
