@@ -94,11 +94,11 @@ public class DasUtils {
         }
         if ("tinyint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return byte.class;
+            return Integer.class;
         }
         if ("smallint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return short.class;
+            return Integer.class;
         }
         if ("int".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
@@ -110,19 +110,19 @@ public class DasUtils {
         }
         if ("bigint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return long.class;
+            return Long.class;
         }
         if ("real".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return float.class;
+            return Float.class;
         }
         if ("float".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return double.class;
+            return Double.class;
         }
         if ("double".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return double.class;
+            return Double.class;
         }
         if ("binary".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 

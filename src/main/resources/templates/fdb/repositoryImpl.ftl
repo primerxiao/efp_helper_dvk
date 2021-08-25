@@ -17,6 +17,7 @@ import java.util.Objects;
 * ${generateInfo.dasTable.comment!''}
 * @date ${.now?string['yyyy-MM-dd']}
 */
+@Service("${generateInfo.basicClassName?uncap_first}Repository")
 public class ${generateInfo.className}  extends FrameworkServiceImpl implements ${generateInfo.basicClassName}Repository {
 
     private final static Logger logger = LoggerFactory.getLogger(${generateInfo.basicClassName}RepositoryImpl.class);
