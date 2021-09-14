@@ -1,5 +1,6 @@
 package com.efp.plugins.general.comment.action;
 
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.general.comment.bean.TestAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.codeInspection.util.IntentionFamilyName;
@@ -11,9 +12,7 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiClassUtil;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +61,7 @@ public class SetCommentConfigCall extends PsiElementBaseIntentionAction {
                     PsiClass psiClass = Arrays.stream(classes).filter(c -> Objects.equals(c.getName(), className)).findFirst().orElse(null);
                     assert psiClass != null;
                     PsiField[] fields = psiClass.getFields();
-                    PsiField psiField = Arrays.stream(fields).filter(f -> setMethodName.equals("set" + com.efp.common.util.StringUtils.upperFirstChar(f.getName()))).findFirst().orElse(null);
+                    PsiField psiField = Arrays.stream(fields).filter(f -> setMethodName.equals("set" + PluginStringUtils.upperFirstChar(f.getName()))).findFirst().orElse(null);
                     assert psiField != null;
                     PsiDocComment docComment = psiField.getDocComment();
                     assert docComment != null;

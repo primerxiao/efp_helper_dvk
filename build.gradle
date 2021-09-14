@@ -30,6 +30,7 @@ dependencies {
     //test
     testCompile 'junit:junit:4.12'
     compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    compile 'org.gitlab4j:gitlab4j-api:4.15.5'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -37,10 +38,10 @@ intellij {
     //插件名称
     pluginName = 'FdbHelper'
     //基于idea的版本 跟localPath互斥
-    //version = 'IU-2020.3'
+    version = 'IU-2020.3'
     //version = 'IU-2021.1'
     //idea的本地路径
-    localPath = IDEA_ROOT_PATH_2021_1
+    //localPath = IDEA_ROOT_PATH_2021_1
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
     downloadSources = true

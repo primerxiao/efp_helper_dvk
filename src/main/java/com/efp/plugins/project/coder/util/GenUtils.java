@@ -2,10 +2,9 @@ package com.efp.plugins.project.coder.util;
 
 import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DasUtils;
-import com.efp.common.util.StringUtils;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.bean.ClassField;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
-import com.intellij.database.model.DasColumn;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -66,7 +65,7 @@ public class GenUtils {
     public static void setValue(GenerateInfo generateInfo, TemplateFileNameEnum aDo) {
         //通用信息处理
         //基础类名
-        generateInfo.setBasicClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())));
+        generateInfo.setBasicClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())));
         generateInfo.setClassFields(DasUtils.getClassFields(generateInfo));
         //字段信息
         generateInfo.setClassFields(DasUtils.getClassFields(generateInfo));
@@ -128,8 +127,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".domain.entity");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "DO.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "DO");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "DO.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "DO");
     }
 
     private static void poParamPackage(GenerateInfo generateInfo) {
@@ -149,8 +148,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".infra.persistence.po");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "PO.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "PO");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "PO.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "PO");
     }
 
     private static void inputParamPackage(GenerateInfo generateInfo) {
@@ -171,8 +170,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".facade.dto");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Input.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Input");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Input.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Input");
     }
 
     private static void outputParamPackage(GenerateInfo generateInfo) {
@@ -193,8 +192,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".facade.dto");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Output.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Output");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Output.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Output");
     }
 
     private static void daoParamPackage(GenerateInfo generateInfo) {
@@ -215,8 +214,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".infra.persistence.mapper");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
     }
 
     private static void mapperParamPackage(GenerateInfo generateInfo) {
@@ -233,8 +232,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".infra.persistence.po");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "MapperImpl.xml");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "MapperImpl.xml");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Mapper");
     }
 
     private static void repositoryParamPackage(GenerateInfo generateInfo) {
@@ -255,8 +254,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".acl.repository");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Repository.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Repository");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Repository.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Repository");
     }
 
     private static void repositoryImplParamPackage(GenerateInfo generateInfo) {
@@ -277,8 +276,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".infra.repository.impl");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "RepositoryImpl");
     }
 
     private static void facadeParamPackage(GenerateInfo generateInfo) {
@@ -299,8 +298,8 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".facade");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service");
     }
 
     private static void facadeImplParamPackage(GenerateInfo generateInfo) {
@@ -321,7 +320,7 @@ public class GenUtils {
                         + getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                         + ".application.service.impl");
         //设置文件名
-        generateInfo.setFileName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl.java");
-        generateInfo.setClassName(StringUtils.upperFirstChar(StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl");
+        generateInfo.setFileName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl.java");
+        generateInfo.setClassName(PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "ServiceImpl");
     }
 }

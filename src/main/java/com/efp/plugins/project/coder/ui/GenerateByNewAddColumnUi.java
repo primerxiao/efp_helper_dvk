@@ -3,12 +3,10 @@ package com.efp.plugins.project.coder.ui;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DasUtils;
-import com.efp.common.util.StringUtils;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.bean.ClassField;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
-import com.efp.plugins.project.coder.generator.Generator;
 import com.efp.plugins.project.coder.util.GenUtils;
-import com.google.common.base.Strings;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasNamed;
 import com.intellij.lang.xml.XMLLanguage;
@@ -19,21 +17,17 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.javadoc.PsiDocCommentImpl;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import freemarker.template.Template;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -149,14 +143,14 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
                 "        <trim prefix=\"set\" suffixOverrides=\",\">\n"
                 +
                 generateInfo.getClassFields().stream().map(c ->
-                        "                <if test=\"" + StringUtils.initCap(c.getFieldName()) + "!=null\">\n" +
-                                "                    " + c.getDasColumnName() + "=#{" + StringUtils.initCap(c.getFieldName()) + "},\n" +
+                        "                <if test=\"" + PluginStringUtils.initCap(c.getFieldName()) + "!=null\">\n" +
+                                "                    " + c.getDasColumnName() + "=#{" + PluginStringUtils.initCap(c.getFieldName()) + "},\n" +
                                 "                </if>"
                 ).collect(Collectors.joining("\n"))
                 +
                 "        </trim>\n" +
                 "        where\n" +
-                generateInfo.getPkClassFields().stream().map(c -> "   " + c.getDasColumnName() + "=#{" + StringUtils.initCap(c.getFieldName()) + "}\n").collect(Collectors.joining("   and")) +
+                generateInfo.getPkClassFields().stream().map(c -> "   " + c.getDasColumnName() + "=#{" + PluginStringUtils.initCap(c.getFieldName()) + "}\n").collect(Collectors.joining("   and")) +
                 "\n" +
                 "</update>";
 
@@ -187,7 +181,7 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
                 + "insert into " + generateInfo.getDasTable().getName() + "("
                 + generateInfo.getClassFields().stream().map(ClassField::getDasColumnName).collect(Collectors.joining(","))
                 + ") \nvalues ("
-                + generateInfo.getClassFields().stream().map(c -> "#{" + StringUtils.initCap(c.getFieldName()) + "}").collect(Collectors.joining(","))
+                + generateInfo.getClassFields().stream().map(c -> "#{" + PluginStringUtils.initCap(c.getFieldName()) + "}").collect(Collectors.joining(","))
                 + ")\n"
                 + "</insert>";
 
@@ -232,17 +226,17 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
             throw new RuntimeException("mapper file not found");
         }
         StringBuilder resultMapperTxt = new StringBuilder("<resultMap type=\"com.fdb.a." + GenUtils.getNameByBaseMoudleName(generateInfo.getCurrentModule().getName()) + ".infra.persistence.po." + generateInfo.getBasicClassName() + "PO\"" +
-                "id=\"" + StringUtils.initCap(generateInfo.getBasicClassName()) + "List\">\n");
+                "id=\"" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "List\">\n");
 
         for (ClassField classField : generateInfo.getClassFields()) {
-            resultMapperTxt.append("   <result property=\"").append(StringUtils.initCap(classField.getFieldName())).append("\" column=\"").append(classField.getDasColumnName()).append("\"/>\n");
+            resultMapperTxt.append("   <result property=\"").append(PluginStringUtils.initCap(classField.getFieldName())).append("\" column=\"").append(classField.getDasColumnName()).append("\"/>\n");
         }
         resultMapperTxt.append("</resultMap>");
         XmlFile mapperFile = (XmlFile) filesByName[0];
         XmlTag tagFromText = XmlElementFactory.getInstance(project).createTagFromText(resultMapperTxt.toString().replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
 
         for (XmlTag subTag : Objects.requireNonNull(mapperFile.getRootTag()).getSubTags()) {
-            if ((StringUtils.initCap(generateInfo.getBasicClassName()) + "List").equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
+            if ((PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "List").equals(Objects.requireNonNull(subTag.getAttribute("id")).getValue())) {
                 //相等替换
                 mapperFile.addBefore(tagFromText, subTag);
                 subTag.delete();
@@ -260,9 +254,9 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
         PsiClass aClass = psiFile.getClasses()[0];
         for (DasColumn selectDasColumn : generateInfo.getSelectDasColumns()) {
             //字段名小写
-            String fieldNameUnCat = StringUtils.initCap(StringUtils.underlineToCamel(selectDasColumn.getName()));
+            String fieldNameUnCat = PluginStringUtils.initCap(PluginStringUtils.underlineToCamel(selectDasColumn.getName()));
             //字段名大写
-            String fieldNameUpper = StringUtils.upperFirstChar(StringUtils.underlineToCamel(selectDasColumn.getName()));
+            String fieldNameUpper = PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(selectDasColumn.getName()));
             //字段
             String fieldTxt = "/**\n" +
                     "* " + selectDasColumn.getComment() + "\n" +
@@ -294,11 +288,11 @@ public class GenerateByNewAddColumnUi extends DialogWrapper {
             aClass.addAfter(setterMethod, aClass.getMethods()[0]);
             return;
         }
-        PsiField psiField = Arrays.stream(aClass.getFields()).filter(field -> field.getName().equals(StringUtils.underlineToCamel(columnNames.get(i - 1)))).findFirst().orElse(null);
+        PsiField psiField = Arrays.stream(aClass.getFields()).filter(field -> field.getName().equals(PluginStringUtils.underlineToCamel(columnNames.get(i - 1)))).findFirst().orElse(null);
         //如果找不到 获取最后一个吧
         if (!Objects.isNull(psiField)) {
             aClass.addAfter(fieldFromText, psiField);
-            PsiMethod preSetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals("set" + StringUtils.upperFirstChar(psiField.getName()))).findFirst().orElse(null);
+            PsiMethod preSetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals("set" + PluginStringUtils.upperFirstChar(psiField.getName()))).findFirst().orElse(null);
             aClass.addAfter(getterMethod, preSetterMethod);
             PsiMethod curGetterMethod = Arrays.stream(aClass.getMethods()).filter(m -> m.getName().equals(getterMethod.getName())).findFirst().orElse(null);
             aClass.addAfter(setterMethod, curGetterMethod);

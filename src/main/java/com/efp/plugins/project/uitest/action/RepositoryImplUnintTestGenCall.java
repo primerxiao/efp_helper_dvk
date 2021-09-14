@@ -1,7 +1,7 @@
 package com.efp.plugins.project.uitest.action;
 
 import com.efp.common.util.NotifyUtils;
-import com.efp.common.util.StringUtils;
+import com.efp.common.util.PluginStringUtils;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -54,7 +54,7 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                                     org.apache.commons.lang3.StringUtils.join(
                                             FilenameUtils.getFullPath(applicationModule.getModuleFilePath()),
                                             "src/test/java/",
-                                            StringUtils.package2Path(containingJava.getPackageName())));
+                                            PluginStringUtils.package2Path(containingJava.getPackageName())));
                             if (!packagePath.exists()) {
                                 FileUtils.forceMkdir(packagePath);
                             }
@@ -105,10 +105,10 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "public class " + baseModleName + "ServiceImplTest {\n" +
                 "\n" +
                 "    @InjectMocks\n" +
-                "    private " + baseModleName + "ServiceImpl " + StringUtils.initCap(baseModleName) + "Service = new " + baseModleName + "ServiceImpl();\n" +
+                "    private " + baseModleName + "ServiceImpl " + PluginStringUtils.initCap(baseModleName) + "Service = new " + baseModleName + "ServiceImpl();\n" +
                 "\n" +
                 "    @Mock\n" +
-                "    private " + baseModleName + "Repository " + StringUtils.initCap(baseModleName) + "Repository;\n" +
+                "    private " + baseModleName + "Repository " + PluginStringUtils.initCap(baseModleName) + "Repository;\n" +
                 "\n" +
                 "    private MapperFacade mapperFacade;\n" +
                 "\n" +
@@ -116,7 +116,7 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "    public void setUp() {\n" +
                 "        System.out.println(\"before test method invoke\");\n" +
                 "        mapperFacade = new DefaultMapperFactory.Builder().build().getMapperFacade();\n" +
-                "        " + StringUtils.initCap(baseModleName) + "Service.mapperFacade = mapperFacade;\n" +
+                "        " + PluginStringUtils.initCap(baseModleName) + "Service.mapperFacade = mapperFacade;\n" +
                 "    }\n" +
                 "\n" +
                 "    @After\n" +
@@ -127,8 +127,8 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "    @Test\n" +
                 "    public void insert() {\n" +
                 "        " + baseModleName + "Input input = new " + baseModleName + "Input();\n" +
-                "        PowerMockito.when(" + StringUtils.initCap(baseModleName) + "Repository.insertSingle(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
-                "        IsrvRspInfoOutput isrvRspInfoOutput = " + StringUtils.initCap(baseModleName) + "Service.insertSingle(input);\n" +
+                "        PowerMockito.when(" + PluginStringUtils.initCap(baseModleName) + "Repository.insertSingle(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
+                "        IsrvRspInfoOutput isrvRspInfoOutput = " + PluginStringUtils.initCap(baseModleName) + "Service.insertSingle(input);\n" +
                 "        assert isrvRspInfoOutput.getRspCnt() > 0;\n" +
                 "    }\n" +
                 "\n" +
@@ -138,8 +138,8 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "        //赋值\n" +
                 "        " + baseModleName + "DO pkDO = new " + baseModleName + "DO();\n" +
                 "        //赋值\n" +
-                "        PowerMockito.when(" + StringUtils.initCap(baseModleName) + "Repository.queryByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(pkDO);\n" +
-                "        " + baseModleName + "Output crdtApplInfoOutput = " + StringUtils.initCap(baseModleName) + "Service.queryByPk(input);\n" +
+                "        PowerMockito.when(" + PluginStringUtils.initCap(baseModleName) + "Repository.queryByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(pkDO);\n" +
+                "        " + baseModleName + "Output crdtApplInfoOutput = " + PluginStringUtils.initCap(baseModleName) + "Service.queryByPk(input);\n" +
                 "        assert crdtApplInfoOutput != null;\n" +
                 "    }\n" +
                 "\n" +
@@ -149,8 +149,8 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "        //赋值\n" +
                 "        " + baseModleName + "DO pkDO = new " + baseModleName + "DO();\n" +
                 "        //赋值;\n" +
-                "        PowerMockito.when(" + StringUtils.initCap(baseModleName) + "Repository.updateByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
-                "        IsrvRspInfoOutput isrvRspInfoOutput = " + StringUtils.initCap(baseModleName) + "Service.updateByPk(input);\n" +
+                "        PowerMockito.when(" + PluginStringUtils.initCap(baseModleName) + "Repository.updateByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
+                "        IsrvRspInfoOutput isrvRspInfoOutput = " + PluginStringUtils.initCap(baseModleName) + "Service.updateByPk(input);\n" +
                 "        assert isrvRspInfoOutput.getRspCnt() > 0;\n" +
                 "    }\n" +
                 "\n" +
@@ -158,8 +158,8 @@ public class RepositoryImplUnintTestGenCall extends PsiElementBaseIntentionActio
                 "    public void deleteByPk() {\n" +
                 "        " + baseModleName + "Input input = new " + baseModleName + "Input();\n" +
                 "        //赋值\n" +
-                "        PowerMockito.when(" + StringUtils.initCap(baseModleName) + "Repository.deleteByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
-                "        IsrvRspInfoOutput isrvRspInfoOutput = " + StringUtils.initCap(baseModleName) + "Service.deleteByPk(input);\n" +
+                "        PowerMockito.when(" + PluginStringUtils.initCap(baseModleName) + "Repository.deleteByPk(ArgumentMatchers.any(" + baseModleName + "DO.class))).thenReturn(1);\n" +
+                "        IsrvRspInfoOutput isrvRspInfoOutput = " + PluginStringUtils.initCap(baseModleName) + "Service.deleteByPk(input);\n" +
                 "        assert isrvRspInfoOutput.getRspCnt() > 0;\n" +
                 "    }\n" +
                 "}\n";

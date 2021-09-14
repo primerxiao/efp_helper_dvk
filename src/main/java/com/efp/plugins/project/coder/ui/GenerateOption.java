@@ -3,6 +3,7 @@ package com.efp.plugins.project.coder.ui;
 import com.alibaba.fastjson.JSON;
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.common.util.SofaXmlConfigUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.*;
@@ -267,7 +268,7 @@ public class GenerateOption extends DialogWrapper {
                 + GenUtils.getNameByBaseMoudleName(generateInfo.getBaseMoudleName())
                 + "/facade/";
         String serviceClassName =
-                com.efp.common.util.StringUtils.upperFirstChar(com.efp.common.util.StringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java";
+                PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName())) + "Service.java";
 
         VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(new File(serviceClassFilePath + serviceClassName), true);
         if (fileByIoFile == null) {

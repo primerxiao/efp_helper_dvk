@@ -40,7 +40,7 @@ public class SofaXmlConfigUtils {
                 XmlFile consumerXmlFile = (XmlFile) consumerXmlFileArr[0];
                 XmlTag rootTag = consumerXmlFile.getRootTag();
                 //判断是否已经存在id
-                String idValue = StringUtils.initCap(serviceClass.getName());
+                String idValue = PluginStringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
                 if (!checkTagExist(rootTag, idValue, "id")) {
                     //生成配置
@@ -81,7 +81,7 @@ public class SofaXmlConfigUtils {
                 XmlFile providerXmlFile = (XmlFile) providerXmlFileArr[0];
                 XmlTag rootTag = providerXmlFile.getRootTag();
                 //判断是否已经存在id
-                String refValue = StringUtils.initCap(serviceClass.getName());
+                String refValue = PluginStringUtils.initCap(serviceClass.getName());
                 //判断是否存在该id的tag
                 if (!checkTagExist(rootTag, refValue, "ref")) {
                     //生成配置

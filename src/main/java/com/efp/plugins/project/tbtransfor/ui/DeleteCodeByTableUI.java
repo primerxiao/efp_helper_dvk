@@ -2,6 +2,7 @@ package com.efp.plugins.project.tbtransfor.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.notifier.NotificationHelper;
+import com.efp.common.util.PluginStringUtils;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -78,7 +79,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
             NotificationHelper.getInstance().notifyError("必须设置一个表名", project);
             return;
         }
-        String baseClassName = com.efp.common.util.StringUtils.upperFirstChar(com.efp.common.util.StringUtils.underlineToCamel(tableNameTextField.getText()));
+        String baseClassName = PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(tableNameTextField.getText()));
         String baseMduleName = (String) baseModuleComboBox.getSelectedItem();
         Module start = ModuleManager.getInstance(project).findModuleByName(baseMduleName + "-start");
         Module domain = ModuleManager.getInstance(project).findModuleByName(baseMduleName + "-domain");
@@ -106,7 +107,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
                         continue;
                     }
                     if (("com.fdb.a." + baseMduleName.split("-")[1] + ".facade." + baseClassName + "Service").equals(anInterface.getValue())
-                            && (com.efp.common.util.StringUtils.initCap(baseClassName) + "Service").equals(ref.getValue())
+                            && (PluginStringUtils.initCap(baseClassName) + "Service").equals(ref.getValue())
                     ) {
                         subTag.delete();
                     }
@@ -128,7 +129,7 @@ public class DeleteCodeByTableUI extends DialogWrapper {
                     if (id == null) {
                         continue;
                     }
-                    if ((com.efp.common.util.StringUtils.initCap(baseClassName) + "Service").equals(id.getValue())
+                    if ((PluginStringUtils.initCap(baseClassName) + "Service").equals(id.getValue())
                     ) {
                         subTag.delete();
                     }

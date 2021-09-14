@@ -1,11 +1,12 @@
 package com.efp.common.util;
 
 import com.google.common.base.CaseFormat;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author 86134
  */
-public class StringUtils {
+public class PluginStringUtils {
 
     public static final char UNDERLINE='_';
 
@@ -61,6 +62,20 @@ public class StringUtils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 下划线 转 驼峰
+     */
+    public static String underlineToCamel(String param, boolean initCapFirst) {
+        String s = underlineToCamel(param);
+        if (StringUtils.isEmpty(s)) {
+            return s;
+        }
+        if (initCapFirst) {
+            return PluginStringUtils.initCap(s);
+        }
+        return s;
     }
 
     /**

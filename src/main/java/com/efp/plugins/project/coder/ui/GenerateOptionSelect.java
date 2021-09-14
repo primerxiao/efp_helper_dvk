@@ -2,11 +2,12 @@ package com.efp.plugins.project.coder.ui;
 
 import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
-import com.efp.common.util.StringUtils;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.Generator;
 import com.efp.plugins.project.coder.template.method.SimpleBaseModuleNameMethod;
 import com.efp.plugins.project.coder.util.GenUtils;
+import com.intellij.database.model.DasColumn;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GenerateOptionSelect extends DialogWrapper {
@@ -41,6 +43,8 @@ public class GenerateOptionSelect extends DialogWrapper {
     private JLabel jLabel;
     private JCheckBox repository;
     private JCheckBox repositoryImpl;
+    private JComboBox resultTypeComboBox;
+    private JCheckBox ifCheckBox;
 
     private AnActionEvent e;
     private GenerateInfo generateInfo;
@@ -125,8 +129,8 @@ public class GenerateOptionSelect extends DialogWrapper {
         PsiClass aClass = psiFile.getClasses()[0];
         String methodText = "@Override\n" +
                 "    public List<" + generateInfo.getBasicClassName() + "Output> " + methodName + "(" + generateInfo.getBasicClassName() + "Input input) {\n" +
-                "        List<" + generateInfo.getBasicClassName() + "DO> " + StringUtils.initCap(generateInfo.getBasicClassName()) + "DOS = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Repository.queryList(mapperFacade.map(input, " + generateInfo.getBasicClassName() + "DO.class));\n" +
-                "        return mapperFacade.mapAsList(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "DOS, " + generateInfo.getBasicClassName() + "Output.class);\n" +
+                "        List<" + generateInfo.getBasicClassName() + "DO> " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DOS = " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "Repository.queryList(mapperFacade.map(input, " + generateInfo.getBasicClassName() + "DO.class));\n" +
+                "        return mapperFacade.mapAsList(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DOS, " + generateInfo.getBasicClassName() + "Output.class);\n" +
                 "    }";
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
         aClass.add(method);
@@ -169,11 +173,11 @@ public class GenerateOptionSelect extends DialogWrapper {
 
 
         String methodText = "@Override\n" +
-                "    public List<" + generateInfo.getBasicClassName() + "DO> " + methodName + "(" + generateInfo.getBasicClassName() + "DO " + StringUtils.initCap(generateInfo.getBasicClassName()) + "DO) {\n" +
-                "        List<" + generateInfo.getBasicClassName() + "PO> " + StringUtils.initCap(generateInfo.getBasicClassName()) + "s = " + StringUtils.initCap(generateInfo.getBasicClassName()) + "Mapper.queryList(\n" +
-                "                mapperFacade.map(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "DO, " + generateInfo.getBasicClassName() + "PO.class)\n" +
+                "    public List<" + generateInfo.getBasicClassName() + "DO> " + methodName + "(" + generateInfo.getBasicClassName() + "DO " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO) {\n" +
+                "        List<" + generateInfo.getBasicClassName() + "PO> " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "s = " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "Mapper.queryList(\n" +
+                "                mapperFacade.map(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO, " + generateInfo.getBasicClassName() + "PO.class)\n" +
                 "        );\n" +
-                "        return mapperFacade.mapAsList(" + StringUtils.initCap(generateInfo.getBasicClassName()) + "s, " + generateInfo.getBasicClassName() + "DO.class);\n" +
+                "        return mapperFacade.mapAsList(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "s, " + generateInfo.getBasicClassName() + "DO.class);\n" +
                 "    }";
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
         aClass.add(method);
@@ -198,7 +202,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         methodTextBuilder.append(methodName + "(");
         methodTextBuilder.append(generateInfo.getBasicClassName() + "DO");
         methodTextBuilder.append(" ");
-        methodTextBuilder.append(StringUtils.initCap(generateInfo.getBasicClassName()) + "DO");
+        methodTextBuilder.append(PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO");
         methodTextBuilder.append(");");
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodTextBuilder.toString(), aClass);
         aClass.add(method);
@@ -224,7 +228,7 @@ public class GenerateOptionSelect extends DialogWrapper {
         methodTextBuilder.append(methodName + "(");
         methodTextBuilder.append(generateInfo.getBasicClassName() + "PO");
         methodTextBuilder.append(" ");
-        methodTextBuilder.append(StringUtils.initCap(generateInfo.getBasicClassName()) + "PO");
+        methodTextBuilder.append(PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "PO");
         methodTextBuilder.append(");");
         PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodTextBuilder.toString(), aClass);
         aClass.add(method);
@@ -241,8 +245,39 @@ public class GenerateOptionSelect extends DialogWrapper {
         StringWriter sw = new StringWriter();
         Template template = Generator.freemarker.getTemplate("select_mapper.ftl");
         template.process(processValue(), sw);
-        XmlFile mapperFile = (XmlFile) filesByName[0];
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String selectedItem = (String) resultTypeComboBox.getSelectedItem();
+        if (selectedItem.equals("单个对象")) {
+
+        } else if (selectedItem.equals("列表对象")) {
+            stringBuilder.append("<select id=\"" + methodName + "\" resultMap=\"" + PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName(), true) + "List\">\n");
+            stringBuilder.append("   SELECT\n");
+            stringBuilder.append("   <include refid=\"Base_Column_List\"/>\n");
+            stringBuilder.append("   FROM ${generateInfo.dasTable.name}\n");
+            stringBuilder.append("   where\n");
+            List<DasColumn> selectDasColumns = generateInfo.getSelectDasColumns();
+            for (int i = 0; i < selectDasColumns.size(); i++) {
+                if (ifCheckBox.isSelected()) {
+                    
+                }
+                stringBuilder.append("      ${field.name}=#{field.name}");
+                if (i < selectDasColumns.size() - 1) {
+                    stringBuilder.append(" and \n");
+                }else {
+                    stringBuilder.append(" \n");
+                }
+            }
+            stringBuilder.append("   <#list generateInfo.selectDasColumns as field>\n");
+            stringBuilder.append("      ${field.name}=<#noparse>#{</#noparse>${dashedToCamel(field.name)}}<#if field_has_next> and </#if>\n");
+            stringBuilder.append("   </#list>\n");
+            stringBuilder.append("</select>");
+        } else if (selectedItem.equals("数值（查询语句为count）")) {
+
+        }
+
         XmlTag tagFromText = XmlElementFactory.getInstance(e.getProject()).createTagFromText(sw.toString().replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
+        XmlFile mapperFile = (XmlFile) filesByName[0];
         mapperFile.getRootTag().addSubTag(tagFromText, false);
         mapperFile.navigate(true);
     }

@@ -4,13 +4,9 @@ import com.efp.common.constant.PluginContants;
 import com.efp.common.constant.TemplateFileNameEnum;
 import com.efp.common.util.DasUtils;
 import com.efp.common.util.EditorUtils;
-import com.efp.common.util.NotifyUtils;
-import com.efp.common.util.StringUtils;
-import com.efp.plugins.project.coder.bean.GenerateInfo;
-import com.efp.plugins.project.coder.ui.GenerateOption;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.util.GenUtils;
 import com.intellij.database.model.DasColumn;
-import com.intellij.database.model.DasNamed;
 import com.intellij.database.model.DasTable;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -22,18 +18,14 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexUtil;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.IPopupChooserBuilder;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.search.FilenameIndex;
-import com.intellij.util.containers.JBIterable;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,10 +57,10 @@ public class RewriteRemarkAction extends AnAction {
 
     public void process(Project project, DasTable dasTable, String baseModuleName) {
         String tableName = dasTable.getName();
-        String baseClassName = StringUtils.upperFirstChar(StringUtils.underlineToCamel(tableName));
+        String baseClassName = PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(tableName));
         List<? extends DasColumn> dasColumns = DasUtil.getColumns(dasTable).toList();
         Map<String, String> commentMap = dasColumns.stream().collect(Collectors.toMap(
-                dasColumn -> StringUtils.underlineToCamel(dasColumn.getName()),
+                dasColumn -> PluginStringUtils.underlineToCamel(dasColumn.getName()),
                 dasColumn -> org.apache.commons.lang3.StringUtils.isEmpty(dasColumn.getComment()) ? "" : dasColumn.getComment()));
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "生成文件") {
             @Override

@@ -4,6 +4,7 @@ import com.efp.common.constant.PluginContants;
 import com.efp.common.notifier.NotificationHelper;
 import com.efp.common.util.DasUtils;
 import com.efp.common.util.EditorUtils;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.ui.GenerateOptionSelect;
 import com.intellij.database.model.DasColumn;
@@ -41,7 +42,7 @@ public class GenerateSelect extends AnAction {
         generateInfo.setSelectDasColumns(Arrays.stream(psiElementArr).map(p -> (DasColumn) p).collect(Collectors.toList()));
         String initMethodName = "queryBy" +
                 generateInfo.getSelectDasColumns().stream().map(
-                        dasColumn -> com.efp.common.util.StringUtils.upperFirstChar(com.efp.common.util.StringUtils.underlineToCamel(dasColumn.getName()))
+                        dasColumn -> PluginStringUtils.upperFirstChar(PluginStringUtils.underlineToCamel(dasColumn.getName()))
                 ).collect(Collectors.joining("And"));
 
         final String currentMethodName = Messages.showInputDialog(
