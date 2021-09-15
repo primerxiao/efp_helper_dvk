@@ -1,10 +1,11 @@
 package com.efp.plugins.project.gitmr.ui;
 
-import com.efp.common.constant.PluginContants;
 import com.efp.common.notifier.NotificationHelper;
 import com.efp.plugins.project.gitmr.bean.AppInfo;
 import com.efp.plugins.project.gitmr.bean.AppInfoTableModel;
 import com.efp.plugins.project.gitmr.bean.CommitInfo;
+import com.efp.plugins.project.gitmr.bean.GitProjectInfo;
+import com.efp.plugins.project.gitmr.constant.GitMrConstant;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -55,15 +57,21 @@ public class GitMrUi extends DialogWrapper {
         appInfoTable.setRowSelectionAllowed(true);
         appInfoTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         List<AppInfo> appInfoList = new ArrayList<>();
-        for (String chooseModuleName : PluginContants.CHOOSE_MODULE_NAMES) {
+        for (GitProjectInfo gitProjectInfo : GitMrConstant.GIT_PROJECT_INFOS) {
             AppInfo appInfo = new AppInfo();
-            appInfo.setProjectName(chooseModuleName);
+            appInfo.setProjectName(gitProjectInfo.getProjectName());
+            appInfo.setProjectId(gitProjectInfo.getProjectId());
             appInfo.setCompareStatus("未校对");
             appInfoList.add(appInfo);
         }
         appInfoTable.setModel(new AppInfoTableModel(appInfoList));
-
-        //按钮事件1
+        //touser
+        toUserComboBox.removeAll();
+        for (Map.Entry<String, String> stringStringEntry : GitMrConstant.ASSIGN_MAPS.entrySet()) {
+            String key = stringStringEntry.getKey();
+            toUserComboBox.addItem(key);
+        }
+        //按钮事件
         last30MinuteButton.addActionListener(e -> {
             LocalDateTime now = LocalDateTime.now();
             String nowFormart = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -95,7 +103,7 @@ public class GitMrUi extends DialogWrapper {
                 if (!b) {
                     return;
                 }
-                GitLabApi gitLabApi = GitLabApi.oauth2Login("http://10.139.6.26:7077/", gitAccount.getText(), gitPassword.getText());
+                GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
                 setCommitInfo(gitLabApi);
             } catch (GitLabApiException | ParseException ex) {
                 ex.printStackTrace();
@@ -129,7 +137,7 @@ public class GitMrUi extends DialogWrapper {
 
     public void createMrRequest() throws GitLabApiException {
         //登陆gitlab
-        GitLabApi gitLabApi = GitLabApi.oauth2Login("http://10.139.6.26:7077/", gitAccount.getText(), gitPassword.getText());
+        GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
         //如果数据为空不做处理
         if (commitInfos.isEmpty()) {
             NotificationHelper.getInstance().notifyInfo("数据为空或者未进行提交信息校对", project);
@@ -223,13 +231,8 @@ public class GitMrUi extends DialogWrapper {
 
     private Integer getAssignIdBySelect() {
         String selectedItem = (String) toUserComboBox.getSelectedItem();
-        if (selectedItem.equals("高伟才")) {
-            return 001;
-        }
-        if (selectedItem.equals("高伟才")) {
-            return 002;
-        }
-        return null;
+        String s = GitMrConstant.ASSIGN_MAPS.get(selectedItem);
+        return Integer.valueOf(s);
     }
 
     private boolean checkAppChoose(CommitInfo commitInfo) {
