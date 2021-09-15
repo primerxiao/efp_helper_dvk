@@ -165,7 +165,7 @@ public class GitMrUi extends DialogWrapper {
                         getAssignIdBySelect(),
                         Integer.valueOf(commitInfo.getProjectId()),
                         new String[]{},
-                        0,
+                        -1,
                         false
                 );
                 NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
@@ -192,6 +192,7 @@ public class GitMrUi extends DialogWrapper {
                 continue;
             }
             appInfo.setCompareStatus("有差异");
+            commitInfos.clear();
             //其它工程
             CommitInfo commitInfo = new CommitInfo();
             commitInfo.setCommitFiles(new ArrayList<>());
@@ -247,4 +248,5 @@ public class GitMrUi extends DialogWrapper {
         }
         return false;
     }
+
 }

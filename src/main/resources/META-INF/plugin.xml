@@ -83,7 +83,7 @@
         <!--git-mr-->
         <action id="GitMrAction"
                 class="com.efp.plugins.project.gitmr.action.GitMrAction"
-                text="Temp Delete">
+                text="提版助手">
             <add-to-group group-id="efp_helper_dvk_tools_menu"/>
         </action>
         <!--数据字典导出-->
