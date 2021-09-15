@@ -6,6 +6,8 @@ import com.efp.plugins.project.gitmr.bean.AppInfoTableModel;
 import com.efp.plugins.project.gitmr.bean.CommitInfo;
 import com.efp.plugins.project.gitmr.bean.GitProjectInfo;
 import com.efp.plugins.project.gitmr.constant.GitMrConstant;
+import com.efp.plugins.project.util.GitMrUtils;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +43,9 @@ public class GitMrUi extends DialogWrapper {
     private JTable appInfoTable;
     private JPanel jPanel;
     private JButton fetchCommitInfoButton;
+    private JTextArea console;
+    private JButton saveButton;
+    private JButton createMrButton;
 
     private Project project;
 
@@ -50,9 +55,9 @@ public class GitMrUi extends DialogWrapper {
         super(project);
         this.setTitle("MR助手");
         this.project = project;
-        this.setOKActionEnabled(true);
-        this.setOKButtonText("提交MR");
-        this.setCancelButtonText("取消");
+        this.setOKActionEnabled(false);
+        this.setCancelButtonText("关闭");
+        console.setLineWrap(true);
         //表格数据初始化
         appInfoTable.setRowSelectionAllowed(true);
         appInfoTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -97,19 +102,53 @@ public class GitMrUi extends DialogWrapper {
             endTime.setText(nowFormart);
         });
         fetchCommitInfoButton.addActionListener(e -> {
+            console.setText("");
             //登陆gitlab
             try {
                 boolean b = paramCheck();
                 if (!b) {
                     return;
                 }
+                console.append("开始登录" + "\r\n");
                 GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+                console.setText("登录成功");
+                console.setText("开始获取提交记录");
                 setCommitInfo(gitLabApi);
+                console.setText("获取提交记录完成");
             } catch (GitLabApiException | ParseException ex) {
                 ex.printStackTrace();
+                NotificationHelper.getInstance().notifyError(ex.getMessage(), project);
+                console.append("异常：" + "\r\n");
+                console.append(ex.getMessage() + "\r\n");
             }
         });
+        saveButton.addActionListener(e -> cacheConfig());
+
+        createMrButton.addActionListener(e -> createMrAction());
+
+        initConfig();
+
         init();
+    }
+
+    private void createMrAction() {
+        GitLabApi gitLabApi = null;
+        try {
+            console.append("-------------创建MR开始---------" + "\r\n");
+            //登陆gitlab
+            gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+            createMrRequest(gitLabApi);
+            console.append("-------------创建MR结束---------" + "\r\n");
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+            console.append("-------------创建MR异常，信息如下：---------" + "\r\n");
+            console.append(e.getMessage() + "\r\n");
+        } finally {
+            if (gitLabApi != null) {
+                gitLabApi.close();
+            }
+
+        }
     }
 
     private boolean paramCheck() {
@@ -135,32 +174,33 @@ public class GitMrUi extends DialogWrapper {
         return jPanel;
     }
 
-    public void createMrRequest() throws GitLabApiException {
-        //登陆gitlab
-        GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+    public void createMrRequest(GitLabApi gitLabApi) throws GitLabApiException {
         //如果数据为空不做处理
         if (commitInfos.isEmpty()) {
             NotificationHelper.getInstance().notifyInfo("数据为空或者未进行提交信息校对", project);
+            console.append("数据为空或者未进行提交信息校对" + "\r\n");
             return;
         }
         if (appInfoTable.getSelectedRows().length < 1) {
             NotificationHelper.getInstance().notifyInfo("未选择项目", project);
+            console.append("未选择项目" + "\r\n");
             return;
         }
         for (CommitInfo commitInfo : commitInfos) {
             //提交合并请求
-            NotificationHelper.getInstance().notifyInfo("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------", project);
             //判断是否被选择
             boolean b = checkAppChoose(commitInfo);
             if (!b) {
-                return;
+                continue;
             }
+            NotificationHelper.getInstance().notifyInfo("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------", project);
+            console.append("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------" + "\r\n");
             try {
                 gitLabApi.getMergeRequestApi().createMergeRequest(
                         commitInfo.getProjectId(),
-                        "sourceBranch.getText()",
-                        "targetBranch.getText()",
-                        gitAccount.getText() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")),
+                        GitMrUtils.getBranchName(1, GitMrUtils.getProjectInfoById(commitInfo.getProjectId())),
+                        GitMrUtils.getBranchName(2, GitMrUtils.getProjectInfoById(commitInfo.getProjectId())),
+                        "【s1-》uat】【账号：" + gitAccount.getText() + " 时间：" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "】",
                         commitInfo.getCommitMessages().stream().collect(Collectors.joining("/r/n")),
                         getAssignIdBySelect(),
                         Integer.valueOf(commitInfo.getProjectId()),
@@ -169,12 +209,13 @@ public class GitMrUi extends DialogWrapper {
                         false
                 );
                 NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
+                console.append("模块[" + commitInfo.getProjectName() + "]代码合并成功" + "\r\n");
             } catch (GitLabApiException e) {
                 e.printStackTrace();
                 NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并失败：" + e.getMessage(), project);
+                console.append("模块[" + commitInfo.getProjectName() + "]代码合并失败：" + e.getMessage() + "\r\n");
             }
         }
-        gitLabApi.close();
     }
 
     public void setCommitInfo(GitLabApi gitLabApi) throws GitLabApiException, ParseException {
@@ -184,7 +225,7 @@ public class GitMrUi extends DialogWrapper {
         for (AppInfo appInfo : appInfoList) {
             List<Commit> commits = gitLabApi.getCommitsApi().getCommits(
                     appInfo.getProjectId(),
-                    "sourceBranch.getText()",
+                    GitMrUtils.getBranchName(1, GitMrUtils.getProjectInfoById(appInfo.getProjectId())),
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime.getText()),
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime.getText()));
             if (commits.isEmpty()) {
@@ -247,6 +288,20 @@ public class GitMrUi extends DialogWrapper {
             }
         }
         return false;
+    }
+
+    private void initConfig() {
+        gitAccount.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_1"));
+        gitPassword.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_2"));
+        startTime.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_3"));
+        endTime.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_4"));
+    }
+
+    private void cacheConfig() {
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_1", gitAccount.getText());
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_2", gitPassword.getText());
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_3", startTime.getText());
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_4", endTime.getText());
     }
 
 }

@@ -5,6 +5,7 @@ import com.efp.common.util.NotifyUtils;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.JBColor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,7 @@ public class JsonViewUi extends DialogWrapper {
      */
     private JButton searchButton;
 
-    private Project project;;;
+    private Project project;
 
     public JsonViewUi(@Nullable Project project) {
         super(project, true);
@@ -41,7 +42,7 @@ public class JsonViewUi extends DialogWrapper {
         searchButton.addActionListener(e -> {
             Highlighter highLighter = textArea.getHighlighter();
             String text = textArea.getText();
-            DefaultHighlighter.DefaultHighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+            DefaultHighlighter.DefaultHighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(JBColor.RED);
             int pos = 0;
             String keyWord = searchTextField.getText();
             if (StringUtils.isEmpty(keyWord)) {
