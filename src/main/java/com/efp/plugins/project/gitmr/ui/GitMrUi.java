@@ -10,6 +10,7 @@ import com.efp.plugins.project.util.GitMrUtils;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.JBColor;
 import org.apache.commons.lang3.StringUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -18,6 +19,8 @@ import org.gitlab4j.api.models.Diff;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,6 +49,7 @@ public class GitMrUi extends DialogWrapper {
     private JTextArea console;
     private JButton saveButton;
     private JButton createMrButton;
+    private JButton clearConsoleButton;
 
     private Project project;
 
@@ -58,6 +62,9 @@ public class GitMrUi extends DialogWrapper {
         this.setOKActionEnabled(false);
         this.setCancelButtonText("关闭");
         console.setLineWrap(true);
+        console.setEditable(false);
+        console.setBackground(JBColor.GRAY);
+        console.setSelectedTextColor(JBColor.GREEN);
         //表格数据初始化
         appInfoTable.setRowSelectionAllowed(true);
         appInfoTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -70,6 +77,8 @@ public class GitMrUi extends DialogWrapper {
             appInfoList.add(appInfo);
         }
         appInfoTable.setModel(new AppInfoTableModel(appInfoList));
+        AppInfoTableModel model = (AppInfoTableModel) appInfoTable.getModel();
+        model.fireTableDataChanged();
         //touser
         toUserComboBox.removeAll();
         for (Map.Entry<String, String> stringStringEntry : GitMrConstant.ASSIGN_MAPS.entrySet()) {
@@ -126,6 +135,8 @@ public class GitMrUi extends DialogWrapper {
 
         createMrButton.addActionListener(e -> createMrAction());
 
+        clearConsoleButton.addActionListener(e -> console.setText(""));
+
         initConfig();
 
         init();
@@ -133,6 +144,7 @@ public class GitMrUi extends DialogWrapper {
 
     private void createMrAction() {
         GitLabApi gitLabApi = null;
+        console.setText("");
         try {
             console.append("-------------创建MR开始---------" + "\r\n");
             //登陆gitlab
@@ -177,23 +189,32 @@ public class GitMrUi extends DialogWrapper {
     public void createMrRequest(GitLabApi gitLabApi) throws GitLabApiException {
         //如果数据为空不做处理
         if (commitInfos.isEmpty()) {
-            NotificationHelper.getInstance().notifyInfo("数据为空或者未进行提交信息校对", project);
+            NotificationHelper.getInstance().notifyError("数据为空或者未进行提交信息校对", project);
             console.append("数据为空或者未进行提交信息校对" + "\r\n");
             return;
         }
         if (appInfoTable.getSelectedRows().length < 1) {
-            NotificationHelper.getInstance().notifyInfo("未选择项目", project);
+            NotificationHelper.getInstance().notifyError("未选择项目", project);
             console.append("未选择项目" + "\r\n");
             return;
+        }
+
+
+        List<AppInfo> currentSelectList = new ArrayList<>();
+        AppInfoTableModel appInfoTableModel = (AppInfoTableModel) appInfoTable.getModel();
+        List<AppInfo> appInfoList = appInfoTableModel.getAppInfoList();
+        int[] selectedRows = appInfoTable.getSelectedRows();
+        for (int selectedRow : selectedRows) {
+            currentSelectList.add(appInfoList.get(selectedRow));
         }
         for (CommitInfo commitInfo : commitInfos) {
             //提交合并请求
             //判断是否被选择
-            boolean b = checkAppChoose(commitInfo);
-            if (!b) {
-                continue;
+            AppInfo check = currentSelectList.stream().filter(appInfo -> appInfo.getProjectId().equals(commitInfo.getProjectId())).findFirst().orElse(null);
+            if (check != null) {
+                return;
             }
-            NotificationHelper.getInstance().notifyInfo("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------", project);
+            NotificationHelper.getInstance().notifyError("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------", project);
             console.append("开始处理模块[" + commitInfo.getProjectName() + "]代码合并-----------" + "\r\n");
             try {
                 gitLabApi.getMergeRequestApi().createMergeRequest(
@@ -208,17 +229,18 @@ public class GitMrUi extends DialogWrapper {
                         -1,
                         false
                 );
-                NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
+                NotificationHelper.getInstance().notifyError("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
                 console.append("模块[" + commitInfo.getProjectName() + "]代码合并成功" + "\r\n");
             } catch (GitLabApiException e) {
                 e.printStackTrace();
-                NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并失败：" + e.getMessage(), project);
+                NotificationHelper.getInstance().notifyError("模块[" + commitInfo.getProjectName() + "]代码合并失败：" + e.getMessage(), project);
                 console.append("模块[" + commitInfo.getProjectName() + "]代码合并失败：" + e.getMessage() + "\r\n");
             }
         }
     }
 
     public void setCommitInfo(GitLabApi gitLabApi) throws GitLabApiException, ParseException {
+        commitInfos.clear();
         AppInfoTableModel tableModel = (AppInfoTableModel) appInfoTable.getModel();
         List<AppInfo> appInfoList = tableModel.getAppInfoList();
         //获取配置的项目
@@ -233,7 +255,6 @@ public class GitMrUi extends DialogWrapper {
                 continue;
             }
             appInfo.setCompareStatus("有差异");
-            commitInfos.clear();
             //其它工程
             CommitInfo commitInfo = new CommitInfo();
             commitInfo.setCommitFiles(new ArrayList<>());
@@ -267,6 +288,7 @@ public class GitMrUi extends DialogWrapper {
             if (!commitInfo.getCommitFiles().isEmpty()) {
                 commitInfos.add(commitInfo);
             }
+            tableModel.fireTableDataChanged();
         }
         gitLabApi.close();
     }

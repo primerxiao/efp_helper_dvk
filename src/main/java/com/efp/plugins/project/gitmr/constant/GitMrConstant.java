@@ -139,7 +139,7 @@ public class GitMrConstant {
         ASSIGN_MAPS = new HashMap<>();
         //初始化assign数据
         ASSIGN_MAPS.put("高伟才", "13");
-        ASSIGN_MAPS.put("肖均辉", "458");
+        //ASSIGN_MAPS.put("肖均辉", "458");
 
     }
 

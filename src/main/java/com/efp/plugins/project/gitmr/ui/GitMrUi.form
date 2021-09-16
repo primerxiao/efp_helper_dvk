@@ -167,6 +167,14 @@
           <text value="提交MR请求"/>
         </properties>
       </component>
+      <component id="a4379" class="javax.swing.JButton" binding="clearConsoleButton">
+        <constraints>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="清除控制台日志"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
