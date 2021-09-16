@@ -254,23 +254,29 @@ public class GenerateOptionSelect extends DialogWrapper {
             stringBuilder.append("<select id=\"" + methodName + "\" resultMap=\"" + PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName(), true) + "List\">\n");
             stringBuilder.append("   SELECT\n");
             stringBuilder.append("   <include refid=\"Base_Column_List\"/>\n");
-            stringBuilder.append("   FROM ${generateInfo.dasTable.name}\n");
+            stringBuilder.append("   FROM "+generateInfo.getDasTable().getName()+"\n");
             stringBuilder.append("   where\n");
             List<DasColumn> selectDasColumns = generateInfo.getSelectDasColumns();
+
             for (int i = 0; i < selectDasColumns.size(); i++) {
                 if (ifCheckBox.isSelected()) {
                     
                 }
-                stringBuilder.append("      ${field.name}=#{field.name}");
+                stringBuilder.append("      ")
+                        .append(selectDasColumns.get(i).getName())
+                        .append("=#{")
+                        .append(PluginStringUtils.underlineToCamel(selectDasColumns.get(i).getName(), true))
+                        .append("}");
                 if (i < selectDasColumns.size() - 1) {
                     stringBuilder.append(" and \n");
                 }else {
                     stringBuilder.append(" \n");
                 }
+
+                if (ifCheckBox.isSelected()) {
+
+                }
             }
-            stringBuilder.append("   <#list generateInfo.selectDasColumns as field>\n");
-            stringBuilder.append("      ${field.name}=<#noparse>#{</#noparse>${dashedToCamel(field.name)}}<#if field_has_next> and </#if>\n");
-            stringBuilder.append("   </#list>\n");
             stringBuilder.append("</select>");
         } else if (selectedItem.equals("数值（查询语句为count）")) {
 
