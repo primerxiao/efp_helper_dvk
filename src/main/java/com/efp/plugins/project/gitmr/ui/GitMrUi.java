@@ -245,11 +245,13 @@ public class GitMrUi extends DialogWrapper {
         List<AppInfo> appInfoList = tableModel.getAppInfoList();
         //获取配置的项目
         for (AppInfo appInfo : appInfoList) {
+            //s1和uat分支比较是否有差异
             List<Commit> commits = gitLabApi.getCommitsApi().getCommits(
                     appInfo.getProjectId(),
                     GitMrUtils.getBranchName(1, GitMrUtils.getProjectInfoById(appInfo.getProjectId())),
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime.getText()),
                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime.getText()));
+            
             if (commits.isEmpty()) {
                 appInfo.setCompareStatus("无差异");
                 continue;

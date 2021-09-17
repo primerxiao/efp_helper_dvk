@@ -8,6 +8,7 @@ public class AppInfo {
     private String projectId;
     private String compareStatus;
 
+
     public String getProjectName() {
         return projectName;
     }
