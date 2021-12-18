@@ -58,12 +58,12 @@ public class GitMrConstant {
         i164.setUatSuffix("-uat");
         GIT_PROJECT_INFOS.add(i164);
 
-        GitProjectInfo i163 = new GitProjectInfo();
-        i163.setProjectName("A-SMCTS");
-        i163.setProjectId("163");
-        i163.setS1Suffix("-s1");
-        i163.setUatSuffix("-uat");
-        GIT_PROJECT_INFOS.add(i163);
+//        GitProjectInfo i163 = new GitProjectInfo();
+//        i163.setProjectName("A-SMCTS");
+//        i163.setProjectId("163");
+//        i163.setS1Suffix("-s1");
+//        i163.setUatSuffix("-uat");
+//        GIT_PROJECT_INFOS.add(i163);
 
         GitProjectInfo i162 = new GitProjectInfo();
         i162.setProjectName("A-SMCBP");
@@ -79,12 +79,12 @@ public class GitMrConstant {
         i161.setUatSuffix("-uat");
         GIT_PROJECT_INFOS.add(i161);
 
-        GitProjectInfo i160 = new GitProjectInfo();
-        i160.setProjectName("A-SMCYP");
-        i160.setProjectId("160");
-        i160.setS1Suffix("-s1");
-        i160.setUatSuffix("-uat");
-        GIT_PROJECT_INFOS.add(i160);
+//        GitProjectInfo i160 = new GitProjectInfo();
+//        i160.setProjectName("A-SMCYP");
+//        i160.setProjectId("160");
+//        i160.setS1Suffix("-s1");
+//        i160.setUatSuffix("-uat");
+//        GIT_PROJECT_INFOS.add(i160);
 
         GitProjectInfo i159 = new GitProjectInfo();
         i159.setProjectName("A-SMCQC");
@@ -121,25 +121,32 @@ public class GitMrConstant {
         i155.setUatSuffix("-uat");
         GIT_PROJECT_INFOS.add(i155);
 
-        GitProjectInfo i154 = new GitProjectInfo();
-        i154.setProjectName("A-SMCIG");
-        i154.setProjectId("154");
-        i154.setS1Suffix("-s1");
-        i154.setUatSuffix("-uat");
-        GIT_PROJECT_INFOS.add(i154);
+        GitProjectInfo i163 = new GitProjectInfo();
+        i155.setProjectName("A-SMCTS");
+        i155.setProjectId("163");
+        i155.setS1Suffix("-s1");
+        i155.setUatSuffix("-uat");
+        GIT_PROJECT_INFOS.add(i155);
 
-        GitProjectInfo i152 = new GitProjectInfo();
-        i152.setProjectName("A-SMCRM");
-        i152.setProjectId("152");
-        i152.setS1Suffix("-s1");
-        i152.setUatSuffix("-uat");
-        GIT_PROJECT_INFOS.add(i152);
+//        GitProjectInfo i154 = new GitProjectInfo();
+//        i154.setProjectName("A-SMCIG");
+//        i154.setProjectId("154");
+//        i154.setS1Suffix("-s1");
+//        i154.setUatSuffix("-uat");
+//        GIT_PROJECT_INFOS.add(i154);
+
+//        GitProjectInfo i152 = new GitProjectInfo();
+//        i152.setProjectName("A-SMCRM");
+//        i152.setProjectId("152");
+//        i152.setS1Suffix("-s1");
+//        i152.setUatSuffix("-uat");
+//        GIT_PROJECT_INFOS.add(i152);
 
 
         ASSIGN_MAPS = new HashMap<>();
-        //初始化assign数据
+        //初始化assign数据1
+        ASSIGN_MAPS.put("肖均辉", "458");
         ASSIGN_MAPS.put("高伟才", "13");
-        //ASSIGN_MAPS.put("肖均辉", "458");
 
     }
 

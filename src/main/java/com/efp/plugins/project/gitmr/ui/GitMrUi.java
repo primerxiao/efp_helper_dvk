@@ -14,19 +14,20 @@ import com.intellij.ui.JBColor;
 import org.apache.commons.lang3.StringUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.RepositoryApi;
+import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.CompareResults;
 import org.gitlab4j.api.models.Diff;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 /**
  * @author primerxiao
@@ -42,6 +43,13 @@ public class GitMrUi extends DialogWrapper {
     private JButton saveButton;
     private JButton createMrButton;
     private JButton clearConsoleButton;
+    private JTextField sourceBranch;
+    private JTextField targetBrance;
+    private JTextArea createMrDescTextField;
+    private JTextField newBranceNameTextField;
+    private JButton createBranceButton;
+    private JButton delBranceButton;
+    private JCheckBox regularCheckBox;
 
     private Project project;
 
@@ -80,13 +88,14 @@ public class GitMrUi extends DialogWrapper {
         fetchCommitInfoButton.addActionListener(e -> {
             console.setText("");
             //登陆gitlab
+            GitLabApi gitLabApi = null;
             try {
                 boolean b = paramCheck();
                 if (!b) {
                     return;
                 }
                 console.append("开始登录" + "\r\n");
-                GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+                gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
                 console.setText("登录成功");
                 console.setText("开始获取提交记录");
                 setCommitInfo(gitLabApi);
@@ -96,6 +105,11 @@ public class GitMrUi extends DialogWrapper {
                 NotificationHelper.getInstance().notifyError(ex.getMessage(), project);
                 console.append("异常：" + "\r\n");
                 console.append(ex.getMessage() + "\r\n");
+            } finally {
+                if (gitLabApi != null) {
+                    gitLabApi.close();
+                }
+
             }
         });
         saveButton.addActionListener(e -> cacheConfig());
@@ -104,10 +118,133 @@ public class GitMrUi extends DialogWrapper {
 
         clearConsoleButton.addActionListener(e -> console.setText(""));
 
+        createBranceButton.addActionListener(e -> {
+            try {
+                createBrance(project);
+            } catch (GitLabApiException ex) {
+                ex.printStackTrace();
+                NotificationHelper.getInstance().notifyError(ex.getMessage(), project);
+            }
+        });
+
+        delBranceButton.addActionListener(e -> {
+            try {
+                if (regularCheckBox.isSelected()) {
+                    delBrance2(project);
+                } else {
+                    delBrance(project);
+                }
+            } catch (GitLabApiException ex) {
+                ex.printStackTrace();
+                NotificationHelper.getInstance().notifyError(ex.getMessage(), project);
+            }
+        });
+
         initConfig();
 
         init();
     }
+
+    private void createBrance(@Nullable Project project) throws GitLabApiException {
+        console.setText("");
+        String text = newBranceNameTextField.getText().trim();
+        if (StringUtils.isEmpty(text)) {
+            NotificationHelper.getInstance().notifyError("分支名不能为空", project);
+            return;
+        }
+        List<AppInfo> selectAppInfos = getSelectAppInfos();
+        if (selectAppInfos.isEmpty()) {
+            NotificationHelper.getInstance().notifyError("请选择项目", project);
+            return;
+        }
+        GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+        for (AppInfo selectAppInfo : selectAppInfos) {
+            try {
+                console.append("-----开始创建分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】，源分支【master】\r\n");
+                RepositoryApi repositoryApi = gitLabApi.getRepositoryApi();
+                repositoryApi.createBranch(selectAppInfo.getProjectId(), text, "master");
+                console.append("-----成功创建分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】，源分支【master】\r\n");
+                console.append("-----\r\n");
+            } catch (Exception exception) {
+                console.append(exception.getMessage());
+                console.append("-----失败创建分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】，源分支【master】失败\r\n");
+                console.append("-----\r\n");
+                continue;
+            }
+        }
+        gitLabApi.close();
+    }
+
+    private void delBrance(@Nullable Project project) throws GitLabApiException {
+        console.setText("");
+        String text = newBranceNameTextField.getText().trim();
+        if (StringUtils.isEmpty(text)) {
+            NotificationHelper.getInstance().notifyError("分支名不能为空", project);
+            return;
+        }
+        List<AppInfo> selectAppInfos = getSelectAppInfos();
+        if (selectAppInfos.isEmpty()) {
+            NotificationHelper.getInstance().notifyError("请选择项目", project);
+            return;
+        }
+        GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+        for (AppInfo selectAppInfo : selectAppInfos) {
+            try {
+                console.append("-----开始删除分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】\r\n");
+                RepositoryApi repositoryApi = gitLabApi.getRepositoryApi();
+                repositoryApi.deleteBranch(selectAppInfo.getProjectId(), text);
+                console.append("-----成功删除分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】\r\n");
+                console.append("-----\r\n");
+            } catch (Exception exception) {
+                console.append(exception.getMessage());
+                console.append("-----失败删除分支【" + text + "】，项目【" + selectAppInfo.getProjectName() + "】失败\r\n");
+                console.append("-----\r\n");
+                continue;
+            }
+        }
+        gitLabApi.close();
+    }
+
+    private void delBrance2(@Nullable Project project) throws GitLabApiException {
+        console.setText("");
+        String text = newBranceNameTextField.getText().trim();
+        if (StringUtils.isEmpty(text)) {
+            NotificationHelper.getInstance().notifyError("分支名【正则表达式】不能为空", project);
+            return;
+        }
+        List<AppInfo> selectAppInfos = getSelectAppInfos();
+        if (selectAppInfos.isEmpty()) {
+            NotificationHelper.getInstance().notifyError("请选择项目", project);
+            return;
+        }
+        GitLabApi gitLabApi = GitLabApi.oauth2Login(GitMrConstant.GIT_LAB_APIURL, gitAccount.getText(), gitPassword.getText());
+        for (AppInfo selectAppInfo : selectAppInfos) {
+            List<Branch> branches = gitLabApi.getRepositoryApi().getBranches(selectAppInfo.getProjectId());
+            for (Branch branch : branches) {
+                String branchName = branch.getName();
+                try {
+                    boolean isMatch = Pattern.matches(text, branchName);
+                    if (!isMatch) {
+                        console.append("-----分支【" + branchName + "】，项目【" + selectAppInfo.getProjectName() + "】不匹配正则表达式\r\n");
+                        continue;
+                    }
+                    //正则模式匹配
+                    console.append("-----开始删除分支【" + branchName + "】，项目【" + selectAppInfo.getProjectName() + "】\r\n");
+                    RepositoryApi repositoryApi = gitLabApi.getRepositoryApi();
+                    repositoryApi.deleteBranch(selectAppInfo.getProjectId(), branchName);
+                    console.append("-----成功删除分支【" + branchName + "】，项目【" + selectAppInfo.getProjectName() + "】\r\n");
+                    console.append("-----\r\n");
+                } catch (Exception exception) {
+                    console.append(exception.getMessage());
+                    console.append("-----失败删除分支【" + branchName + "】，项目【" + selectAppInfo.getProjectName() + "】失败\r\n");
+                    console.append("-----\r\n");
+                }
+
+            }
+        }
+        gitLabApi.close();
+    }
+
 
     private void createMrAction() {
         GitLabApi gitLabApi = null;
@@ -133,9 +270,15 @@ public class GitMrUi extends DialogWrapper {
     private boolean paramCheck() {
         String gitAccountText = gitAccount.getText();
         String gitPasswordText = gitPassword.getText();
-
+        String sourceBranchText = sourceBranch.getText();
+        String targetBranceText = targetBrance.getText();
+        // String createMrDescTextFieldText = createMrDescTextField.getText();
         if (StringUtils.isEmpty(gitAccountText) ||
-                StringUtils.isEmpty(gitPasswordText)
+                StringUtils.isEmpty(gitPasswordText) ||
+                StringUtils.isEmpty(sourceBranchText) ||
+                StringUtils.isEmpty(targetBranceText)
+//                StringUtils.isEmpty(createMrDescTextFieldText) ||
+//                createMrDescTextFieldText.equals("这里填写合版说明")
         ) {
             NotificationHelper.getInstance().notifyError("参数不能为空", project);
             return false;
@@ -154,6 +297,12 @@ public class GitMrUi extends DialogWrapper {
         if (diffGitProject.isEmpty()) {
             NotificationHelper.getInstance().notifyError("差异数据为空或者未进行提交信息校对", project);
             console.append("差异数据为空或者未进行提交信息校对" + "\r\n");
+            return;
+        }
+        String createMrDescTextFieldText = createMrDescTextField.getText();
+        if (StringUtils.isEmpty(createMrDescTextFieldText) || createMrDescTextFieldText.equals("这里填写合版说明")) {
+            NotificationHelper.getInstance().notifyError("请填写详细的合版说明", project);
+            console.append("请填写详细的合版说明" + "\r\n");
             return;
         }
         int[] selectedRows = appInfoTable.getSelectedRows();
@@ -179,17 +328,17 @@ public class GitMrUi extends DialogWrapper {
             try {
                 gitLabApi.getMergeRequestApi().createMergeRequest(
                         commitInfo.getProjectId(),
-                        GitMrUtils.getBranchName(1, GitMrUtils.getProjectInfoById(commitInfo.getProjectId())),
-                        GitMrUtils.getBranchName(2, GitMrUtils.getProjectInfoById(commitInfo.getProjectId())),
-                        "【s1-》uat】【账号：" + gitAccount.getText() + " 时间：" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "】",
-                        "代码合并申请",
+                        getBranceName(commitInfo, sourceBranch.getText()),
+                        getBranceName(commitInfo, targetBrance.getText()),
+                        "【" + getBranceName(commitInfo, sourceBranch.getText()) + "-》" + getBranceName(commitInfo, targetBrance.getText()) + "】【账号：" + gitAccount.getText() + " 时间：" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "】",
+                        createMrDescTextField.getText(),
                         getAssignIdBySelect(),
                         Integer.valueOf(commitInfo.getProjectId()),
                         new String[]{},
                         -1,
                         false
                 );
-                NotificationHelper.getInstance().notifyError("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
+                NotificationHelper.getInstance().notifyInfo("模块[" + commitInfo.getProjectName() + "]代码合并成功", project);
                 console.append("模块[" + commitInfo.getProjectName() + "]代码合并成功" + "\r\n");
             } catch (GitLabApiException e) {
                 e.printStackTrace();
@@ -205,18 +354,27 @@ public class GitMrUi extends DialogWrapper {
         List<AppInfo> appInfoList = tableModel.getAppInfoList();
         //获取配置的项目
         for (AppInfo appInfo : appInfoList) {
-            //s1和uat分支比较是否有差异
-            CompareResults compare = gitLabApi.getRepositoryApi().compare(appInfo.getProjectId(), GitMrUtils.getBranchName(1, GitMrUtils.getProjectInfoById(appInfo.getProjectId())), GitMrUtils.getBranchName(2, GitMrUtils.getProjectInfoById(appInfo.getProjectId())), true);
-            List<Diff> diffs = compare.getDiffs();
+            try {
+                //s1和uat分支比较是否有差异
+                CompareResults compare = gitLabApi.getRepositoryApi().compare(
+                        appInfo.getProjectId(),
+                        getBranceName(appInfo, sourceBranch.getText()),
+                        getBranceName(appInfo, targetBrance.getText()),
+                        true);
+                List<Diff> diffs = compare.getDiffs();
 
-            if (diffs.isEmpty()) {
-                appInfo.setCompareStatus("无差异");
-                continue;
+                if (diffs.isEmpty()) {
+                    appInfo.setCompareStatus("无差异");
+                    continue;
+                }
+                appInfo.setCompareStatus("有差异");
+                diffGitProject.add(GitMrUtils.getProjectInfoById(appInfo.getProjectId()));
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
             }
-            appInfo.setCompareStatus("有差异");
-            diffGitProject.add(GitMrUtils.getProjectInfoById(appInfo.getProjectId()));
         }
         tableModel.fireTableDataChanged();
+
         gitLabApi.close();
     }
 
@@ -242,11 +400,40 @@ public class GitMrUi extends DialogWrapper {
     private void initConfig() {
         gitAccount.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_1"));
         gitPassword.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_2"));
+        sourceBranch.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_3"));
+        targetBrance.setText(PropertiesComponent.getInstance(project).getValue("GIT_MR_CACH_EKEY_4"));
     }
 
     private void cacheConfig() {
         PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_1", gitAccount.getText());
         PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_2", gitPassword.getText());
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_3", sourceBranch.getText());
+        PropertiesComponent.getInstance(project).setValue("GIT_MR_CACH_EKEY_4", targetBrance.getText());
+    }
+
+    private String getBranceName(GitProjectInfo gitProjectInfo, String preBranceName) {
+        if (preBranceName.trim().startsWith("应用名-")) {
+            return preBranceName.trim().replace("应用名-", gitProjectInfo.getProjectName().toLowerCase() + "-");
+        }
+        return preBranceName.trim();
+    }
+
+    private String getBranceName(AppInfo appInfo, String preBranceName) {
+        if (preBranceName.trim().startsWith("应用名-")) {
+            return preBranceName.trim().replace("应用名-", appInfo.getProjectName().toLowerCase() + "-");
+        }
+        return preBranceName.trim();
+    }
+
+    private List<AppInfo> getSelectAppInfos() {
+        int[] selectedRows = appInfoTable.getSelectedRows();
+        List<AppInfo> currentSelectList = new ArrayList<>();
+        AppInfoTableModel appInfoTableModel = (AppInfoTableModel) appInfoTable.getModel();
+        List<AppInfo> appInfoList = appInfoTableModel.getAppInfoList();
+        for (int selectedRow : selectedRows) {
+            currentSelectList.add(appInfoList.get(selectedRow));
+        }
+        return currentSelectList;
     }
 
 }

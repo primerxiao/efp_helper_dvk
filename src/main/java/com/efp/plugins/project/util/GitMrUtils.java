@@ -11,17 +11,21 @@ public class GitMrUtils {
 
     /**
      * 获取分支名
-     * @param type 1-s1 2-uat
+     * @param type 1-s1 2-uat bug-fix
      * @param gitProjectInfo 项目信息
      * @return String
      */
-    public static String getBranchName(int type, GitProjectInfo gitProjectInfo) {
-        if (type == 1) {
+    public static String getBranchName(String type, GitProjectInfo gitProjectInfo) {
+        if ("1".equals(type)) {
             return gitProjectInfo.getProjectName().toLowerCase() + gitProjectInfo.getS1Suffix();
         }
 
-        if (type == 2) {
+        if ("2".equals(type)) {
             return gitProjectInfo.getProjectName().toLowerCase() + gitProjectInfo.getUatSuffix();
+        }
+
+        if ("bug-fix".equals(type)) {
+            return type;
         }
 
         throw new RuntimeException("类型不符合");

@@ -50,9 +50,9 @@ public class DeleteCodeByTableUI extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        super.doOKAction();
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "开始删除相关文件") {
-            @Override
+            super.doOKAction();
+            ProgressManager.getInstance().run(new Task.Backgroundable(project, "开始删除相关文件") {
+                @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 WriteCommandAction.runWriteCommandAction(project, () -> {
                     indicator.setFraction(0);
