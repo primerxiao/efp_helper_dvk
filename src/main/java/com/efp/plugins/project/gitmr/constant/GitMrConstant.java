@@ -122,11 +122,11 @@ public class GitMrConstant {
         GIT_PROJECT_INFOS.add(i155);
 
         GitProjectInfo i163 = new GitProjectInfo();
-        i155.setProjectName("A-SMCTS");
-        i155.setProjectId("163");
-        i155.setS1Suffix("-s1");
-        i155.setUatSuffix("-uat");
-        GIT_PROJECT_INFOS.add(i155);
+        i163.setProjectName("A-SMCTS");
+        i163.setProjectId("163");
+        i163.setS1Suffix("-s1");
+        i163.setUatSuffix("-uat");
+        GIT_PROJECT_INFOS.add(i163);
 
 //        GitProjectInfo i154 = new GitProjectInfo();
 //        i154.setProjectName("A-SMCIG");
