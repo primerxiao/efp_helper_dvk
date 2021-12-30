@@ -1,8 +1,7 @@
 package com.efp.plugins;
 
+import com.efp.common.util.PluginStringUtils;
 import com.efp.common.util.RuleUtils;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import org.apache.commons.lang3.StringUtils;
 
 public class Test {
@@ -24,5 +23,12 @@ public class Test {
         String ip = "127.0.0.10000000000000000";
         System.out.println(RuleUtils.isIp(ip));
     }
+    @org.junit.Test
+    public void package2Path(){
+        String ip = "127.0.0.10000000000000000";
+        System.out.println(PluginStringUtils.package2Path(ip));
+    }
+
+
 
 }

@@ -2,8 +2,10 @@ package com.efp.plugins.general.jsonviewer.ui;
 
 import com.efp.common.util.JsonUtils;
 import com.efp.common.util.NotifyUtils;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.JBColor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +29,11 @@ public class JsonViewUi extends DialogWrapper {
      */
     private JButton searchButton;
 
+    private Project project;
+
     public JsonViewUi(@Nullable Project project) {
         super(project, true);
+        this.project = project;
         jPanel.setPreferredSize(new Dimension(400, 400));
         setTitle("Json格式化");
         setOKActionEnabled(true);
@@ -37,7 +42,7 @@ public class JsonViewUi extends DialogWrapper {
         searchButton.addActionListener(e -> {
             Highlighter highLighter = textArea.getHighlighter();
             String text = textArea.getText();
-            DefaultHighlighter.DefaultHighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(Color.RED);
+            DefaultHighlighter.DefaultHighlightPainter p = new DefaultHighlighter.DefaultHighlightPainter(JBColor.RED);
             int pos = 0;
             String keyWord = searchTextField.getText();
             if (StringUtils.isEmpty(keyWord)) {
@@ -52,7 +57,9 @@ public class JsonViewUi extends DialogWrapper {
                     badLocationException.printStackTrace();
                 }
             }
+            setCacheValue(project);
         });
+        initCacheValue(project);
         init();
     }
 
@@ -72,5 +79,19 @@ public class JsonViewUi extends DialogWrapper {
         //格式化字符串
         textArea.setText("");
         textArea.append(JsonUtils.prettyformat(srcAreaText));
+        setCacheValue(project);
+    }
+
+    private static String JSON_CACH_EKEY = "JSON_CACH_EKEY";
+
+    private void initCacheValue(Project project){
+        String value = PropertiesComponent.getInstance(project).getValue(JSON_CACH_EKEY);
+        if (StringUtils.isEmpty(value)) {
+            return;
+        }
+        textArea.setText(value);
+    }
+    private void setCacheValue(Project project){
+        PropertiesComponent.getInstance(project).setValue(JSON_CACH_EKEY, textArea.getText());
     }
 }

@@ -1,14 +1,22 @@
 package com.efp.common.constant;
 
 public enum TemplateFileNameEnum {
-    DOMAIN("domain.ftl"),
-    VO("vo.ftl"),
+    DO("do.ftl"),
+    PO("po.ftl"),
+    INPUT("input.ftl"),
+    OUTPUT("output.ftl"),
     DAO("dao.ftl"),
     MAPPER("mapper.ftl"),
-    SERVICE("service.ftl"),
-    SERVICEIMPL("service_impl.ftl"),
-    CONTROLLER("controller.ftl");
+    FACADE("facade.ftl"),
+    FACADEIMPL("facadeImpl.ftl"),
+    REPOSITORY("repository.ftl"),
+    REPOSITORYIMP("repositoryImpl.ftl"),;
+
+    /**
+     * 模板文件名称
+     */
     private String fileName;
+
     TemplateFileNameEnum(String fileName) {
         this.fileName = fileName;
     }

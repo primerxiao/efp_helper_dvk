@@ -1,12 +1,13 @@
 package com.efp.plugins.project.coder.ui;
 
 import com.efp.common.constant.PluginContants;
-import com.efp.common.data.EfpCovert;
-import com.efp.common.data.EfpModuleType;
-import com.efp.common.util.StringUtils;
+import com.efp.common.constant.TemplateFileNameEnum;
+import com.efp.common.util.PluginStringUtils;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
 import com.efp.plugins.project.coder.generator.Generator;
-import com.intellij.lang.java.JavaLanguage;
+import com.efp.plugins.project.coder.template.method.SimpleBaseModuleNameMethod;
+import com.efp.plugins.project.coder.util.GenUtils;
+import com.intellij.database.model.DasColumn;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -14,7 +15,6 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -29,6 +29,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GenerateOptionSelect extends DialogWrapper {
 
@@ -38,15 +41,22 @@ public class GenerateOptionSelect extends DialogWrapper {
     private JCheckBox service;
     private JCheckBox serviceImpl;
     private JLabel jLabel;
+    private JCheckBox repository;
+    private JCheckBox repositoryImpl;
+    private JComboBox resultTypeComboBox;
+    private JCheckBox ifCheckBox;
 
     private AnActionEvent e;
     private GenerateInfo generateInfo;
+    private String methodName;
+
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
         return jPanel;
     }
-    public GenerateOptionSelect(boolean canBeParent, AnActionEvent e, GenerateInfo generateInfo) {
+
+    public GenerateOptionSelect(boolean canBeParent, AnActionEvent e, GenerateInfo generateInfo, String methodName) {
         super(canBeParent);
         this.e = e;
         this.generateInfo = generateInfo;
@@ -54,6 +64,9 @@ public class GenerateOptionSelect extends DialogWrapper {
         this.dao.setSelected(true);
         this.service.setSelected(true);
         this.serviceImpl.setSelected(true);
+        this.methodName = methodName;
+        this.repository.setSelected(true);
+        this.repositoryImpl.setSelected(true);
         init();
         setTitle(PluginContants.GENERATOR_UI_TITLE);
     }
@@ -81,6 +94,12 @@ public class GenerateOptionSelect extends DialogWrapper {
                         if (dao.isSelected()) {
                             generateSelectDao();
                         }
+                        if (repository.isSelected()) {
+                            generateSelectRepository();
+                        }
+                        if (repositoryImpl.isSelected()) {
+                            generateSelectRepositoryImpl();
+                        }
                         if (service.isSelected()) {
                             generateSelectService();
                         }
@@ -100,62 +119,180 @@ public class GenerateOptionSelect extends DialogWrapper {
         });
     }
 
-    private void generateSelectService() {
-        final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.SERVICE);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceFileName(), module.getModuleScope());
+    private void generateSelectServiceImpl() {
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.FACADEIMPL);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
-            throw new RuntimeException("service file not found");
+            throw new RuntimeException("facadeImpl file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getVoClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getVoClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getVoClassName()) + ")  throws Exception;", aClass);
+        String methodText = "@Override\n" +
+                "    public List<" + generateInfo.getBasicClassName() + "Output> " + methodName + "(" + generateInfo.getBasicClassName() + "Input input) {\n" +
+                "        List<" + generateInfo.getBasicClassName() + "DO> " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DOS = " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "Repository.queryList(mapperFacade.map(input, " + generateInfo.getBasicClassName() + "DO.class));\n" +
+                "        return mapperFacade.mapAsList(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DOS, " + generateInfo.getBasicClassName() + "Output.class);\n" +
+                "    }";
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
 
-    private void generateSelectServiceImpl() throws Exception {
-        final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getServiceImplFileName(), module.getModuleScope());
+    private void generateSelectService() {
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.FACADE);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
+        if (filesByName == null && filesByName.length <= 0) {
+            throw new RuntimeException("facade file not found");
+        }
+        PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
+        PsiClass aClass = psiFile.getClasses()[0];
+
+        StringBuilder methodTextBuilder = new StringBuilder();
+        //CrdtApplInfoDO queryByPk(CrdtApplInfoDO crdtApplInfoDO);
+        methodTextBuilder.append("List<");
+        methodTextBuilder.append(generateInfo.getBasicClassName());
+        methodTextBuilder.append("Output>");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append(methodName + "(");
+        methodTextBuilder.append(generateInfo.getBasicClassName() + "Input");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append("input");
+        methodTextBuilder.append(");");
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodTextBuilder.toString(), aClass);
+        aClass.add(method);
+        psiFile.navigate(true);
+    }
+
+    private void generateSelectRepositoryImpl() throws Exception {
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.REPOSITORYIMP);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("serviceImpl file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        StringWriter sw = new StringWriter();
-        Template template = Generator.freemarker.getTemplate("select_serviceImpl.ftl");
-        template.process(generateInfo,sw);
-        PsiJavaFile ftlJavaFile = (PsiJavaFile) PsiFileFactory.getInstance(e.getProject()).createFileFromText(JavaLanguage.INSTANCE, sw.toString().replaceAll("\r\n", "\n"));
-        final PsiMethod[] methods = ftlJavaFile.getClasses()[0].getMethods();
-        aClass.add(methods[0]);
+
+
+        String methodText = "@Override\n" +
+                "    public List<" + generateInfo.getBasicClassName() + "DO> " + methodName + "(" + generateInfo.getBasicClassName() + "DO " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO) {\n" +
+                "        List<" + generateInfo.getBasicClassName() + "PO> " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "s = " + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "Mapper.queryList(\n" +
+                "                mapperFacade.map(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO, " + generateInfo.getBasicClassName() + "PO.class)\n" +
+                "        );\n" +
+                "        return mapperFacade.mapAsList(" + PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "s, " + generateInfo.getBasicClassName() + "DO.class);\n" +
+                "    }";
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodText, aClass);
+        aClass.add(method);
         psiFile.navigate(true);
     }
 
-    private void generateSelectDao() throws Exception{
-        final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getDaoFileName(), module.getModuleScope());
+    private void generateSelectRepository() {
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.REPOSITORY);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
+        if (filesByName == null && filesByName.length <= 0) {
+            throw new RuntimeException("repository file not found");
+        }
+        PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
+        PsiClass aClass = psiFile.getClasses()[0];
+
+        StringBuilder methodTextBuilder = new StringBuilder();
+        //CrdtApplInfoDO queryByPk(CrdtApplInfoDO crdtApplInfoDO);
+        methodTextBuilder.append("List<");
+        methodTextBuilder.append(generateInfo.getBasicClassName());
+        methodTextBuilder.append("DO>");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append(methodName + "(");
+        methodTextBuilder.append(generateInfo.getBasicClassName() + "DO");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append(PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "DO");
+        methodTextBuilder.append(");");
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodTextBuilder.toString(), aClass);
+        aClass.add(method);
+        psiFile.navigate(true);
+    }
+
+
+    private void generateSelectDao() throws Exception {
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.DAO);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("dao file not found");
         }
         PsiJavaFile psiFile = (PsiJavaFile) filesByName[0];
         PsiClass aClass = psiFile.getClasses()[0];
-        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText("List<"+generateInfo.getGenerateJava().getDomainClassName() + "> " + generateInfo.getGenerateJava().getCurrentMethodName() + "(" + generateInfo.getGenerateJava().getDomainClassName() + " " + StringUtils.initCap(generateInfo.getGenerateJava().getDomainClassName()) + ");", aClass);
+
+        StringBuilder methodTextBuilder = new StringBuilder();
+        //List<BdLoanpayPO> queryByPk(BdLoanpayPO bdLoanpayPO);
+        methodTextBuilder.append("List<");
+        methodTextBuilder.append(generateInfo.getBasicClassName());
+        methodTextBuilder.append("PO>");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append(methodName + "(");
+        methodTextBuilder.append(generateInfo.getBasicClassName() + "PO");
+        methodTextBuilder.append(" ");
+        methodTextBuilder.append(PluginStringUtils.initCap(generateInfo.getBasicClassName()) + "PO");
+        methodTextBuilder.append(");");
+        PsiMethod method = PsiElementFactory.getInstance(e.getProject()).createMethodFromText(methodTextBuilder.toString(), aClass);
         aClass.add(method);
         psiFile.navigate(true);
     }
 
     private final void generateSelectMapper() throws Exception {
-        //获取mapper insert or update mapper
-        final Module module = EfpCovert.getModule(e.getProject(), generateInfo.getDasNamespace(), EfpModuleType.IMPL);
-        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getGenerateJava().getMapperFileName(), module.getModuleScope());
+        //获取mapper
+        GenUtils.setValue(generateInfo, TemplateFileNameEnum.MAPPER);
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(e.getProject(), generateInfo.getFileName(), generateInfo.getCurrentModule().getModuleScope());
         if (filesByName == null && filesByName.length <= 0) {
             throw new RuntimeException("mapper file not found");
         }
         StringWriter sw = new StringWriter();
         Template template = Generator.freemarker.getTemplate("select_mapper.ftl");
-        template.process(generateInfo,sw);
+        template.process(processValue(), sw);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String selectedItem = (String) resultTypeComboBox.getSelectedItem();
+        if (selectedItem.equals("单个对象")) {
+
+        } else if (selectedItem.equals("列表对象")) {
+            stringBuilder.append("<select id=\"" + methodName + "\" resultMap=\"" + PluginStringUtils.underlineToCamel(generateInfo.getDasTable().getName(), true) + "List\">\n");
+            stringBuilder.append("   SELECT\n");
+            stringBuilder.append("   <include refid=\"Base_Column_List\"/>\n");
+            stringBuilder.append("   FROM "+generateInfo.getDasTable().getName()+"\n");
+            stringBuilder.append("   where\n");
+            List<DasColumn> selectDasColumns = generateInfo.getSelectDasColumns();
+
+            for (int i = 0; i < selectDasColumns.size(); i++) {
+                if (ifCheckBox.isSelected()) {
+                    
+                }
+                stringBuilder.append("      ")
+                        .append(selectDasColumns.get(i).getName())
+                        .append("=#{")
+                        .append(PluginStringUtils.underlineToCamel(selectDasColumns.get(i).getName(), true))
+                        .append("}");
+                if (i < selectDasColumns.size() - 1) {
+                    stringBuilder.append(" and \n");
+                }else {
+                    stringBuilder.append(" \n");
+                }
+
+                if (ifCheckBox.isSelected()) {
+
+                }
+            }
+            stringBuilder.append("</select>");
+        } else if (selectedItem.equals("数值（查询语句为count）")) {
+
+        }
+
+        XmlTag tagFromText = XmlElementFactory.getInstance(e.getProject()).createTagFromText(sw.toString().replaceAll("\r\n", "\n"), XMLLanguage.INSTANCE);
         XmlFile mapperFile = (XmlFile) filesByName[0];
-        XmlTag tagFromText = XmlElementFactory.getInstance(e.getProject()).createTagFromText(sw.toString().replaceAll("\r\n","\n"), XMLLanguage.INSTANCE);
-        mapperFile.getRootTag().addSubTag(tagFromText,false);
+        mapperFile.getRootTag().addSubTag(tagFromText, false);
         mapperFile.navigate(true);
+    }
+
+    public Map<String, Object> processValue() {
+        HashMap<String, Object> root = new HashMap<>();
+        root.put("generateInfo", generateInfo);
+        root.put("simpleBaseModuleNameMethod", new SimpleBaseModuleNameMethod());
+        root.put("methodName", methodName);
+        return root;
     }
 }

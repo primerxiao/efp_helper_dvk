@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.efp.plugins.project.coder.ui.GenerateByNewAddColumnUi">
+  <grid id="27dc6" binding="jpanel" layout-manager="GridLayoutManager" row-count="10" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="791" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="10fb4" class="javax.swing.JCheckBox" binding="poCheckBox">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="更新字段到PO"/>
+        </properties>
+      </component>
+      <vspacer id="3c081">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="da19b" class="javax.swing.JCheckBox" binding="inputCheckBox">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="更新字段到Input"/>
+        </properties>
+      </component>
+      <component id="55c7" class="javax.swing.JCheckBox" binding="mapperResultMapCheckBox">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="重新生成Mapper-resultMap"/>
+        </properties>
+      </component>
+      <component id="deabb" class="javax.swing.JCheckBox" binding="mapperBaseColumnListCheckBox">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="重新生成Mapper-Base_Column_List"/>
+        </properties>
+      </component>
+      <component id="7519c" class="javax.swing.JCheckBox" binding="doCheckBox">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="更新字段到DO"/>
+        </properties>
+      </component>
+      <component id="a78f3" class="javax.swing.JCheckBox" binding="outputCheckBox">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="更新字段到Output"/>
+        </properties>
+      </component>
+      <component id="43c29" class="javax.swing.JCheckBox" binding="mapperInsertSingleCheckBox">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="重新生成Mapper-insertSingle"/>
+        </properties>
+      </component>
+      <hspacer id="a16e1">
+        <constraints>
+          <grid row="0" column="6" row-span="10" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="c2a5f" class="javax.swing.JTextField" binding="insertSingleAliasName">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="d18e6" class="javax.swing.JTextField" binding="updateByPKAliasName">
+        <constraints>
+          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="76cdf" class="javax.swing.JCheckBox" binding="mapperUpdateByPKCheckBox">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="重新生成Mapper-updateByPK"/>
+        </properties>
+      </component>
+      <component id="494df" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="别名"/>
+        </properties>
+      </component>
+      <component id="23554" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="别名"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

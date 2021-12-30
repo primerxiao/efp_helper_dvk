@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * 导入标签动作
+ * @author primerxiao
  */
 public class ImportBookMarkAction extends AnAction {
 
@@ -29,7 +30,7 @@ public class ImportBookMarkAction extends AnAction {
             return;
         }
         try {
-            final FileReader fileReader = new FileReader(new File(virtualFile.getPath()));
+            final FileReader fileReader = new FileReader(virtualFile.getPath());
             final BufferedReader bufferedReader = new BufferedReader(fileReader);
             final StringBuilder stringBuilder = new StringBuilder();
             String readLineStr = null;

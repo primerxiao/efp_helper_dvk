@@ -10,13 +10,14 @@ tasks.withType(JavaCompile) {
 
 group 'com.efp.plugins'
 
-version '1.0.6'
+version '1.0.2'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
 targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
+   // maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
     mavenLocal()
     mavenCentral()
     jcenter()
@@ -25,70 +26,63 @@ repositories {
 dependencies {
     //模板
     compile 'org.freemarker:freemarker:2.3.28'
-    // https://mvnrepository.com/artifact/com.101tec/zkclient
-    compile 'com.101tec:zkclient:0.11'
-    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
     compile 'org.quartz-scheduler:quartz:2.3.2'
-    // https://mvnrepository.com/artifact/com.alibaba/fastjson
     compile 'com.alibaba:fastjson:1.2.74'
     //test
     testCompile 'junit:junit:4.12'
-    // dubbo
-    compile('com.alibaba:dubbo:2.5.3') {
-        exclude group: 'spring:org.springframework'
-    }
-    compile 'org.javassist:javassist:3.21.0-GA'
-
+    compile 'net.sourceforge.jexcelapi:jxl:2.6.12'
+    compile 'org.gitlab4j:gitlab4j-api:4.15.5'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     //插件名称
-    pluginName = 'EfpHelper'
+    pluginName = 'FdbHelper'
     //基于idea的版本 跟localPath互斥
-    version = 'IU-2020.3'
+    //version = 'IU-2019.3'
+    //version = 'IU-2020.3'
     //idea的本地路径
+    localPath = IDEA_ROOT_PATH_2021_1\
+    //localPath = IDEA_ROOT_PATH_2020_3\
     //localPath = IDEA_ROOT_PATH_2019_3\
     //localSourcesPath = LOCAL_SOURCES_PATH
     updateSinceUntilBuild = true
-    downloadSources = true
+    //downloadSources = true
     //localSourcesPath = LOCAL_SOURCES_PATH
     //加载的插件
     plugins = ['java', 'properties', 'DatabaseTools', 'git4idea']
 }
 
 patchPluginXml {
-    version = '1.0.6'
+    version = '1.0.5'
     changeNotes = """
 <div>
-  <p>1.0.6(xiaojunhui)</p> 
-  <ul> 
-    <li>提供生成标签的导出导入功能</li> 
-  </ul>
   <p>1.0.5(xiaojunhui)</p> 
   <ul> 
-    <li>提供生成insertOrUpdate的功能</li> 
+    <li>提供版本MR助手</li> 
   </ul>
   <p>1.0.4(xiaojunhui)</p> 
   <ul> 
-    <li>优化代码生成功能：支持内容覆盖，支持联合主键</li> 
+    <li>提供基于表字段备注信息反向更新到类字段文档注释的功能</li> 
   </ul>
-  <p>1.0.3(caoxin)</p> 
+  <p>1.0.3(xiaojunhui)</p> 
   <ul> 
-    <li>在dubbo服务类中函数直接发起dubbo调用</li> 
+    <li>提供生成简单单元测试类的功能</li> 
   </ul>
   <p>1.0.2(xiaojunhui)</p> 
   <ul> 
-    <li>在数据库视图中右键相应表直接生成项目代码以及配置</li> 
+    <li>提供导出数据库字典为excel文档的能力</li> 
   </ul>
   <p>1.0.1(xiaojunhui)</p> 
   <ul> 
-    <li>1、生成dubbo配置整合为一个动作同时生成</li> 
-    <li>3、支持的idea版本前置到2018</li> 
+    <li>修正生成代码缺包/导包错误问题</li> 
   </ul>
   <p>1.0.0 </p>
   <ul> 
-    <li>初始化插件：提供生成根据类生成消费者、生产者中的xml配置</li> 
+    <li>初始化插件：提供基于选择表生成增删查改功能</li> 
+    <li>初始化插件：提供基于选择字段生成查询函数</li> 
+    <li>初始化插件：提供基于选择字段反向添加代码到领域模型以及mapper.xml文件</li> 
+    <li>初始化插件：提供基于interface添加sofa生产者/消费者配置到配置文件</li> 
   </ul>
 </div>
        """
@@ -104,7 +98,7 @@ task cleanPackTempFiles(type: Delete) {
 //插件打包-2
 task copyPlugin(type: Copy) {
     dependsOn(cleanPackTempFiles)
-    from "${buildDir}/idea-sandbox/plugins/EfpHelper/"
+    from "${buildDir}/idea-sandbox/plugins/FdbHelper/"
     into "${buildDir}/packTemp/efp_helper_dvk/efp_helper_dvk"
 }
 

@@ -26,14 +26,13 @@ public class DaoGenerator extends Generator {
 
     @Override
     public VirtualFile generate() throws IOException, TemplateException {
-        final String[] simapleGenerateInfo = getSimapleGenerateInfo();
         VirtualFile virtualFile = null;
         String packageName = null;
         //查找文件看是否存在
         PsiFile[] filesByName = FilenameIndex.getFilesByName(
                 generateInfo.getProject(),
-                simapleGenerateInfo[1],
-                ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+                generateInfo.getFileName(),
+                ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getCurrentModule().getName()).getModuleScope()
         );
         if (filesByName != null && filesByName.length > 0) {
             if (!isOverWrite) {
@@ -43,12 +42,12 @@ public class DaoGenerator extends Generator {
             packageName = ((PsiJavaFile) PsiManager.getInstance(generateInfo.getProject()).findFile(virtualFile))
                     .getPackageStatement().getPackageName();
         } else {
-            File packagePath = new File(simapleGenerateInfo[2]);
+            File packagePath = new File(generateInfo.getPackagePath());
             if (!packagePath.exists()) {
                 FileUtils.forceMkdir(packagePath);
             }
             virtualFile = VfsUtil.findFile(packagePath.toPath(), true)
-                    .createChildData(generateInfo.getProject(), simapleGenerateInfo[1]);
+                    .createChildData(generateInfo.getProject(), generateInfo.getFileName());
         }
         virtualFile.setBinaryContent(getSw().toString().getBytes(Charset.forName("utf-8")));
         //重新设置包名
@@ -57,8 +56,8 @@ public class DaoGenerator extends Generator {
             PsiJavaFile psiFile = (PsiJavaFile) (
                     FilenameIndex.getFilesByName(
                             generateInfo.getProject(),
-                            simapleGenerateInfo[1],
-                            ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(simapleGenerateInfo[0]).getModuleScope()
+                            generateInfo.getFileName(),
+                            ModuleManager.getInstance(generateInfo.getProject()).findModuleByName(generateInfo.getCurrentModule().getName()).getModuleScope()
                     )
             )[0];
             psiFile.setPackageName(packageName);

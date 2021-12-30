@@ -1,9 +1,7 @@
 package com.efp.common.util;
 
-import com.efp.common.data.EfpCovert;
-import com.efp.common.data.EfpModuleType;
+import com.efp.plugins.project.coder.bean.ClassField;
 import com.efp.plugins.project.coder.bean.GenerateInfo;
-import com.efp.plugins.project.coder.bean.GenerateJava;
 import com.google.common.base.CaseFormat;
 import com.intellij.database.model.*;
 import com.intellij.database.psi.DbNamespaceImpl;
@@ -11,14 +9,17 @@ import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import org.apache.commons.io.FilenameUtils;
+import com.intellij.util.containers.JBIterable;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DasUtils {
     /**
@@ -93,11 +94,11 @@ public class DasUtils {
         }
         if ("tinyint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return byte.class;
+            return Integer.class;
         }
         if ("smallint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return short.class;
+            return Integer.class;
         }
         if ("int".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
@@ -109,19 +110,19 @@ public class DasUtils {
         }
         if ("bigint".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return long.class;
+            return Long.class;
         }
         if ("real".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return float.class;
+            return Float.class;
         }
         if ("float".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return double.class;
+            return Double.class;
         }
         if ("double".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
-            return double.class;
+            return Double.class;
         }
         if ("binary".equalsIgnoreCase(dasColumn.getDataType().typeName)) {
 
@@ -213,75 +214,39 @@ public class DasUtils {
         generateInfo.setDasDataSource(dataSource);
         generateInfo.setDasNamespace(namespace);
         generateInfo.setDasTable(dasTable);
-        generateInfo.setDasColumns(DasUtil.getColumns(dasTable));
+
+        JBIterable<? extends DasColumn> columns = DasUtil.getColumns(dasTable);
+        List<? extends DasColumn> dasColumns = columns.toList();
+        generateInfo.setDasColumns(dasColumns);
         generateInfo.setProject(e.getProject());
-        generateInfo.setImplModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.IMPL));
-        generateInfo.setServiceModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.SERVICE));
-        generateInfo.setApiModule(EfpCovert.getModule(e.getProject(), namespace, EfpModuleType.API));
-        generateInfo.setGenerateJava(getGenerateJava(generateInfo));
         return generateInfo;
     }
 
-    /**
-     * 根据有关代码生成的信息封装对象获取java相关的封装对象
-     *
-     * @param generateInfo 建造信息
-     * @return GenerateJava
-     */
-    public static GenerateJava getGenerateJava(GenerateInfo generateInfo) {
-        GenerateJava generateJava = new GenerateJava();
-        final String[] implModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getImplModule());
-        final String[] serviceModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getServiceModule());
+    public static List<ClassField> getClassFields(GenerateInfo generateInfo) {
+        List<? extends DasColumn> dasColumns = generateInfo.getDasColumns();
+        return dasColumns.stream().map(dasColumn ->
+                new ClassField(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, dasColumn.getName()),
+                        dasColumn.getComment(), DasUtils.getJavaTypeClass(dasColumn),
+                        dasColumn.getName(),
+                        DasUtils.checkPrimaryKey(dasColumn))
+        ).collect(Collectors.toList());
+    }
 
-        //判断路径是否存在
-        //base
-        generateJava.setBaseClassName(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, generateInfo.getDasTable().getName()));
-        //domain
-        generateJava.setDomainClassName(generateJava.getBaseClassName());
-        generateJava.setDomainPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.domain");
-        //generateJava.setDomainPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-        generateJava.setDomainPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/domain/");
-        generateJava.setDomainFileName(generateJava.getBaseClassName() + ".java");
-        //vo
-        generateJava.setVoClassName(generateJava.getBaseClassName() + "VO");
-        generateJava.setVoPackageName("com.irdstudio." + serviceModuleNameArr[0] + "." + serviceModuleNameArr[1] + ".service.vo");
-        //generateJava.setVoPackagePath(generateInfo.getServiceModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + serviceModuleNameArr[1] + "/service/vo/");
-        generateJava.setVoPackagePath(FilenameUtils.getFullPath(generateInfo.getServiceModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + serviceModuleNameArr[1] + "/service/vo/");
-        generateJava.setVoFileName(generateJava.getBaseClassName() + "VO.java");
-        //dao
-        generateJava.setDaoClassName(generateJava.getBaseClassName() + "Dao");
-        generateJava.setDaoPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.dao");
-        //generateJava.setDaoPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/dao/");
-        generateJava.setDaoPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/dao/");
-        generateJava.setDaoFileName(generateJava.getBaseClassName() + "Dao.java");
-        //service
-        generateJava.setServiceClassName(generateJava.getBaseClassName() + "Service");
-        generateJava.setServicePackageName("com.irdstudio." + serviceModuleNameArr[0] + "." + serviceModuleNameArr[1] + ".service.facade");
-        //generateJava.setServicePackagePath(generateInfo.getServiceModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/facade/");
-        generateJava.setServicePackagePath(FilenameUtils.getFullPath(generateInfo.getServiceModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + serviceModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/facade/");
-        generateJava.setServiceFileName(generateJava.getBaseClassName() + "Service.java");
-        //serviceImpl
-        generateJava.setServiceImplClassName(generateJava.getBaseClassName() + "ServiceImpl");
-        generateJava.setServiceImplPackageName("com.irdstudio." + implModuleNameArr[0] + "." + implModuleNameArr[1] + ".service.impl");
-        //generateJava.setServiceImplPackagePath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/impl/");
-        generateJava.setServiceImplPackagePath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + implModuleNameArr[0] + "/" + implModuleNameArr[1] + "/service/impl/");
-        generateJava.setServiceImplFileName(generateJava.getBaseClassName() + "ServiceImpl.java");
-        //mapper
-        //generateJava.setMapperPath(generateInfo.getImplModule().getModuleFile().getParent().getPath() + "/src/main/resources/mybatis/mapper/");
-        generateJava.setMapperPath(FilenameUtils.getFullPath(generateInfo.getImplModule().getModuleFilePath()) + "src/main/resources/mybatis/mapper/");
-        generateJava.setMapperFileNameWithoutExt(generateJava.getBaseClassName() + "Mapper");
-        generateJava.setMapperFileName(generateJava.getBaseClassName() + "Mapper.xml");
-        //controller
-        if (generateInfo.getApiModule() != null) {
-            //api有可能为空
-            final String[] apiModuleNameArr = EfpCovert.getModuleNameArr(generateInfo.getApiModule());
-            generateJava.setControllerClassName(generateJava.getBaseClassName() + "Controller");
-            generateJava.setControllerPathName("com.irdstudio." + apiModuleNameArr[0] + "." + apiModuleNameArr[1] + ".api.rest");
-            //generateJava.setControllerPackagePath(generateInfo.getApiModule().getModuleFile().getParent().getPath() + "/src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
-            generateJava.setControllerPackagePath(FilenameUtils.getFullPath(generateInfo.getApiModule().getModuleFilePath()) + "src/main/java/com/irdstudio/" + apiModuleNameArr[0] + "/" + apiModuleNameArr[1] + "/api/rest/");
-            generateJava.setControllerFileName(generateJava.getBaseClassName() + "Controller.java");
+
+    public static List<String> getImports(List<ClassField> classFields) {
+        ArrayList<String> imports = new ArrayList<>();
+        for (ClassField classField : classFields) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(classField.getJavaTypeClass().getSimpleName())) {
+                continue;
+            }
+            if (!classField.getJavaTypeClass().isPrimitive() && !classField.getJavaTypeClass().getName().startsWith("java.lang")) {
+                if (imports.contains(classField.getJavaTypeClass().getName())) {
+                    continue;
+                }
+                imports.add(classField.getJavaTypeClass().getName());
+            }
         }
-        return generateJava;
+        return imports;
     }
 
 }

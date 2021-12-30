@@ -4,6 +4,7 @@
 
 package com.efp.common.notifier;
 
+import com.efp.common.constant.PluginContants;
 import com.intellij.notification.*;
 import com.intellij.openapi.project.Project;
 
@@ -11,10 +12,10 @@ import com.intellij.openapi.project.Project;
  * @author 肖均辉
  */
 public class NotificationHelper {
-    public static final String NOTIFICATION_GROUP = "Efp Plugin errors";
+
     private static NotificationHelper instance = new NotificationHelper();
 
-    private NotificationGroup notificationGroup = new NotificationGroup(NOTIFICATION_GROUP, NotificationDisplayType.BALLOON, true);
+    private NotificationGroup notificationGroup = new NotificationGroup(PluginContants.GENERATOR_UI_TITLE, NotificationDisplayType.BALLOON, true);
 
     public static NotificationHelper getInstance() {
         return instance;
