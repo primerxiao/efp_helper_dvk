@@ -3,13 +3,17 @@ package com.efp.dvk.plugins.db.service;
 import com.efp.dvk.common.util.PluginNotifierUtils;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.intellij.openapi.components.Service;
-import org.apache.commons.dbutils.QueryRunner;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 @Service
 public class DbService {
+    /**
+     * 获取数据库连接
+     * @param dbConnectParam 连接参数
+     * @return Connection
+     */
     public Connection getConnection(DbConnectParam dbConnectParam) {
         try {
             Class.forName(dbConnectParam.getDriverClass());

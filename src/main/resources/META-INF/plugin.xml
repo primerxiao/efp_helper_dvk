@@ -32,10 +32,11 @@
     <actions>
         <group id="com.efp.dvk.tools.menu.group">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <action id="com.efp.dvk.tools.menu.group.action.test"
-                    class="com.efp.dvk.plugins.test.action.TestAction"/>
-
         </group>
+        <action id="com.efp.dvk.tools.menu.group.action.test"
+                class="com.efp.dvk.plugins.test.action.TestAction">
+            <add-to-group group-id="com.efp.dvk.tools.menu.group"/>
+        </action>
 
 
     </actions>

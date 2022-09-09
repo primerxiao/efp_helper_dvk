@@ -3,6 +3,7 @@ package com.efp.dvk.plugins.db.ui;
 import com.efp.dvk.plugins.db.service.DBRunnable;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -10,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public class CommonDbConfUI extends DialogWrapper {
     private JPanel jPanel;
@@ -32,9 +35,20 @@ public class CommonDbConfUI extends DialogWrapper {
         super(project, canBeParent);
         this.project = project;
         this.dbRunnable = dbRunnable;
+        //deriver
         driverClassComboBox.addItem("com.mysql.cj.jdbc.Driver");
         driverClassComboBox.addItem("com.mysql.jdbc.Driver");
+        //module
+        assert project != null;
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        Arrays.stream(modules).forEach(m -> moduleComboBox.addItem(m));
+        //save
+        saveAsDefaultButton.setAction(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+            }
+        });
         init();
     }
 

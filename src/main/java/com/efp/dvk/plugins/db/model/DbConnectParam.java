@@ -23,6 +23,7 @@ public class DbConnectParam {
     public String getConnectUrl() {
         return StringUtils.join(
                 baseUrl,
+                "/",
                 schema,
                 "?",
                 StringUtils.isEmpty(params) ? "" : params
