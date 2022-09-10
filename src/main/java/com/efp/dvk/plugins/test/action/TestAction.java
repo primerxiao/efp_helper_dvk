@@ -15,7 +15,11 @@ import java.sql.SQLException;
 public class TestAction extends AnAction implements DBRunnable {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        new CommonDbConfUI(e.getProject(), true, this).show();
+        new CommonDbConfUI(e.getProject(),
+                true,
+                "",
+                this,
+                true).show();
     }
 
     @Override

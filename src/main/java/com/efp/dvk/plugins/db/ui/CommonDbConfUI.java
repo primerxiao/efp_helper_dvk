@@ -1,12 +1,15 @@
 package com.efp.dvk.plugins.db.ui;
 
+import com.efp.dvk.common.annation.ConfField;
+import com.efp.dvk.common.service.DialogAbstractService;
+import com.efp.dvk.common.util.NotifyUtils;
 import com.efp.dvk.plugins.db.service.DBRunnable;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.ui.ValidationInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,30 +17,47 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
-public class CommonDbConfUI extends DialogWrapper {
+public class CommonDbConfUI extends DialogWrapper implements DialogAbstractService {
     private JPanel jPanel;
+    @ConfField
     private JComboBox<String> driverClassComboBox;
+    @ConfField
     private JTextField baseUrlTextField;
+    @ConfField
     private JTextField userNameTextField;
+    @ConfField
     private JTextField schemaTextField;
     private JButton saveAsDefaultButton;
     private JButton loadFromModuleButton;
+    @ConfField
     private JComboBox<Module> moduleComboBox;
+    @ConfField
     private JPasswordField passwordField;
+    @ConfField
     private JTextField paramsTextField;
 
     private final Project project;
 
     private final DBRunnable dbRunnable;
 
-    public CommonDbConfUI(@Nullable Project project, boolean canBeParent, DBRunnable dbRunnable) {
-
+    public CommonDbConfUI(@Nullable Project project,
+                          boolean canBeParent,
+                          String title,
+                          DBRunnable dbRunnable,
+                          boolean schemaInformationFlag) {
         super(project, canBeParent);
+        setTitle(StringUtils.isEmpty(title) ? "Database Config" : title);
         this.project = project;
         this.dbRunnable = dbRunnable;
-        //deriver
+        //driver
         driverClassComboBox.addItem("com.mysql.cj.jdbc.Driver");
         driverClassComboBox.addItem("com.mysql.jdbc.Driver");
+        //url
+        baseUrlTextField.setText("jdbc:mysql://localhost:3306");
+        if (schemaInformationFlag) {
+            schemaTextField.setEditable(false);
+            schemaTextField.setText("information_schema");
+        }
         //module
         assert project != null;
         Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -46,23 +66,26 @@ public class CommonDbConfUI extends DialogWrapper {
         saveAsDefaultButton.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                saveConf();
+                NotifyUtils.info(project, "save conf success");
             }
         });
+        saveAsDefaultButton.setText("SaveConf");
+        //load
+        loadFromModuleButton.setAction(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadConf();
+                NotifyUtils.info(project, "load conf success");
+            }
+        });
+        loadFromModuleButton.setText("LoadConf");
         init();
     }
 
     @Override
     protected void doOKAction() {
         //check
-        if (StringUtils.isEmpty(String.valueOf(driverClassComboBox.getSelectedItem())) ||
-                StringUtils.isEmpty(baseUrlTextField.getText()) ||
-                StringUtils.isEmpty(schemaTextField.getText()) ||
-                StringUtils.isEmpty(userNameTextField.getText()) ||
-                StringUtils.isEmpty(String.valueOf(passwordField.getPassword()))) {
-            Messages.showErrorDialog(project, "DbConnect config not valid", "Error");
-            return;
-        }
         DbConnectParam dbConnectParam = new DbConnectParam();
         dbConnectParam.setDriverClass(String.valueOf(driverClassComboBox.getSelectedItem()));
         dbConnectParam.setBaseUrl(baseUrlTextField.getText().trim());
@@ -70,8 +93,29 @@ public class CommonDbConfUI extends DialogWrapper {
         dbConnectParam.setUserName(userNameTextField.getText().trim());
         dbConnectParam.setPassword(String.valueOf(passwordField.getPassword()));
         dbConnectParam.setParams(paramsTextField.getText().trim());
-        super.doOKAction();
         dbRunnable.run(project, dbConnectParam);
+        super.doOKAction();
+    }
+
+    @Override
+    protected @Nullable ValidationInfo doValidate() {
+
+        if (StringUtils.isEmpty(String.valueOf(driverClassComboBox.getSelectedItem()))) {
+            return new ValidationInfo("Choose driver class");
+        }
+        if (StringUtils.isEmpty(baseUrlTextField.getText())) {
+            return new ValidationInfo("Base url is not valid");
+        }
+        if (StringUtils.isEmpty(schemaTextField.getText())) {
+            return new ValidationInfo("Shcema is not valid");
+        }
+        if (StringUtils.isEmpty(userNameTextField.getText())) {
+            return new ValidationInfo("Username is not valid");
+        }
+        if (StringUtils.isEmpty(String.valueOf(passwordField.getPassword()))) {
+            return new ValidationInfo("Password is not valid");
+        }
+        return super.doValidate();
     }
 
     @Override

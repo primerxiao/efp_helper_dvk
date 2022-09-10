@@ -4,7 +4,7 @@ import org.gradle.api.internal.artifacts.mvnsettings.LocalMavenRepositoryLocator
 
 plugins {
   id("java")
-  id("org.jetbrains.intellij") version "1.8.0"
+  id("org.jetbrains.intellij") version "1.9.0"
 }
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -16,7 +16,7 @@ repositories {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -24,13 +24,14 @@ dependencies {
   implementation("commons-dbutils:commons-dbutils:1.7")
   compileOnly("org.projectlombok:lombok:1.18.24")
   annotationProcessor("org.projectlombok:lombok:1.18.24")
+  implementation("net.sourceforge.jexcelapi:jxl:2.6.12")
 }
 
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
   //2021.1.1  2020.3
-  version.set("IU-2021.1.1")
+  version.set("IU-2022.2")
   //localPath.set("D:\\Program Files\\Jebrains\\ideaIU-2020.3\\")
   plugins.set(listOf("com.intellij.java","DatabaseTools"))
 }

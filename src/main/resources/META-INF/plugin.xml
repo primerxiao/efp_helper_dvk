@@ -45,7 +45,7 @@
         <notificationGroup id="com.efp.dvk.notification.group"
                            displayType="BALLOON"
                            key="com.efp.dvk.notification.group.name"/>
-        <projectService serviceImplementation="com.efp.dvk.plugins.db.service.DbService"/>
-    </extensions>
+<!--        <projectService serviceImplementation="com.efp.dvk.plugins.db.service.DbService"/>-->
+     </extensions>
 
 </idea-plugin>
