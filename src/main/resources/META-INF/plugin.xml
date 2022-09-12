@@ -38,7 +38,10 @@
             <add-to-group group-id="com.efp.dvk.tools.menu.group"/>
         </action>
 
-
+        <action id="com.efp.dvk.plugins.db.action.ExportDbDictAction"
+                class="com.efp.dvk.plugins.db.action.ExportDbDictAction">
+            <add-to-group group-id="com.efp.dvk.tools.menu.group"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
