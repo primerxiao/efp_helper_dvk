@@ -1,11 +1,11 @@
 package com.efp.dvk.plugins.db.model;
 
+import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
-
 @Data
+@Builder
 public class DbConnectParam {
 
     private String driverClass;

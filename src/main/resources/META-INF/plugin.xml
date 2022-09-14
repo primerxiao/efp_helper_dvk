@@ -29,26 +29,21 @@
 
     <resource-bundle>messages.BasicBundle</resource-bundle>
 
-    <actions>
-        <group id="com.efp.dvk.tools.menu.group">
+    <actions resource-bundle="messages.BasicBundle">
+        <group id="com.efp.dvk.tools.menu.group" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="com.efp.dvk.tools.menu.group.action.test"
+                    class="com.efp.dvk.plugins.test.action.TestAction"/>
+            <action id="com.efp.dvk.plugins.db.action.ExportDbDictAction"
+                    class="com.efp.dvk.plugins.db.action.ExportDbDictAction"/>
         </group>
-        <action id="com.efp.dvk.tools.menu.group.action.test"
-                class="com.efp.dvk.plugins.test.action.TestAction">
-            <add-to-group group-id="com.efp.dvk.tools.menu.group"/>
-        </action>
-
-        <action id="com.efp.dvk.plugins.db.action.ExportDbDictAction"
-                class="com.efp.dvk.plugins.db.action.ExportDbDictAction">
-            <add-to-group group-id="com.efp.dvk.tools.menu.group"/>
-        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="com.efp.dvk.notification.group"
                            displayType="BALLOON"
                            key="com.efp.dvk.notification.group.name"/>
-<!--        <projectService serviceImplementation="com.efp.dvk.plugins.db.service.DbService"/>-->
-     </extensions>
+        <!--        <projectService serviceImplementation="com.efp.dvk.plugins.db.service.DbService"/>-->
+    </extensions>
 
 </idea-plugin>

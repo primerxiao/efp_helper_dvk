@@ -1,9 +1,8 @@
 package com.efp.dvk.plugins.db.service;
 
-import com.efp.dvk.plugins.db.model.DbConnectParam;
-import com.intellij.openapi.project.Project;
+import com.efp.dvk.plugins.db.model.DbRunEvent;
 
 @FunctionalInterface
 public interface DBRunnable {
-    abstract void run(Project project, DbConnectParam dbConnectParam);
+    abstract void run(DbRunEvent dbRunEvent);
 }
