@@ -3,9 +3,9 @@ package com.efp.dvk.plugins.db.ui;
 import com.efp.dvk.common.annation.ConfField;
 import com.efp.dvk.common.service.DialogAbstractService;
 import com.efp.dvk.common.util.NotifyUtils;
+import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
 import com.efp.dvk.plugins.db.service.DBRunnable;
-import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 public class DbConfUI extends DialogWrapper implements DialogAbstractService {
     private JPanel jPanel;
@@ -30,8 +29,6 @@ public class DbConfUI extends DialogWrapper implements DialogAbstractService {
     private JTextField schemaTextField;
     private JButton saveAsDefaultButton;
     private JButton loadFromModuleButton;
-    @ConfField
-    private JComboBox<Module> moduleComboBox;
     @ConfField
     private JPasswordField passwordField;
     @ConfField
@@ -63,7 +60,6 @@ public class DbConfUI extends DialogWrapper implements DialogAbstractService {
         //module
         assert project != null;
         Module[] modules = ModuleManager.getInstance(project).getModules();
-        Arrays.stream(modules).forEach(m -> moduleComboBox.addItem(m));
         //save
         saveAsDefaultButton.setAction(new AbstractAction() {
             @Override
