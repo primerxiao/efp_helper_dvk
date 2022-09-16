@@ -1,7 +1,7 @@
 package com.efp.dvk.plugins.db.ui;
 
 import com.efp.dvk.common.annation.ConfField;
-import com.efp.dvk.common.service.DialogAbstractService;
+import com.efp.dvk.common.service.AbstractDialogService;
 import com.efp.dvk.common.util.NotifyUtils;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class DbConfUI extends DialogWrapper implements DialogAbstractService {
+public class DbConfUI extends DialogWrapper implements AbstractDialogService {
     private JPanel jPanel;
     @ConfField
     private JComboBox<String> driverClassComboBox;

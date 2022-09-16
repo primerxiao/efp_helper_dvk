@@ -61,15 +61,6 @@ public class DatabaseConfig implements Serializable {
 
     @Override
     public String toString() {
-        return "DatabaseConfig{" +
-                ", dbType='" + dbType + '\'' +
-                ", name='" + name + '\'' +
-                ", host='" + host + '\'' +
-                ", port='" + port + '\'' +
-                ", schema='" + schema + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", encoding='" + encoding + '\'' +
-                '}';
+        return getName();
     }
 }

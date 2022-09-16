@@ -1,7 +1,7 @@
 package com.efp.dvk.plugins.db.ui;
 
 import com.efp.dvk.common.annation.ConfField;
-import com.efp.dvk.common.service.DialogAbstractService;
+import com.efp.dvk.common.service.AbstractDialogService;
 import com.efp.dvk.plugins.db.entity.Tables;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
@@ -14,11 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class SelectTableUI extends DialogWrapper implements DialogAbstractService {
+public class SelectTableUI extends DialogWrapper implements AbstractDialogService {
 
 
     private final DbConnectParam dbConnectParam;

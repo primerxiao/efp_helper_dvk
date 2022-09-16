@@ -2,14 +2,13 @@ package com.efp.dvk.common.service;
 
 import com.efp.dvk.common.annation.ConfField;
 import com.efp.dvk.common.util.NotifyUtils;
-import com.intellij.ide.util.PropertiesComponent;
 
 import javax.swing.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public interface DialogAbstractService {
+public interface AbstractDialogService {
     default void saveConf() {
         try {
             Field[] declaredFields = this.getClass().getDeclaredFields();
@@ -27,16 +26,22 @@ public interface DialogAbstractService {
                 }
                 if (obj instanceof JComboBox) {
                     //class+field
-                    PropertiesComponent.getInstance().setValue(confKey,
-                            String.valueOf(((JComboBox<?>) obj).getSelectedIndex()));
+                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                            confKey,
+                            String.valueOf(((JComboBox<?>) obj).getSelectedIndex())
+                    );
                 }
                 if (obj instanceof JTextField) {
                     String text = ((JTextField) obj).getText();
-                    PropertiesComponent.getInstance().setValue(confKey, text);
+                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                            confKey,
+                            text);
                 }
                 if (obj instanceof JPasswordField) {
                     String text = String.valueOf(((JPasswordField) obj).getPassword());
-                    PropertiesComponent.getInstance().setValue(confKey, text);
+                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                            confKey,
+                            text);
                 }
                 field.setAccessible(false);
             }
@@ -54,7 +59,11 @@ public interface DialogAbstractService {
             }
             for (Field field : fields) {
                 String confKey = this.getClass().getName() + "--" + field.getName();
-                String confValue = PropertiesComponent.getInstance().getValue(confKey);
+
+                String confValue = CacheService.instance().hashMapGet(CacheService.NameEnum.DialogConfig, confKey);
+                if (confValue == null) {
+                    continue;
+                }
                 field.setAccessible(true);
                 Object obj = field.get(this);
                 if (obj == null) {
@@ -63,9 +72,7 @@ public interface DialogAbstractService {
                 }
                 if (obj instanceof JComboBox) {
                     //class+field
-                    if (confValue != null) {
-                        ((JComboBox<?>) obj).setSelectedIndex(Integer.parseInt(confValue));
-                    }
+                    ((JComboBox<?>) obj).setSelectedIndex(Integer.parseInt(confValue));
                 }
                 if (obj instanceof JTextField) {
                     ((JTextField) obj).setText(confValue);

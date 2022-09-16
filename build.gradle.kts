@@ -33,7 +33,9 @@ dependencies {
     implementation("commons-dbutils:commons-dbutils:1.7")
     compileOnly("org.projectlombok:lombok:1.18.24")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
-    implementation("net.sourceforge.jexcelapi:jxl:2.6.12")
+    implementation("net.sourceforge.jexcelapi:jxl:2.6.12"){
+        exclude(group="log4j",module = "log4j")
+    }
     implementation("org.mapdb:mapdb:3.0.8") {
         exclude(group = "com.google.guava")
     }

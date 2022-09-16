@@ -11,14 +11,8 @@ import org.apache.commons.dbutils.*;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
 @Service(Service.Level.PROJECT)
 public final class DbService {
@@ -89,10 +83,9 @@ public final class DbService {
             try (Connection connection = getConnection(config);) {
                 NotifyUtils.info(null, "连接成功");
             }
-        } catch (RuntimeException e) {
-            NotifyUtils.warn(null, "连接失败, " + e.getMessage());
         } catch (Exception e) {
             NotifyUtils.warn(null, "连接失败");
+            throw new RuntimeException(e);
         }
     }
 
@@ -113,10 +106,50 @@ public final class DbService {
         return drivers.get(config.getDbType()).connect(url, props);
     }
 
-    public String getConnectionUrlWithSchema(DatabaseConfig dbConfig) throws ClassNotFoundException {
+    public String getConnectionUrlWithSchema(DatabaseConfig dbConfig) {
 
         return String.format(dbConfig.getDbType().getConnectionUrlPattern(),
                 dbConfig.getHost(), dbConfig.getPort(), dbConfig.getSchema(), dbConfig.getEncoding());
+    }
+
+    public List<String> getTableNames(DatabaseConfig config, String filter){
+        try (Connection connection = getConnection(config)) {
+            List<String> tables = new ArrayList<>();
+            DatabaseMetaData md = connection.getMetaData();
+            ResultSet rs;
+            if (config.getDbType() == DbType.SQL_Server) {
+                String sql = "select name from sysobjects  where xtype='u' or xtype='v' order by name";
+                rs = connection.createStatement().executeQuery(sql);
+                while (rs.next()) {
+                    tables.add(rs.getString("name"));
+                }
+            } else if (config.getDbType() == DbType.Oracle) {
+                rs = md.getTables(null, config.getUsername().toUpperCase(), null, new String[]{"TABLE", "VIEW"});
+            } else if (config.getDbType() == DbType.Sqlite) {
+                String sql = "Select name from sqlite_master;";
+                rs = connection.createStatement().executeQuery(sql);
+                while (rs.next()) {
+                    tables.add(rs.getString("name"));
+                }
+            } else {
+                // rs = md.getTables(null, config.getUsername().toUpperCase(), null, null);
+                //针对 postgresql 的左侧数据表显示
+                rs = md.getTables(config.getSchema(), null, "%", new String[]{"TABLE", "VIEW"});
+            }
+            while (rs.next()) {
+                tables.add(rs.getString(3));
+            }
+            if (StringUtils.isNotBlank(filter)) {
+                tables.removeIf(x -> !x.contains(filter) && !(x.replaceAll("_", "").contains(filter)));
+            }
+            if (tables.size() > 1) {
+                Collections.sort(tables);
+            }
+            return tables;
+        } catch (Exception exception) {
+            NotifyUtils.error(null, exception.getMessage());
+            throw new RuntimeException(exception);
+        }
     }
 
 

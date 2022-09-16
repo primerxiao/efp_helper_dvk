@@ -29,6 +29,16 @@
               <text value="GeneratorConfig"/>
             </properties>
           </component>
+          <component id="649d3" class="javax.swing.JTextField" binding="filterTextField">
+            <constraints/>
+            <properties/>
+          </component>
+          <component id="904cc" class="javax.swing.JButton" binding="filterButton">
+            <constraints/>
+            <properties>
+              <text value="过滤"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <splitpane id="119e5">
@@ -37,10 +47,13 @@
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <dividerLocation value="150"/>
+          <dividerSize value="1"/>
+        </properties>
         <border type="none"/>
         <children>
-          <scrollpane id="bca4e">
+          <scrollpane id="bca4e" binding="jScrollPane">
             <constraints>
               <splitpane position="left"/>
             </constraints>
@@ -49,7 +62,10 @@
             <children>
               <component id="54e4a" class="javax.swing.JTree" binding="tree1" default-binding="true">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <rootVisible value="false"/>
+                  <showsRootHandles value="false"/>
+                </properties>
               </component>
             </children>
           </scrollpane>
