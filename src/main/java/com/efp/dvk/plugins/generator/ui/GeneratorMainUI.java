@@ -21,11 +21,14 @@ public class GeneratorMainUI extends DialogWrapper {
     private JPanel jPanel;
     private JButton connectionConfigButton;
     private JButton generatorConfigButton;
-    private JTabbedPane tabbedPane1;
     private JTree tree1;
     private JScrollPane jScrollPane;
     private JTextField filterTextField;
     private JButton filterButton;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
 
     private final Project project;
 
