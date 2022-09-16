@@ -27,7 +27,6 @@ public class GeneratorMainUI extends DialogWrapper {
     private JButton filterButton;
     private JTextField textField1;
     private JTextField textField2;
-    private JTextField textField3;
     private JTextField textField4;
 
     private final Project project;
