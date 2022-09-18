@@ -1,11 +1,10 @@
 package com.efp.dvk.plugins.db.service;
 
-import com.efp.dvk.common.util.NotifyUtils;
+import com.efp.dvk.common.lang.NotifyUtils;
 import com.efp.dvk.plugins.db.entity.Tables;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbType;
 import com.efp.dvk.plugins.generator.model.DatabaseConfig;
-import com.intellij.database.util.DbUtil;
 import com.intellij.openapi.components.Service;
 import org.apache.commons.dbutils.*;
 import org.apache.commons.dbutils.handlers.BeanListHandler;

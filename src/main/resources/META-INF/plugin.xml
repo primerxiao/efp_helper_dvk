@@ -4,7 +4,7 @@
 <idea-plugin>
 
     <!-- Unique id for this plugin. Must stay constant for the life of the plugin. -->
-    <id>org.intellij.sdk.action</id>
+    <id>com.efp.dvk.plugin</id>
 
     <!-- Text to display as name on Preferences/Settings | Plugin page -->
     <name>SDK: Action Sample</name>
@@ -40,10 +40,10 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <notificationGroup id="com.efp.dvk.notification.group"
+        <notificationGroup id="Efp Dvk View"
                            displayType="BALLOON"
-                           key="com.efp.dvk.notification.group.name"/>
-        <!--        <projectService serviceImplementation="com.efp.dvk.plugins.db.service.DbService"/>-->
+                           bundle="messages.BasicBundle" key="notification.title.efp.dvk.view"/>
+
     </extensions>
 
 </idea-plugin>

@@ -1,13 +1,17 @@
 package com.efp.dvk.common.service;
 
-import com.efp.dvk.common.annation.ConfField;
-import com.efp.dvk.common.util.NotifyUtils;
+import com.efp.dvk.common.lang.annation.ConfField;
+import com.efp.dvk.common.lang.enums.CacheNameEnum;
+import com.efp.dvk.common.lang.NotifyUtils;
 
 import javax.swing.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * dialog通用处理能力
+ */
 public interface AbstractDialogService {
     default void saveConf() {
         try {
@@ -26,20 +30,20 @@ public interface AbstractDialogService {
                 }
                 if (obj instanceof JComboBox) {
                     //class+field
-                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
                             confKey,
                             String.valueOf(((JComboBox<?>) obj).getSelectedIndex())
                     );
                 }
                 if (obj instanceof JTextField) {
                     String text = ((JTextField) obj).getText();
-                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
                             confKey,
                             text);
                 }
                 if (obj instanceof JPasswordField) {
                     String text = String.valueOf(((JPasswordField) obj).getPassword());
-                    CacheService.instance().hashMapSet(CacheService.NameEnum.DialogConfig,
+                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
                             confKey,
                             text);
                 }
@@ -60,7 +64,7 @@ public interface AbstractDialogService {
             for (Field field : fields) {
                 String confKey = this.getClass().getName() + "--" + field.getName();
 
-                String confValue = CacheService.instance().hashMapGet(CacheService.NameEnum.DialogConfig, confKey);
+                String confValue = CacheService.instance().hashMapGet(CacheNameEnum.DialogConfig, confKey);
                 if (confValue == null) {
                     continue;
                 }

@@ -1,8 +1,8 @@
 package com.efp.dvk.plugins.db.ui;
 
-import com.efp.dvk.common.annation.ConfField;
+import com.efp.dvk.common.lang.annation.ConfField;
 import com.efp.dvk.common.service.AbstractDialogService;
-import com.efp.dvk.common.util.NotifyUtils;
+import com.efp.dvk.common.lang.NotifyUtils;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
 import com.efp.dvk.plugins.db.service.DBRunnable;

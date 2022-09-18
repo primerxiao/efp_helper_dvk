@@ -1,7 +1,8 @@
 package com.efp.dvk.plugins.generator.ui;
 
+import com.efp.dvk.common.lang.enums.CacheNameEnum;
 import com.efp.dvk.common.service.CacheService;
-import com.efp.dvk.common.util.NotifyUtils;
+import com.efp.dvk.common.lang.NotifyUtils;
 import com.efp.dvk.plugins.db.service.DbService;
 import com.efp.dvk.plugins.generator.model.DatabaseConfig;
 import com.intellij.openapi.project.Project;
@@ -38,7 +39,7 @@ public class GeneratorMainUI extends DialogWrapper {
         setSize(700, 500);
 
         DefaultMutableTreeNode root_node = new DefaultMutableTreeNode("Root Node");
-        HashMap<String, DatabaseConfig> objectObjectHashMap = CacheService.instance().hashMapGet(CacheService.NameEnum.DatabaseConfig);
+        HashMap<String, DatabaseConfig> objectObjectHashMap = CacheService.instance().hashMapGet(CacheNameEnum.DatabaseConfig);
         objectObjectHashMap.forEach((k, v) -> {
             DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(k);
             root_node.add(defaultMutableTreeNode);
@@ -68,7 +69,7 @@ public class GeneratorMainUI extends DialogWrapper {
                 int exitCode = connectionConfigUI.getExitCode();
                 if (exitCode == OK_EXIT_CODE) {
                     //刷新
-                    HashMap<String, DatabaseConfig> objectObjectHashMap = CacheService.instance().hashMapGet(CacheService.NameEnum.DatabaseConfig);
+                    HashMap<String, DatabaseConfig> objectObjectHashMap = CacheService.instance().hashMapGet(CacheNameEnum.DatabaseConfig);
                     if (objectObjectHashMap.isEmpty()) {
                         return;
                     }
@@ -101,7 +102,7 @@ public class GeneratorMainUI extends DialogWrapper {
             //选择了配置
             //获取表
             assert project != null;
-            DatabaseConfig databaseConfig = CacheService.instance().hashMapGet(CacheService.NameEnum.DatabaseConfig, databaseConfigKey);
+            DatabaseConfig databaseConfig = CacheService.instance().hashMapGet(CacheNameEnum.DatabaseConfig, databaseConfigKey);
             List<String> tableNames = project.getService(DbService.class).getTableNames(databaseConfig, filterTextField.getName());
             for (String tableName : tableNames) {
                 DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(tableName);

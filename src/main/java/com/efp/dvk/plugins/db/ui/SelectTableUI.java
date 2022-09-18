@@ -1,6 +1,6 @@
 package com.efp.dvk.plugins.db.ui;
 
-import com.efp.dvk.common.annation.ConfField;
+import com.efp.dvk.common.lang.annation.ConfField;
 import com.efp.dvk.common.service.AbstractDialogService;
 import com.efp.dvk.plugins.db.entity.Tables;
 import com.efp.dvk.plugins.db.model.DbConnectParam;

@@ -1,17 +1,17 @@
-package com.efp.dvk.common.util;
+package com.efp.dvk.common.lang;
 
+import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nullable;
 
 public class NotifyUtils {
-
     public static void notifyByType(@Nullable Project project,
                                     NotificationType notificationType,
                                     String content) {
         NotificationGroupManager.getInstance()
-                .getNotificationGroup("com.efp.dvk.notification.group")
+                .getNotificationGroup("Efp Dvk View")
                 .createNotification(content, notificationType)
                 .notify(project);
     }

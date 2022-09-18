@@ -1,4 +1,4 @@
-package com.efp.dvk.common.annation;
+package com.efp.dvk.common.lang.annation;
 
 import java.lang.annotation.*;
 
