@@ -53,6 +53,7 @@ public final class CacheService {
 
     private DB getDb() {
         return DBMaker.fileDB(dbFile)
+                .closeOnJvmShutdown()
                 .fileMmapEnable()
                 .checksumHeaderBypass()
                 .fileMmapPreclearDisable()
