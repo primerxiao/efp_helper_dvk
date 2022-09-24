@@ -1,9 +1,15 @@
 package com.efp.dvk.common.service;
 
 import com.efp.dvk.common.lang.enums.CacheNameEnum;
+import com.ejlchina.searcher.BeanSearcher;
+import com.ejlchina.searcher.MapSearcher;
+import com.ejlchina.searcher.SearcherBuilder;
+import com.ejlchina.searcher.implement.DefaultSqlExecutor;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.Service;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
@@ -15,6 +21,29 @@ import java.util.HashMap;
  */
 @Service(Service.Level.APP)
 public final class CacheService {
+
+    static {
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setPoolName("SQLiteConnectionPool");
+        hikariConfig.setDriverClassName("org.sqlite.JDBC");
+        hikariConfig.setJdbcUrl("jdbc:sqlite:" + "d://sqlite.db");
+        hikariDataSource = new HikariDataSource(hikariConfig);
+
+    }
+
+    private static final HikariDataSource hikariDataSource;
+
+    private final static DefaultSqlExecutor sqlExecutor = new DefaultSqlExecutor(hikariDataSource);
+
+    // 构建 Map 检索器
+    private final MapSearcher mapSearcher = SearcherBuilder.mapSearcher()
+            .sqlExecutor(sqlExecutor)
+            .build();
+
+    // 构建 Bean 检索器
+    public final BeanSearcher beanSearcher = SearcherBuilder.beanSearcher()
+            .sqlExecutor(sqlExecutor)
+            .build();
 
     private final String dbFile = String.join(PathManager.getHomePath(), "/help/efp_dvk_cache.db");
 

@@ -2,9 +2,14 @@ package com.efp.dvk.plugins.test.action;
 
 import com.efp.dvk.common.lang.EfpDvkBundle;
 import com.efp.dvk.common.lang.EfpDvkNotifications;
+import com.efp.dvk.common.orm.entity.PluginDialogConf;
+import com.efp.dvk.common.service.CacheService;
+import com.efp.dvk.common.service.PluginOrmService;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
 import com.efp.dvk.plugins.db.service.DBRunnable;
 import com.efp.dvk.plugins.generator.ui.GeneratorMainUI;
+import com.ejlchina.searcher.SearchResult;
+import com.ejlchina.searcher.util.MapUtils;
 import com.intellij.database.DatabaseBundle;
 import com.intellij.database.DatabaseNotifications;
 import com.intellij.database.extensions.ExtensionScriptsUtil;
@@ -17,28 +22,35 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.List;
 
 public class TestAction extends AnAction implements DBRunnable {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-//        new DbConfUI(e.getProject(),
-//                true,
-//                "",
-//                this,
-//                true).show();
 
-        File file = new File("E:\\payadmin4_2.sql");
+        //beansearch test
 
-        VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(file, true);
+        PluginDialogConf one = PluginOrmService.instance().pluginDialogConfDao().findOne("1");
+        System.out.println(one);
 
-        EfpDvkNotifications.EFP_DVK_VIEW_GROUP
-                .createNotification(
-                        EfpDvkBundle.message(
-                                "notification.test.to.file",
-                                 fileByIoFile.getPath()
-                        ),
-                        NotificationType.INFORMATION)
-                .setListener((notification, event) -> ExtensionScriptsUtil.navigateToFile(e.getProject(), file.toPath())).notify(e.getProject());
+
+//        SearchResult<Test> jack = CacheService.instance().beanSearcher.search(Test.class, MapUtils.builder().field(Test::getName, "jack").build());
+//        List<Test> dataList = jack.getDataList();
+//        System.out.println(dataList.size());
+
+//        //nofify信息中带文件跳转路径
+//        File file = new File("E:\\payadmin4_2.sql");
+//
+//        VirtualFile fileByIoFile = VfsUtil.findFileByIoFile(file, true);
+//
+//        EfpDvkNotifications.EFP_DVK_VIEW_GROUP
+//                .createNotification(
+//                        EfpDvkBundle.message(
+//                                "notification.test.to.file",
+//                                 fileByIoFile.getPath()
+//                        ),
+//                        NotificationType.INFORMATION)
+//                .setListener((notification, event) -> ExtensionScriptsUtil.navigateToFile(e.getProject(), file.toPath())).notify(e.getProject());
 
         //new GeneratorMainUI(e.getProject(),true).show();
     }
