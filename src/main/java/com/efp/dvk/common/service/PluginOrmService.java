@@ -1,40 +1,43 @@
 package com.efp.dvk.common.service;
 
-import com.efp.dvk.common.orm.dao.PluginDialogConfDao;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginUtil;
+import com.efp.dvk.common.lang.annation.Exclude;
+import com.efp.dvk.common.lang.annation.Id;
+import com.efp.dvk.common.lang.util.StrUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.components.Service;
-import com.intellij.openapi.extensions.PluginId;
+import com.intellij.util.ReflectionUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.dbutils.BasicRowProcessor;
+import org.apache.commons.dbutils.GenerousBeanProcessor;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.xmlbeans.impl.common.IOUtil;
-import org.fastsql.core.DefaultObjectFactory;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service(Service.Level.APP)
-public final class PluginOrmService {
+public final class PluginOrmService implements IPluginOrmService {
 
     private static final HikariDataSource hikariDataSource;
-
-    //定义工厂
-    private static final DefaultObjectFactory factory = new DefaultObjectFactory();
 
     static {
         //获取db文件路径
         String dbFilePath = PathManager.getHomePath() + "/help/plugin.db";
         File file = new File(dbFilePath);
         if (!file.exists()) {
-            copyDbfile(dbFilePath);
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setPoolName("SQLiteConnectionPool");
@@ -48,17 +51,10 @@ public final class PluginOrmService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        //设置数据源
-        factory.setDataSource(hikariDataSource);
-        //注册dao
     }
 
     public static PluginOrmService instance() {
         return ApplicationManager.getApplication().getService(PluginOrmService.class);
-    }
-
-    public PluginDialogConfDao pluginDialogConfDao() {
-        return factory.getBean(PluginDialogConfDao.class);
     }
 
     private static void initTableOrDate() throws SQLException {
@@ -70,18 +66,120 @@ public final class PluginOrmService {
                 );
                 """;
         queryRunner.update(pluginDialogConf);
+
     }
 
-    private static void copyDbfile(String dbFilePath) {
-        PluginId pluginId = PluginUtil.getInstance().findPluginId(new Throwable());
-        assert pluginId != null;
-        IdeaPluginDescriptor enabledPlugin = PluginManager.getInstance().findEnabledPlugin(pluginId);
-        assert enabledPlugin != null;
-        try (InputStream inputStream = Objects.requireNonNull(Objects.requireNonNull(enabledPlugin.getPluginClassLoader())).getResourceAsStream("/db/plugin.db")) {
-            assert inputStream != null;
-            IOUtil.copyCompletely(inputStream, new FileOutputStream(dbFilePath));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+    private final QueryRunner queryRunner = new QueryRunner(hikariDataSource);
+
+    private final BasicRowProcessor basicRowProcessor = new BasicRowProcessor(new GenerousBeanProcessor());
+
+    @Override
+    public <T> T selectById(T t) {
+        try {
+            Class<?> tClass = t.getClass();
+            String tableName = getTableNameByClass(tClass);
+            Field field = Arrays.stream(tClass.getDeclaredFields())
+                    .filter(f -> f.getAnnotation(Id.class) != null)
+                    .findFirst().orElse(null);
+            if (field == null) {
+                throw new RuntimeException("not find id column");
+            }
+            String idFieldName = field.getName();
+            String idColumnName = StrUtils.convertLineToHump(idFieldName);
+            field.setAccessible(true);
+            Object idValue = field.get(t);
+            String sql = """
+                    select * from %s
+                    where
+                    %s = ?
+                    """;
+            String formattedSql = sql.formatted(tableName, idColumnName);
+            Object query = queryRunner.query(formattedSql,
+                    new BeanHandler<>(tClass, basicRowProcessor),
+                    idValue);
+            return (T) query;
+        } catch (IllegalAccessException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <T> int insert(T t) {
+        try {
+            Class<?> tClass = t.getClass();
+            String tableName = getTableNameByClass(tClass);
+            List<Field> fields = ReflectionUtil.collectFields(tClass)
+                    .stream()
+                    .filter(f -> f.getAnnotation(Exclude.class) == null).toList();
+            List<String> paramNameBuilder = new ArrayList<>();
+            List<String> paramValueBuilder = new ArrayList<String>();
+            List<Object> params = new ArrayList<>();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object fieldVal = field.get(t);
+                if (fieldVal == null) {
+                    continue;
+                }
+                paramNameBuilder.add(StrUtils.convertLineToHump(field.getName()));
+                paramValueBuilder.add("?");
+                params.add(fieldVal);
+            }
+            String sql = """
+                    insert into %s(%s)
+                    values(%s);
+                    """;
+            String formattedSql = sql.formatted(
+                    tableName,
+                    String.join(",", paramNameBuilder),
+                    String.join(",", paramValueBuilder));
+            return queryRunner.update(formattedSql,
+                    params);
+        } catch (IllegalAccessException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <T> int deleteById(T t) {
+        try {
+            Class<?> tClass = t.getClass();
+            String tableName = getTableNameByClass(tClass);
+            Field idField = ReflectionUtil.collectFields(tClass)
+                    .stream()
+                    .filter(f -> f.getAnnotation(Id.class) != null).findAny().orElse(null);
+            if (idField == null) {
+                throw new RuntimeException("id field not found");
+            }
+            idField.setAccessible(true);
+            Object idValue = idField.get(t);
+            if (idValue == null) {
+                throw new RuntimeException("id value is null");
+            }
+            String sql = """
+                    delete from %s where %s=?;
+                    """;
+            String formattedSql = sql.formatted(
+                    tableName,
+                    getColumnNameByField(idField));
+            return queryRunner.update(formattedSql, idValue);
+        } catch (IllegalAccessException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <T> List<T> selectAll(Class<T> tClass) {
+        try {
+            String tableName = getTableNameByClass(tClass);
+            String sql = """
+                    select * from %s;
+                    """;
+            String formattedSql = sql.formatted(tableName);
+            List<Object> querys = queryRunner.query(formattedSql,
+                    new BeanListHandler<>(tClass, basicRowProcessor));
+            return (List<T>) querys;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

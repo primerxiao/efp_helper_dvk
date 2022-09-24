@@ -37,25 +37,11 @@ dependencies {
     implementation("net.sourceforge.jexcelapi:jxl:2.6.12") {
         exclude(group = "log4j", module = "log4j")
     }
-    implementation("org.mapdb:mapdb:3.0.8") {
-        exclude(group = "com.google.guava")
-    }
-    implementation("com.ejlchina:bean-searcher:3.8.1")
-    {
-        exclude(group = "org.slf4j")
-    }
     implementation("com.zaxxer:HikariCP:5.0.1"){
         exclude(group = "org.slf4j")
         exclude(group = "slf4j")
     }
     implementation("org.xerial:sqlite-jdbc:3.39.3.0")
-
-    // https://mvnrepository.com/artifact/org.fastsql/fastsql
-    implementation("org.fastsql:fastsql:1.0")
-
-
-
-
 
 }
 

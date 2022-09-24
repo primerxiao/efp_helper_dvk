@@ -1,28 +1,14 @@
 package com.efp.dvk.plugins.test.action;
 
-import com.efp.dvk.common.lang.EfpDvkBundle;
-import com.efp.dvk.common.lang.EfpDvkNotifications;
 import com.efp.dvk.common.orm.entity.PluginDialogConf;
-import com.efp.dvk.common.service.CacheService;
 import com.efp.dvk.common.service.PluginOrmService;
 import com.efp.dvk.plugins.db.model.DbRunEvent;
 import com.efp.dvk.plugins.db.service.DBRunnable;
-import com.efp.dvk.plugins.generator.ui.GeneratorMainUI;
-import com.ejlchina.searcher.SearchResult;
-import com.ejlchina.searcher.util.MapUtils;
-import com.intellij.database.DatabaseBundle;
-import com.intellij.database.DatabaseNotifications;
-import com.intellij.database.extensions.ExtensionScriptsUtil;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.util.List;
+import java.sql.SQLException;
 
 public class TestAction extends AnAction implements DBRunnable {
     @Override
@@ -30,9 +16,9 @@ public class TestAction extends AnAction implements DBRunnable {
 
         //beansearch test
 
-        PluginDialogConf one = PluginOrmService.instance().pluginDialogConfDao().findOne("1");
-        System.out.println(one);
-
+        PluginOrmService.instance().selectById(PluginDialogConf.builder().confKey("1").build());
+        PluginOrmService.instance().insert(PluginDialogConf.builder().confKey("2").confValue("3").build());
+        PluginDialogConf pluginDialogConf = PluginOrmService.instance().selectById(PluginDialogConf.builder().confKey("3").build());
 
 //        SearchResult<Test> jack = CacheService.instance().beanSearcher.search(Test.class, MapUtils.builder().field(Test::getName, "jack").build());
 //        List<Test> dataList = jack.getDataList();

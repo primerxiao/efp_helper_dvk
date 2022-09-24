@@ -1,8 +1,8 @@
 package com.efp.dvk.common.service;
 
-import com.efp.dvk.common.lang.annation.ConfField;
-import com.efp.dvk.common.lang.enums.CacheNameEnum;
 import com.efp.dvk.common.lang.NotifyUtils;
+import com.efp.dvk.common.lang.annation.ConfField;
+import com.efp.dvk.common.orm.entity.PluginDialogConf;
 
 import javax.swing.*;
 import java.lang.reflect.Field;
@@ -30,22 +30,30 @@ public interface AbstractDialogService {
                 }
                 if (obj instanceof JComboBox) {
                     //class+field
-                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
-                            confKey,
-                            String.valueOf(((JComboBox<?>) obj).getSelectedIndex())
+                    PluginOrmService.instance().insert(
+                            PluginDialogConf.builder()
+                                    .confKey(confKey)
+                                    .confValue(String.valueOf(((JComboBox<?>) obj).getSelectedIndex()))
+                                    .build()
                     );
                 }
                 if (obj instanceof JTextField) {
                     String text = ((JTextField) obj).getText();
-                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
-                            confKey,
-                            text);
+                    PluginOrmService.instance().insert(
+                            PluginDialogConf.builder()
+                                    .confKey(confKey)
+                                    .confValue(text)
+                                    .build()
+                    );
                 }
                 if (obj instanceof JPasswordField) {
                     String text = String.valueOf(((JPasswordField) obj).getPassword());
-                    CacheService.instance().hashMapSet(CacheNameEnum.DialogConfig,
-                            confKey,
-                            text);
+                    PluginOrmService.instance().insert(
+                            PluginDialogConf.builder()
+                                    .confKey(confKey)
+                                    .confValue(text)
+                                    .build()
+                    );
                 }
                 field.setAccessible(false);
             }
@@ -64,7 +72,13 @@ public interface AbstractDialogService {
             for (Field field : fields) {
                 String confKey = this.getClass().getName() + "--" + field.getName();
 
-                String confValue = CacheService.instance().hashMapGet(CacheNameEnum.DialogConfig, confKey);
+                PluginDialogConf pluginDialogConf = PluginOrmService.instance().selectById(
+                        PluginDialogConf.builder().confKey(confKey).build()
+                );
+                if (pluginDialogConf == null) {
+                    continue;
+                }
+                String confValue = pluginDialogConf.getConfValue();
                 if (confValue == null) {
                     continue;
                 }

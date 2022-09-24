@@ -1,9 +1,7 @@
 package com.efp.dvk.plugins.generator.ui;
 
 import com.efp.dvk.common.lang.annation.ConfField;
-import com.efp.dvk.common.lang.enums.CacheNameEnum;
 import com.efp.dvk.common.service.AbstractDialogService;
-import com.efp.dvk.common.service.CacheService;
 import com.efp.dvk.plugins.db.model.DbType;
 import com.efp.dvk.plugins.db.service.DbService;
 import com.efp.dvk.plugins.generator.model.DatabaseConfig;
@@ -89,7 +87,7 @@ public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogS
     protected void doOKAction() {
         saveConf();
         DatabaseConfig dabaseConfig = getDabaseConfig();
-        CacheService.instance().hashMapSet(CacheNameEnum.DatabaseConfig, dabaseConfig.getName(), dabaseConfig);
+        //CacheService.instance().hashMapSet(CacheNameEnum.DatabaseConfig, dabaseConfig.getName(), dabaseConfig);
         super.doOKAction();
     }
 
