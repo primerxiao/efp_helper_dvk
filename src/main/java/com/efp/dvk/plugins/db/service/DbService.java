@@ -4,7 +4,7 @@ import com.efp.dvk.common.lang.NotifyUtils;
 import com.efp.dvk.plugins.db.entity.Tables;
 import com.efp.dvk.plugins.db.model.DbConnectParam;
 import com.efp.dvk.plugins.db.model.DbType;
-import com.efp.dvk.plugins.generator.model.DatabaseConfig;
+import com.efp.dvk.plugins.generator.entity.DatabaseConfig;
 import com.intellij.openapi.components.Service;
 import org.apache.commons.dbutils.*;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -89,8 +89,8 @@ public final class DbService {
     }
 
     public Connection getConnection(DatabaseConfig config) throws ClassNotFoundException, SQLException {
-        if (drivers.get(config.getDbType()) == null) {
-            loadDbDriver(config.getDbType());
+        if (drivers.get(config.getDbTypeEnum()) == null) {
+            loadDbDriver(config.getDbTypeEnum());
         }
 
         String url = getConnectionUrlWithSchema(config);
@@ -102,30 +102,34 @@ public final class DbService {
         props.setProperty("password", config.getPassword());
 
         DriverManager.setLoginTimeout(DB_CONNECTION_TIMEOUTS_SECONDS);
-        return drivers.get(config.getDbType()).connect(url, props);
+        return drivers.get(config.getDbTypeName()).connect(url, props);
     }
 
     public String getConnectionUrlWithSchema(DatabaseConfig dbConfig) {
 
-        return String.format(dbConfig.getDbType().getConnectionUrlPattern(),
+        return String.format(dbConfig.getDbTypeEnum().getConnectionUrlPattern(),
                 dbConfig.getHost(), dbConfig.getPort(), dbConfig.getSchema(), dbConfig.getEncoding());
     }
 
-    public List<String> getTableNames(DatabaseConfig config, String filter){
+    public List<String> getTableNames(DatabaseConfig config, String filter) {
         try (Connection connection = getConnection(config)) {
             List<String> tables = new ArrayList<>();
             DatabaseMetaData md = connection.getMetaData();
             ResultSet rs;
-            if (config.getDbType() == DbType.SQL_Server) {
-                String sql = "select name from sysobjects  where xtype='u' or xtype='v' order by name";
+            if (config.getDbTypeEnum() == DbType.SQL_Server) {
+                String sql = """
+                        select name from sysobjects  where xtype='u' or xtype='v' order by name;
+                        """;
                 rs = connection.createStatement().executeQuery(sql);
                 while (rs.next()) {
                     tables.add(rs.getString("name"));
                 }
-            } else if (config.getDbType() == DbType.Oracle) {
+            } else if (config.getDbTypeEnum() == DbType.Oracle) {
                 rs = md.getTables(null, config.getUsername().toUpperCase(), null, new String[]{"TABLE", "VIEW"});
-            } else if (config.getDbType() == DbType.Sqlite) {
-                String sql = "Select name from sqlite_master;";
+            } else if (config.getDbTypeEnum() == DbType.Sqlite) {
+                String sql = """
+                        Select name from sqlite_master;
+                        """;
                 rs = connection.createStatement().executeQuery(sql);
                 while (rs.next()) {
                     tables.add(rs.getString("name"));

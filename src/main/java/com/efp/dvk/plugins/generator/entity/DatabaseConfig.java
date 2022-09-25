@@ -1,33 +1,60 @@
-package com.efp.dvk.plugins.generator.model;
+package com.efp.dvk.plugins.generator.entity;
 
+import com.efp.dvk.common.lang.annation.Id;
 import com.efp.dvk.plugins.db.model.DbType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * Created by Owen on 5/13/16.
- */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DatabaseConfig implements Serializable {
 
-    private DbType dbType;
-
+    /**
+     * 配置名称
+     */
+    @Id
     private String name;
 
+    /**
+     * 数据库类型
+     */
+    private String dbTypeName;
+
+    /**
+     * 主机
+     */
     private String host;
 
+    /**
+     * 端口
+     */
     private String port;
 
+    /**
+     * 数据库
+     */
     private String schema;
 
+    /**
+     * 用户名
+     */
     private String username;
 
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 编码
+     */
     private String encoding;
 
 
@@ -36,7 +63,7 @@ public class DatabaseConfig implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DatabaseConfig that = (DatabaseConfig) o;
-        return Objects.equals(dbType, that.dbType) &&
+        return Objects.equals(dbTypeName, that.dbTypeName) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(host, that.host) &&
                 Objects.equals(port, that.port) &&
@@ -49,7 +76,7 @@ public class DatabaseConfig implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(
-                dbType,
+                dbTypeName,
                 name,
                 host,
                 port,
@@ -62,5 +89,9 @@ public class DatabaseConfig implements Serializable {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public DbType getDbTypeEnum(){
+        return DbType.valueOf(getDbTypeName());
     }
 }

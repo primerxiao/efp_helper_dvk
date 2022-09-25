@@ -1,8 +1,9 @@
 package com.efp.dvk.plugins.generator.ui;
 
 import com.efp.dvk.common.lang.NotifyUtils;
+import com.efp.dvk.common.service.PluginOrmService;
 import com.efp.dvk.plugins.db.service.DbService;
-import com.efp.dvk.plugins.generator.model.DatabaseConfig;
+import com.efp.dvk.plugins.generator.entity.DatabaseConfig;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +13,6 @@ import javax.swing.tree.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.List;
 
 public class GeneratorMainUI extends DialogWrapper {
@@ -37,9 +37,10 @@ public class GeneratorMainUI extends DialogWrapper {
         setSize(700, 500);
 
         DefaultMutableTreeNode root_node = new DefaultMutableTreeNode("Root Node");
-        HashMap<String, DatabaseConfig> objectObjectHashMap = null;//CacheService.instance().hashMapGet(CacheNameEnum.DatabaseConfig);
-        objectObjectHashMap.forEach((k, v) -> {
-            DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(k);
+        List<DatabaseConfig> databaseConfigs = PluginOrmService.instance().selectAll(DatabaseConfig.class);
+
+        databaseConfigs.forEach(d -> {
+            DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(d.getName());
             root_node.add(defaultMutableTreeNode);
         });
         DefaultTreeModel treeModel = new DefaultTreeModel(root_node);
@@ -67,13 +68,6 @@ public class GeneratorMainUI extends DialogWrapper {
                 int exitCode = connectionConfigUI.getExitCode();
                 if (exitCode == OK_EXIT_CODE) {
                     //刷新
-                    HashMap<String, DatabaseConfig> objectObjectHashMap = null;//CacheService.instance().hashMapGet(CacheNameEnum.DatabaseConfig);
-                    if (objectObjectHashMap.isEmpty()) {
-                        return;
-                    }
-                    objectObjectHashMap.forEach((k, v) -> {
-
-                    });
                 }
             }
         });
@@ -94,7 +88,7 @@ public class GeneratorMainUI extends DialogWrapper {
             return;
         }
         DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
-        if (selectionPath.getPath().length-1==1) {
+        if (selectionPath.getPath().length - 1 == 1) {
             lastPathComponent.removeAllChildren();
             String databaseConfigKey = (String) lastPathComponent.getUserObject();
             //选择了配置
@@ -113,7 +107,7 @@ public class GeneratorMainUI extends DialogWrapper {
                 }
             }
         }
-        if (selectionPath.getPath().length-1==2) {
+        if (selectionPath.getPath().length - 1 == 2) {
             //选择了表
             String selectTableName = (String) lastPathComponent.getUserObject();
             NotifyUtils.warn(project, selectTableName);

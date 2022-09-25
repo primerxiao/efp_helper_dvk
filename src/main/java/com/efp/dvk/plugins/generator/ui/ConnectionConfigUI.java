@@ -4,7 +4,7 @@ import com.efp.dvk.common.lang.annation.ConfField;
 import com.efp.dvk.common.service.AbstractDialogService;
 import com.efp.dvk.plugins.db.model.DbType;
 import com.efp.dvk.plugins.db.service.DbService;
-import com.efp.dvk.plugins.generator.model.DatabaseConfig;
+import com.efp.dvk.plugins.generator.entity.DatabaseConfig;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogService {
     private JPanel jPanel;
@@ -93,10 +94,12 @@ public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogS
 
     private DatabaseConfig getDabaseConfig() {
         return DatabaseConfig.builder()
-                .dbType((DbType) dbType.getSelectedItem())
+                .dbTypeName(((DbType) Objects.requireNonNull(dbType.getSelectedItem())).name())
                 .schema(schema.getText())
                 .encoding(String.valueOf(encoding.getSelectedItem()))
                 .host(ip.getText())
+
+
                 .name(name.getText())
                 .username(username.getText())
                 .password(String.valueOf(password.getPassword()))

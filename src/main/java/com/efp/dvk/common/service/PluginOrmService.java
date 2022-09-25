@@ -59,14 +59,28 @@ public final class PluginOrmService implements IPluginOrmService {
 
     private static void initTableOrDate() throws SQLException {
         QueryRunner queryRunner = new QueryRunner(hikariDataSource);
-        String pluginDialogConf = """
+        String sql = """
                 create table if not exists plugin_dialog_conf(
                     conf_key text primary key,
                     conf_value text
                 );
                 """;
-        queryRunner.update(pluginDialogConf);
+        queryRunner.update(sql);
 
+        sql = """
+                create table if not exists database_config
+                (
+                    name         text primary key,
+                    db_type_name text,
+                    host         text,
+                    port         text,
+                    schema       text,
+                    username     text,
+                    password     text,
+                    encoding     text
+                );             
+                """;
+        queryRunner.update(sql);
     }
 
     private final QueryRunner queryRunner = new QueryRunner(hikariDataSource);
