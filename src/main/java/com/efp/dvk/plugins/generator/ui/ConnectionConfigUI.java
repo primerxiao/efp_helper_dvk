@@ -2,6 +2,7 @@ package com.efp.dvk.plugins.generator.ui;
 
 import com.efp.dvk.common.lang.annation.ConfField;
 import com.efp.dvk.common.service.AbstractDialogService;
+import com.efp.dvk.common.service.PluginOrmService;
 import com.efp.dvk.plugins.db.model.DbType;
 import com.efp.dvk.plugins.db.service.DbService;
 import com.efp.dvk.plugins.generator.entity.DatabaseConfig;
@@ -77,7 +78,11 @@ public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogS
     @Override
     protected @Nullable ValidationInfo doValidate() {
         try {
-            project.getService(DbService.class).testConnection(getDabaseConfig());
+            DatabaseConfig dabaseConfig = getDabaseConfig();
+            project.getService(DbService.class).testConnection(dabaseConfig);
+            if (PluginOrmService.instance().selectById(DatabaseConfig.builder().name(dabaseConfig.getName()).build()) != null) {
+                throw new RuntimeException("name " + dabaseConfig.getName() + " exis");
+            }
             return super.doValidate();
         } catch (Exception e) {
             return new ValidationInfo(e.getMessage());
@@ -87,8 +92,7 @@ public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogS
     @Override
     protected void doOKAction() {
         saveConf();
-        DatabaseConfig dabaseConfig = getDabaseConfig();
-        //CacheService.instance().hashMapSet(CacheNameEnum.DatabaseConfig, dabaseConfig.getName(), dabaseConfig);
+        PluginOrmService.instance().insert(getDabaseConfig());
         super.doOKAction();
     }
 
@@ -98,8 +102,6 @@ public class ConnectionConfigUI extends DialogWrapper implements AbstractDialogS
                 .schema(schema.getText())
                 .encoding(String.valueOf(encoding.getSelectedItem()))
                 .host(ip.getText())
-
-
                 .name(name.getText())
                 .username(username.getText())
                 .password(String.valueOf(password.getPassword()))

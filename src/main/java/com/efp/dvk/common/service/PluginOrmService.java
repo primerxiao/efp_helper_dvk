@@ -14,6 +14,7 @@ import org.apache.commons.dbutils.GenerousBeanProcessor;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,9 @@ public final class PluginOrmService implements IPluginOrmService {
         File file = new File(dbFilePath);
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    throw new RuntimeException("create db file fail");
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -88,7 +91,7 @@ public final class PluginOrmService implements IPluginOrmService {
     private final BasicRowProcessor basicRowProcessor = new BasicRowProcessor(new GenerousBeanProcessor());
 
     @Override
-    public <T> T selectById(T t) {
+    public <T> @Nullable T selectById(T t) {
         try {
             Class<?> tClass = t.getClass();
             String tableName = getTableNameByClass(tClass);
@@ -111,6 +114,9 @@ public final class PluginOrmService implements IPluginOrmService {
             Object query = queryRunner.query(formattedSql,
                     new BeanHandler<>(tClass, basicRowProcessor),
                     idValue);
+            if (query == null) {
+                return null;
+            }
             return (T) query;
         } catch (IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
@@ -118,7 +124,7 @@ public final class PluginOrmService implements IPluginOrmService {
     }
 
     @Override
-    public <T> int insert(T t) {
+    public <T> void insert(T t) {
         try {
             Class<?> tClass = t.getClass();
             String tableName = getTableNameByClass(tClass);
@@ -146,15 +152,69 @@ public final class PluginOrmService implements IPluginOrmService {
                     tableName,
                     String.join(",", paramNameBuilder),
                     String.join(",", paramValueBuilder));
-            return queryRunner.update(formattedSql,
-                    params);
+            int update = queryRunner.update(formattedSql,
+                    params.toArray());
+            if (update < 1) {
+                throw new RuntimeException("insert data error update num < 1");
+            }
         } catch (IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public <T> int deleteById(T t) {
+    public <T> void insertOrUpdate(T t) {
+        T t1 = selectById(t);
+        if (t1 != null) {
+            //update
+            updateById(t);
+            return;
+        }
+        insert(t);
+    }
+
+    @Override
+    public <T> void updateById(T t) {
+        try {
+            Class<?> tClass = t.getClass();
+            String tableName = getTableNameByClass(tClass);
+            List<Field> fields = ReflectionUtil.collectFields(tClass)
+                    .stream()
+                    .filter(f -> f.getAnnotation(Exclude.class) == null).toList();
+            Field idField = getIdField(tClass);
+            List<String> paramNameBuilder = new ArrayList<>();
+            List<Object> params = new ArrayList<>();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object fieldVal = field.get(t);
+                if (fieldVal == null) {
+                    continue;
+                }
+                paramNameBuilder.add(StrUtils.convertLineToHump(field.getName()) + "=?");
+                params.add(fieldVal);
+            }
+            idField.setAccessible(true);
+            params.add(idField.get(t));
+            String sql = """
+                    update %s set %s
+                    where %s = ?;
+                    """;
+            String formattedSql = sql.formatted(
+                    tableName,
+                    String.join(",", paramNameBuilder),
+                    getColumnNameByField(idField));
+            int update = queryRunner.update(formattedSql,
+                    params.toArray());
+            if (update < 1) {
+                throw new RuntimeException("update data error update num < 1");
+            }
+        } catch (IllegalAccessException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <T> void deleteById(T t) {
         try {
             Class<?> tClass = t.getClass();
             String tableName = getTableNameByClass(tClass);
@@ -175,7 +235,10 @@ public final class PluginOrmService implements IPluginOrmService {
             String formattedSql = sql.formatted(
                     tableName,
                     getColumnNameByField(idField));
-            return queryRunner.update(formattedSql, idValue);
+            int update = queryRunner.update(formattedSql, idValue);
+            if (update < 1) {
+                throw new RuntimeException("update error num < 1");
+            }
         } catch (IllegalAccessException | SQLException e) {
             throw new RuntimeException(e);
         }

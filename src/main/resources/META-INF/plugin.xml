@@ -36,6 +36,10 @@
                     class="com.efp.dvk.plugins.test.action.TestAction"/>
             <action id="com.efp.dvk.plugins.db.action.ExportDbDictAction"
                     class="com.efp.dvk.plugins.db.action.ExportDbDictAction"/>
+            <action id="com.efp.dvk.plugins.generator.action.GeneratorAction"
+                    class="com.efp.dvk.plugins.generator.action.GeneratorAction"
+                    text="GeneratorAction"
+                    description="GeneratorAction"/>
         </group>
     </actions>
 

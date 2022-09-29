@@ -30,7 +30,7 @@ public interface AbstractDialogService {
                 }
                 if (obj instanceof JComboBox) {
                     //class+field
-                    PluginOrmService.instance().insert(
+                    PluginOrmService.instance().insertOrUpdate(
                             PluginDialogConf.builder()
                                     .confKey(confKey)
                                     .confValue(String.valueOf(((JComboBox<?>) obj).getSelectedIndex()))
@@ -39,7 +39,7 @@ public interface AbstractDialogService {
                 }
                 if (obj instanceof JTextField) {
                     String text = ((JTextField) obj).getText();
-                    PluginOrmService.instance().insert(
+                    PluginOrmService.instance().insertOrUpdate(
                             PluginDialogConf.builder()
                                     .confKey(confKey)
                                     .confValue(text)
@@ -48,7 +48,7 @@ public interface AbstractDialogService {
                 }
                 if (obj instanceof JPasswordField) {
                     String text = String.valueOf(((JPasswordField) obj).getPassword());
-                    PluginOrmService.instance().insert(
+                    PluginOrmService.instance().insertOrUpdate(
                             PluginDialogConf.builder()
                                     .confKey(confKey)
                                     .confValue(text)

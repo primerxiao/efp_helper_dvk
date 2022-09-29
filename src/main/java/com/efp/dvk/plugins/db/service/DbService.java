@@ -102,7 +102,7 @@ public final class DbService {
         props.setProperty("password", config.getPassword());
 
         DriverManager.setLoginTimeout(DB_CONNECTION_TIMEOUTS_SECONDS);
-        return drivers.get(config.getDbTypeName()).connect(url, props);
+        return drivers.get(config.getDbTypeEnum()).connect(url, props);
     }
 
     public String getConnectionUrlWithSchema(DatabaseConfig dbConfig) {
