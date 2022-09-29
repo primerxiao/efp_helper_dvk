@@ -4,14 +4,8 @@ import com.efp.dvk.common.lang.NotifyUtils;
 import com.efp.dvk.common.service.PluginOrmService;
 import com.efp.dvk.plugins.db.service.DbService;
 import com.efp.dvk.plugins.generator.entity.DatabaseConfig;
-import com.efp.dvk.plugins.generator.model.GeneratorConfigTableModel;
-import com.intellij.compiler.options.ModuleOptionsTableModel;
-import com.intellij.openapi.compiler.JavaCompilerBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.TableUtil;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.scale.JBUIScale;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,14 +25,11 @@ public class GeneratorMainUI extends DialogWrapper {
     private JScrollPane jScrollPane;
     private JTextField filterTextField;
     private JButton filterButton;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField4;
     private JPanel rightSplitJpanel;
+    private GeneratorOptionsComponent generatorOptionsComponent;
 
     private final Project project;
 
-    private JBTable myTable;
 
     public GeneratorMainUI(@Nullable Project project, boolean canBeParent) {
         super(project, canBeParent);
@@ -89,31 +80,7 @@ public class GeneratorMainUI extends DialogWrapper {
         });
         filterButton.setText("过滤");
         connectionConfigButton.setText("连接设置");
-
-        myTable = new JBTable(new GeneratorConfigTableModel());
-        myTable.setShowGrid(false);
-        myTable.setRowHeight(JBUIScale.scale(22));
-        myTable.getEmptyText().setText(JavaCompilerBundle.message("settings.all.modules.will.be.compiled.with.project.bytecode.version"));
-
-
-        JPanel tableComp = ToolbarDecorator.createDecorator(myTable)
-                .disableUpAction()
-                .disableDownAction()
-                .setAddAction(b -> addModules())
-                .setRemoveAction(b -> removeSelectedModules())
-                .createPanel();
-
-        rightSplitJpanel.add(tableComp);
-
         init();
-    }
-
-    private void removeSelectedModules() {
-        TableUtil.removeSelectedItems(myTable);
-    }
-
-    private void addModules() {
-
     }
 
     private void updateTables() {
@@ -152,5 +119,10 @@ public class GeneratorMainUI extends DialogWrapper {
     @Override
     protected @Nullable JComponent createCenterPanel() {
         return jPanel;
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        generatorOptionsComponent = new GeneratorOptionsComponent(project);
     }
 }
