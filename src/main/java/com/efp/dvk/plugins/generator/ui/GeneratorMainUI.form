@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.efp.dvk.plugins.generator.ui.GeneratorMainUI">
-  <grid id="27dc6" binding="jPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="jPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="754" height="460"/>
@@ -8,84 +8,18 @@
     <properties/>
     <border type="none"/>
     <children>
-      <toolbar id="c3cde">
+      <splitpane id="119e5" binding="jSplitPane">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="-1" height="20"/>
-          </grid>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="65b28" class="javax.swing.JButton" binding="connectionConfigButton" default-binding="true">
-            <constraints/>
-            <properties>
-              <text value="ConnectionConfig"/>
-            </properties>
-          </component>
-          <component id="6e86a" class="javax.swing.JButton" binding="generatorConfigButton" default-binding="true">
-            <constraints/>
-            <properties>
-              <text value="GeneratorConfig"/>
-            </properties>
-          </component>
-          <component id="649d3" class="javax.swing.JTextField" binding="filterTextField">
-            <constraints/>
-            <properties/>
-          </component>
-          <component id="904cc" class="javax.swing.JButton" binding="filterButton">
-            <constraints/>
-            <properties>
-              <text value="过滤"/>
-            </properties>
-          </component>
-        </children>
-      </toolbar>
-      <splitpane id="119e5">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
         <properties>
-          <dividerLocation value="150"/>
+          <dividerLocation value="0"/>
           <dividerSize value="1"/>
         </properties>
         <border type="none"/>
-        <children>
-          <scrollpane id="bca4e" binding="jScrollPane">
-            <constraints>
-              <splitpane position="left"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="54e4a" class="javax.swing.JTree" binding="tree1" default-binding="true">
-                <constraints/>
-                <properties>
-                  <rootVisible value="false"/>
-                  <showsRootHandles value="false"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <grid id="71ba7" binding="rightSplitJpanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <splitpane position="right"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="ee4bd" class="com.efp.dvk.plugins.generator.ui.GeneratorOptionsComponent" binding="generatorOptionsComponent" custom-create="true">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
-              </component>
-            </children>
-          </grid>
-        </children>
+        <children/>
       </splitpane>
     </children>
   </grid>

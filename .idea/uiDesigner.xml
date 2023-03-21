@@ -125,5 +125,6 @@
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
     </group>
+    <group name="my" />
   </component>
 </project>

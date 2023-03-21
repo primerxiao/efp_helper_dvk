@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class GeneratorOptionsComponent extends JPanel {
@@ -26,49 +27,28 @@ public class GeneratorOptionsComponent extends JPanel {
     public GeneratorOptionsComponent(@NotNull Project myProject) {
         super(new GridBagLayout());
         this.myProject = myProject;
-        GeneratorConfigTableModel generatorConfigTableModel = new GeneratorConfigTableModel();
-        GeneratorConfig generatorConfig = new GeneratorConfig();
-        generatorConfig.setFileName("test");
-        generatorConfig.setName("test");
-        generatorConfig.setType("test");
-        generatorConfig.setFilePath("test");
-        generatorConfig.setTemplateContent("test");
-        generatorConfigTableModel.getGeneratorConfigList().add(generatorConfig);
-        myTable = new JBTable(generatorConfigTableModel);
+        myTable = new JBTable(new GeneratorConfigTableModel());
         myTable.setShowGrid(false);
         myTable.setRowHeight(JBUIScale.scale(22));
         myTable.getEmptyText().setText(JavaCompilerBundle.message("settings.all.modules.will.be.compiled.with.project.bytecode.version"));
+        GeneratorConfigTableModel model = (GeneratorConfigTableModel) myTable.getModel();
+        model.getGeneratorConfigList().add(GeneratorConfig.builder()
+                .fileName("test")
+                .filePath("test")
+                .name("name")
+                .type("type")
+                .templateContent("coadfasda")
+                .build()
+        );
 
-//        if (column == 0) {
-//            return "配置名";
-//        }
-//        if (column == 1) {
-//            return "类型";
-//        }
-//        if (column == 2) {
-//            return "文件名";
-//        }
-//        if (column == 3) {
-//            return "文件路径";
-//        }
-//        if (column == 4) {
-//            return "模板内容";
-//        }
-
-        TableColumn moduleColumn = myTable.getColumnModel().getColumn(0);
-        moduleColumn.setHeaderValue("配置名");
-        moduleColumn.setCellRenderer(new ModuleTableCellRenderer());
-
-        TableColumn optionsColumn = myTable.getColumnModel().getColumn(1);
-        String columnTitle = "类型";
-        optionsColumn.setHeaderValue(columnTitle);
-        int width = myTable.getFontMetrics(myTable.getFont()).stringWidth(columnTitle) + 10;
-        optionsColumn.setPreferredWidth(width);
-        optionsColumn.setMinWidth(width);
-        ExpandableTextField editor = new ExpandableTextField();
-        InsertPathAction.addTo(editor, null, false);
-        optionsColumn.setCellEditor(new DefaultCellEditor(editor));
+        model.fireTableDataChanged();
         new TableSpeedSearch(myTable);
+
+        myTable.getColumnModel().getColumn(0).setHeaderValue("名称");
+        myTable.getColumnModel().getColumn(1).setHeaderValue("类型");
+        myTable.getColumnModel().getColumn(2).setHeaderValue("文件名");
+        myTable.getColumnModel().getColumn(3).setHeaderValue("文件路径");
+        myTable.getColumnModel().getColumn(4).setHeaderValue("文本模板");
 
         JPanel table = ToolbarDecorator.createDecorator(myTable)
                 .disableUpAction()
@@ -76,10 +56,11 @@ public class GeneratorOptionsComponent extends JPanel {
                 .setAddAction(b -> addModules())
                 .setRemoveAction(b -> removeSelectedModules())
                 .createPanel();
-        table.setPreferredSize(new Dimension(myTable.getWidth(), 150));
+        table.setPreferredSize(new Dimension(myTable.getWidth(), 200));
         JLabel header = new JLabel("设置代码生成配置");
         add(header, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, JBUI.insets(5, 5, 0, 0), 0, 0));
         add(table, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, JBUI.insets(5, 5, 0, 0), 0, 0));
+
     }
 
     private void removeSelectedModules() {
